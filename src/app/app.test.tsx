@@ -1,13 +1,13 @@
-import '@testing-library/jest-dom'
-import { render, screen } from '@testing-library/react'
-import Page from '../app/page'
+import '@testing-library/jest-dom';
+import { render, screen } from '@testing-library/react';
+import Page from '../app/page';
 
 describe('Page', () => {
-    it('renders a heading', () => {
-        render(<Page />)
+  it('renders a heading', () => {
+    render(<Page />);
 
-        const main = screen.getByRole('main')
+    const main = screen.getByRole('main');
 
-        expect(main).toBeInTheDocument()
-    })
-})
+    expect(main).toBeInTheDocument();
+  });
+});
