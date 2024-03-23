@@ -1,6 +1,6 @@
 name: CI Workflow
 
-on: [push, pull_request]
+on: [ push, pull_request ]
 
 jobs:
   build-and-test:
@@ -8,16 +8,11 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [20.x]
-
-    services:
-      mongo:
-        image: mongo
-        ports:
-          - 27017:27017
+        node-version: [ 20.x ]
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Check out repository code
+        uses: actions/checkout@v3
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -25,35 +20,35 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
 
-      - name: Set npm Registry
-        run: npm config set registry https://registry.npmjs.org/
-
       - name: Install Dependencies
         run: npm ci --verbose
 
       - name: Run Linter
         run: npm run lint
 
-      - name: Build Project
-        run: npm run build --if-present
+      # Assuming you want to start your application and dependencies before building and testing
+      - name: Start Docker Compose Services
+        run: docker-compose up -d
         env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI }} # Update this with your real URI if needed
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+
+      # Optionally wait for services to be fully up and running
+      # This step would require a script that checks the readiness of your services
+      # - name: Wait for Services to be Ready
+      #   run: ./scripts/wait-for-services.sh
+
+      - name: Build Project
+        run: npm run build
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
 
       - name: Run Tests
         run: npm run test
-  build-and-push-docker:
-    runs-on: ubuntu-latest
-    needs: build-and-test
-
-    steps:
-      - uses: actions/checkout@v3
-
-      - name: Build and Run Docker Compose
-        run: |
-          docker-compose -f docker-compose.yml up --build -d
         env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI }} # Update this with your real URI if needed
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
 
+      # Stop and remove Docker Compose services after tests or builds
       - name: Docker Compose Down
         run: docker-compose down

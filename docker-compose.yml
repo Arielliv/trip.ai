@@ -9,6 +9,7 @@ services:
       - '3000:3000'
     environment:
       - MONGODB_URI=${MONGODB_URI}
+      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
     depends_on:
       - mongo
 
