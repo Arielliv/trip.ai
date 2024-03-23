@@ -1,10 +1,30 @@
 import Image from 'next/image';
 import styles from './page.module.css';
+import { ITrip } from '@/models/Trip';
+import axios from 'axios';
 
-export default function Home() {
+export enum DataTestIds {
+  tripContainer = 'trip-container',
+}
+
+async function fetchTrips(): Promise<ITrip[]> {
+  const res = await axios.get('http://localhost:3000/api/trips');
+  return res.data as ITrip[];
+}
+
+const Home = async () => {
+  const trips = await fetchTrips();
+
   return (
     <main className={styles.main}>
       <div className={styles.description}>
+        <>
+          {trips?.map((trip) => (
+            <p key={trip._id} data-testid={DataTestIds.tripContainer}>
+              {trip.name}
+            </p>
+          ))}
+        </>
         <p>
           Get started by editing&nbsp;
           <code className={styles.code}>src/app/page.tsx</code>
@@ -76,4 +96,6 @@ export default function Home() {
       </div>
     </main>
   );
-}
+};
+
+export default Home;
