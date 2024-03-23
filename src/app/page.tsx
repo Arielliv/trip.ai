@@ -5,7 +5,7 @@ import axios from 'axios';
 import { DataTestIds } from '@/app/constants';
 
 async function fetchTrips(): Promise<ITrip[]> {
-  const res = await axios.get('http://localhost:3000/api/trips');
+  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/trips`);
   return res.data as ITrip[];
 }
 

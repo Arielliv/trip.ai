@@ -21,7 +21,6 @@ export async function GET() {
   try {
     await dbConnect();
     const trips = await Trip.find();
-    console.log(trips);
     return NextResponse.json(trips);
   } catch (error) {
     return NextResponse.json({ error });
