@@ -11,12 +11,12 @@ jobs:
         node-version: [ 18.x ]
 
     services:
-      mongo:
-        image: mongo
+      mongodb:
+        image: mongodb
         ports:
           - 27017:27017
         options: >-
-          --health-cmd "mongo --eval 'db.runCommand({ ping: 1 })'"
+          --health-cmd "mongodb --eval 'db.runCommand({ ping: 1 })'"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
