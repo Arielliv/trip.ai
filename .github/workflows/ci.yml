@@ -36,6 +36,9 @@ jobs:
 
       - name: Build Project
         run: npm run build --if-present
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }} # Update this with your real URI if needed
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
 
       - name: Run Tests
         run: npm run test
