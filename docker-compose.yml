@@ -10,15 +10,15 @@ services:
     environment:
       - MONGODB_URI=${MONGODB_URI}
     depends_on:
-      - mongodb
+      - mongo
 
-  mongodb:
-    container_name: mongodb
-    image: mongodb:latest
+  mongo:
+    container_name: mongo
+    image: mongo:latest
     ports:
       - '27017:27017'
     volumes:
-      - mongodb-data:/data/db
+      - mongo-data:/data/db
 
 volumes:
-  mongodb-data:
+  mongo-data:
