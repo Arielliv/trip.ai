@@ -15,8 +15,11 @@ jobs:
         image: mongodb
         ports:
           - 27017:27017
-        options:
-          --health-cmd "mongo --eval 'db.runCommand({ ping: 1 })'" --health-interval 10s --health-timeout 5s --health-retries 5
+        options: >-
+          --health-cmd "mongo --eval 'db.runCommand({ ping: 1 })'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
 
     steps:
       - uses: actions/checkout@v3
@@ -52,7 +55,7 @@ jobs:
         run: |
           docker-compose -f docker-compose.yml up --build -d
         env:
-          MONGODB_URI: ${MONGODB_URI} # Update this with your real URI if needed
+          MONGODB_URI: ${{ secrets.MONGODB_URI }} # Update this with your real URI if needed
 
       - name: Docker Compose Down
         run: docker-compose down
