@@ -20,7 +20,7 @@ services:
     volumes:
       - mongo-data:/data/db
     healthcheck:
-      test: [ "CMD", "mongo", "--eval", "db.runCommand('ping').ok" ]
+      test: ['CMD', 'mongo', '--eval', "db.runCommand('ping').ok"]
       interval: 10s
       timeout: 5s
       retries: 5

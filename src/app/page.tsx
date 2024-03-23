@@ -2,10 +2,7 @@ import Image from 'next/image';
 import styles from './page.module.css';
 import { ITrip } from '@/models/Trip';
 import axios from 'axios';
-
-export enum DataTestIds {
-  tripContainer = 'trip-container',
-}
+import { DataTestIds } from '@/app/constants';
 
 async function fetchTrips(): Promise<ITrip[]> {
   const res = await axios.get('http://localhost:3000/api/trips');

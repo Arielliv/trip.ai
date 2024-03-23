@@ -1,7 +1,8 @@
 import '@testing-library/jest-dom';
 import { render, screen, waitFor } from '@testing-library/react';
-import Home, { DataTestIds } from '../app/page';
 import axios from 'axios';
+import Home from '@/app/page';
+import { DataTestIds } from '@/app/constants';
 
 // Mock axios globally
 jest.mock('axios');
@@ -34,7 +35,7 @@ describe('Page', () => {
     // Wait for the component to update based on the mock response
     await waitFor(() => {
       // Query for elements by the test ID and assert their count
-      const tripElements = screen.getAllByTestId('trip-container');
+      const tripElements = screen.getAllByTestId(DataTestIds.tripContainer);
       expect(tripElements).toHaveLength(1);
     });
   });
