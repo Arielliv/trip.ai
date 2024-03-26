@@ -8,11 +8,13 @@ services:
     ports:
       - '3000:3000'
     environment:
-      - MONGODB_URI=${MONGODB_URI}
-      - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
-#    depends_on:
-#      - mongo
+      MONGODB_URI: ${MONGODB_URI}
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+    # Uncomment the following lines if your application depends on MongoDB running as part of your Docker setup
+    # depends_on:
+    #   - mongo
 
+# Uncomment this section if you want to include a MongoDB service in your Docker environment
 #  mongo:
 #    container_name: mongo
 #    image: mongo:latest
@@ -26,5 +28,6 @@ services:
 #      timeout: 5s
 #      retries: 5
 
+# Uncomment if using the MongoDB service
 #volumes:
 #  mongo-data:
