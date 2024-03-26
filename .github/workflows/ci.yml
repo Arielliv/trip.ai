@@ -53,7 +53,7 @@ jobs:
       # Log in to Azure Container Registry
       - name: Log in to Azure Container Registry
         run: |
-          docker login tripairegistry.azurecr.io -u ${{ secrets.AZURE_REGISTRY_USERNAME }} -p ${{ secrets.AZURE_REGISTRY_PASSWORD }}
+          echo ${{ secrets.AZURE_REGISTRY_PASSWORD }} | docker login tripairegistry.azurecr.io --username ${{ secrets.AZURE_REGISTRY_USERNAME }} --password-stdin
 
       # Build and push Docker image with a meaningful tag
       - name: Build and push Docker image
