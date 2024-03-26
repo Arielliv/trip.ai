@@ -44,7 +44,7 @@ jobs:
           BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//-/g')
           TIMESTAMP=$(date -u +"%Y%m%dT%H%M%SZ")
           IMAGE_TAG=${BRANCH_NAME}-${TIMESTAMP}
-          docker build --build-arg MONGODB_URI=${{ secrets.MONGODB_URI }} -t tripairegistry.azurecr.io/tripai:$IMAGE_TAG .
+          docker build --build-arg MONGODB_URI="${{ secrets.MONGODB_URI }}" -t tripairegistry.azurecr.io/tripai:$IMAGE_TAG .
           docker push tripairegistry.azurecr.io/tripai:$IMAGE_TAG
         env:
           GITHUB_REF: ${{ github.ref }}
