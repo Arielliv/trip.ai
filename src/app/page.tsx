@@ -1,13 +1,7 @@
 import Image from 'next/image';
 import styles from './page.module.css';
-import { ITrip } from '@/models/Trip';
-import axios from 'axios';
 import { DataTestIds } from '@/app/constants';
-
-async function fetchTrips(): Promise<ITrip[]> {
-  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/trips`);
-  return res.data as ITrip[];
-}
+import { fetchTrips } from '@/lib/data';
 
 const Home = async () => {
   const trips = await fetchTrips();

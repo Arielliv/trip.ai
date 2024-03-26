@@ -1,6 +1,6 @@
 name: CI Workflow
 
-on: [ push, pull_request ]
+on: [push, pull_request]
 
 jobs:
   build-and-test:
@@ -8,7 +8,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [ 20.x ]
+        node-version: [20.x]
 
     steps:
       - name: Check out repository code
