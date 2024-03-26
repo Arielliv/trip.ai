@@ -10,8 +10,8 @@ services:
     environment:
       - MONGODB_URI=${MONGODB_URI}
       - NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
-    depends_on:
-      - mongo
+#    depends_on:
+#      - mongo
 
 #  mongo:
 #    container_name: mongo
@@ -26,5 +26,5 @@ services:
 #      timeout: 5s
 #      retries: 5
 
-volumes:
-  mongo-data:
+#volumes:
+#  mongo-data:
