@@ -24,13 +24,7 @@ jobs:
         run: npm ci --verbose
 
       - name: Run Linter
-        run: npm run lint
-
-      # Assuming you want to start your application and dependencies before building and testing
-      - name: Start Docker Compose Services
-        run: docker-compose up -d
-        env:
-          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+        run: npm run lin
 
       # Optionally wait for services to be fully up and running
       # This step would require a script that checks the readiness of your services
@@ -49,6 +43,4 @@ jobs:
           MONGODB_URI: ${{ secrets.MONGODB_URI }}
           NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
 
-      # Stop and remove Docker Compose services after tests or builds
-      - name: Docker Compose Down
-        run: docker-compose down
+      # This step is removed: Docker Compose Down
