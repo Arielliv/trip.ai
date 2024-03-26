@@ -24,7 +24,7 @@ jobs:
         run: npm ci --verbose
 
       - name: Run Linter
-        run: npm run lin
+        run: npm run lint
 
       # Optionally wait for services to be fully up and running
       # This step would require a script that checks the readiness of your services
