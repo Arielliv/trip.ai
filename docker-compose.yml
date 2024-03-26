@@ -13,7 +13,6 @@ services:
     # Uncomment the following lines if your application depends on MongoDB running as part of your Docker setup
     # depends_on:
     #   - mongo
-
 # Uncomment this section if you want to include a MongoDB service in your Docker environment
 #  mongo:
 #    container_name: mongo
