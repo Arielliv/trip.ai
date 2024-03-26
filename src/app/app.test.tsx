@@ -1,19 +1,21 @@
 import '@testing-library/jest-dom';
 import { render, screen, waitFor } from '@testing-library/react';
-import axios from 'axios';
 import Home from '@/app/page';
 import { DataTestIds } from '@/app/constants';
+import { appDriver } from '@/app/app.driver';
 
-// Mock axios globally
-jest.mock('axios');
+jest.mock('@/lib/data', () => ({
+  fetchTrips: jest.fn(),
+}));
 
 describe('Page', () => {
-  let mockedAxios = axios as jest.Mocked<typeof axios>;
+  let driver: appDriver;
+
   beforeEach(() => {
-    // Mocking axios.get to return a resolved promise with a sample trip
-    mockedAxios.get.mockResolvedValue({
-      data: [], // Sample trip data
-    });
+    jest.clearAllMocks();
+
+    driver = new appDriver();
+    driver.givenFetchTripsMock([]);
   });
 
   it('renders a heading', async () => {
@@ -25,9 +27,7 @@ describe('Page', () => {
   });
 
   it('should show one trip when there is one trip available', async () => {
-    mockedAxios.get.mockResolvedValue({
-      data: [{ _id: '1', name: 'Sample Trip' }], // Sample trip data
-    });
+    driver.givenFetchTripsMock([{ _id: '1', name: 'Sample Trip' }]);
 
     // Render the Home component
     render(await Home());
