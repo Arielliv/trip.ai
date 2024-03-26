@@ -2,7 +2,7 @@ import '@testing-library/jest-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import Home from '@/app/page';
 import { DataTestIds } from '@/app/constants';
-import { appDriver } from '@/app/app.driver';
+import { appDriver } from '@/app/test/app.driver';
 
 jest.mock('@/lib/data', () => ({
   fetchTrips: jest.fn(),
