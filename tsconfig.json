@@ -21,7 +21,8 @@
     "paths": {
       "@/app/*": ["src/app/*"],
       "@/lib/*": ["src/lib/*"],
-      "@/models/*": ["src/models/*"]
+      "@/models/*": ["src/models/*"],
+      "crypto": ["node_modules/crypto-js"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
