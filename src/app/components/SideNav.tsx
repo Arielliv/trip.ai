@@ -22,6 +22,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 
 const drawerWidth = 240;
 
@@ -36,7 +37,7 @@ const MenuList: MenuListItem[] = [
   { name: 'Trips', icon: <AirlineStopsIcon />, href: '/trips' },
   { name: 'Explore', icon: <TravelExploreIcon />, href: '/explore' },
   // { name: 'Login', icon: <LoginIcon />, href: '/login' },
-  { name: 'Logout', icon: <LogoutIcon />, href: '/logout' },
+  { name: 'Logout', icon: <LogoutIcon />, href: '/signin' },
   { name: 'Sign in', icon: <LoginIcon />, href: '/signin' },
 ];
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
@@ -90,6 +91,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 export default function SideNav({ children }: React.PropsWithChildren) {
   const theme = useTheme();
+  const { data: session } = useSession();
   const [open, setOpen] = React.useState(false);
   const pathname = usePathname();
 
@@ -138,7 +140,15 @@ export default function SideNav({ children }: React.PropsWithChildren) {
         </DrawerHeader>
         <Divider />
         <List>
-          {MenuList.map(({ name, icon, href }, index) => (
+          {MenuList.filter(({ name }) => {
+            if (name === 'Logout' && !session) {
+              return false;
+            }
+            if (name === 'Sign in' && session) {
+              return false;
+            }
+            return true;
+          }).map(({ name, icon, href }, index) => (
             <Link key={name} href={href}>
               <ListItem key={name} disablePadding>
                 <ListItemButton selected={isSelected(href)}>
