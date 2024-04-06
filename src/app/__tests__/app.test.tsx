@@ -2,20 +2,29 @@ import '@testing-library/jest-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import Home from '@/app/page';
 import { DataTestIds } from '@/app/constants';
-import { appDriver } from '@/app/test/app.driver';
+import { appDriver } from '@/app/__test__/app.driver';
+import { useSession } from 'next-auth/react';
 
 jest.mock('@/lib/data', () => ({
   fetchTrips: jest.fn(),
 }));
 
+jest.mock('next-auth/react');
+
 describe('Page', () => {
+  const mockSession = {
+    expires: new Date(Date.now() + 2 * 86400).toISOString(),
+    user: { username: 'admin' },
+  };
+
   let driver: appDriver;
 
   beforeEach(() => {
     jest.clearAllMocks();
-
+    (useSession as jest.Mock).mockReturnValueOnce([mockSession, 'authenticated']);
     driver = new appDriver();
     driver.givenFetchTripsMock([]);
+    driver.givenSession(mockSession);
   });
 
   it('renders a heading', async () => {
