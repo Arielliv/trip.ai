@@ -13,6 +13,7 @@
     "format:fix": "prettier --write --ignore-path .gitignore .",
     "lint:fix": "npm run format:fix && next lint --fix"
   },
+  "type": "module",
   "dependencies": {
     "@auth/mongodb-adapter": "^2.5.2",
     "@emotion/cache": "^11.11.0",

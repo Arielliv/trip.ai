@@ -2,17 +2,16 @@
 import { useSession } from 'next-auth/react';
 import React from 'react';
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { redirect } from 'next/navigation';
 
 const ProtectedPage = ({ children }: React.PropsWithChildren) => {
   const { data: session, status } = useSession();
   const isUser = !!session?.user;
-  const router = useRouter();
 
   useEffect(() => {
     // If not authenticated, redirect to the login page
     if (status === 'loading') return; // Do nothing while loading
-    if (!isUser) router.push('/signin');
+    if (!isUser) redirect('/signin');
   }, [isUser, status]);
 
   if (isUser) {

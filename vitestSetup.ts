@@ -18,9 +18,15 @@ const mockData = {
 
 beforeAll(() => {
   vi.mock('@/lib/data');
-  vi.mock('next-auth/react');
-  vi.mock('next/navigation', () => require('next-router-mock'));
-  driver.givenSession(mockData);
+  vi.mock('next-auth/react', () => ({
+    useSession: vi.fn(() => {
+      return mockData;
+    }),
+  }));
+  vi.mock('next/navigation', () => ({
+    redirect: vi.fn(),
+    ...require('next-router-mock'),
+  }));
 });
 
 beforeEach(() => {

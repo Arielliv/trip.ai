@@ -26,11 +26,8 @@ describe('Page', () => {
     // Render the Home component
     render(await Home());
 
-    // Wait for the component to update based on the mock response
-    await waitFor(() => {
-      // Query for elements by the test ID and assert their count
-      const tripElements = screen.getAllByTestId(DataTestIds.tripContainer);
-      expect(tripElements).toHaveLength(1);
-    });
+    // Query for elements by the test ID and assert their count
+    const tripElements = screen.getAllByTestId(DataTestIds.tripContainer);
+    expect(tripElements).toHaveLength(1);
   });
 });
