@@ -1,16 +1,19 @@
 'use client';
-import { useSession, signIn } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import React from 'react';
 import { useEffect } from 'react';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 const ProtectedPage = ({ children }: React.PropsWithChildren) => {
   const { data: session, status } = useSession();
   const isUser = !!session?.user;
+  const router = useRouter();
+
   useEffect(() => {
+    console.log(session);
     // If not authenticated, redirect to the login page
     if (status === 'loading') return; // Do nothing while loading
-    if (!isUser) redirect('/signin');
+    if (!isUser) router.push('/signin');
   }, [isUser, status]);
 
   if (isUser) {

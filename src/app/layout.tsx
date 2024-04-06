@@ -7,7 +7,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import SideNav from '@/app/components/SideNav';
 import theme from '../../theme';
 import { NextAuthProvider } from './components/NextAuthProvider';
-import { auth } from '../../auth';
+import { auth } from '@/auth';
 
 const inter = Inter({ subsets: ['latin'] });
 

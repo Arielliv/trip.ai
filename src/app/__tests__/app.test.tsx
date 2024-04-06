@@ -1,30 +1,15 @@
-import '@testing-library/jest-dom';
 import { render, screen, waitFor } from '@testing-library/react';
 import Home from '@/app/page';
 import { DataTestIds } from '@/app/constants';
-import { appDriver } from '@/app/__test__/app.driver';
-import { useSession } from 'next-auth/react';
-
-jest.mock('@/lib/data', () => ({
-  fetchTrips: jest.fn(),
-}));
-
-jest.mock('next-auth/react');
+import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { appDriver } from '@/app/__tests__/app.driver';
 
 describe('Page', () => {
-  const mockSession = {
-    expires: new Date(Date.now() + 2 * 86400).toISOString(),
-    user: { username: 'admin' },
-  };
-
   let driver: appDriver;
 
   beforeEach(() => {
-    jest.clearAllMocks();
-    (useSession as jest.Mock).mockReturnValueOnce([mockSession, 'authenticated']);
     driver = new appDriver();
     driver.givenFetchTripsMock([]);
-    driver.givenSession(mockSession);
   });
 
   it('renders a heading', async () => {
@@ -32,7 +17,7 @@ describe('Page', () => {
 
     const main = screen.getByRole('main');
 
-    expect(main).toBeInTheDocument();
+    expect(main).toBeDefined();
   });
 
   it('should show one trip when there is one trip available', async () => {
