@@ -1,6 +1,7 @@
 // @ts-check
 import path from 'path';
 import { fileURLToPath } from 'url';
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 /**
@@ -11,12 +12,9 @@ const nextConfig = {
     // Enables the styled-components SWC transform
     styledComponents: true
   },
-  webpack: (config,
-            { buildId, dev, isServer, defaultLoaders, nextRuntime, webpack }) => {
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      '@': path.resolve(__dirname)
-    };
+  webpack: (config) => {
+    config.resolve.alias['@'] = path.resolve(__dirname, './');
+    // Setup other custom Webpack configurations as needed
     return config;
   }
 };
