@@ -9,12 +9,16 @@ const __dirname = path.dirname(__filename);
 const nextConfig = {
   compiler: {
     // Enables the styled-components SWC transform
-    styledComponents: true,
+    styledComponents: true
   },
-  webpack: (config, { _isServer }) => {
-    config.resolve.alias['@'] = path.join(__dirname, 'src');
+  webpack: (config,
+            { buildId, dev, isServer, defaultLoaders, nextRuntime, webpack }) => {
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      '@': path.resolve(__dirname)
+    };
     return config;
-  },
+  }
 };
 
 export default nextConfig;
