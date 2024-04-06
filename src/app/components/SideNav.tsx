@@ -19,7 +19,6 @@ import AirlineStopsIcon from '@mui/icons-material/AirlineStops';
 import TravelExploreIcon from '@mui/icons-material/TravelExplore';
 import LoginIcon from '@mui/icons-material/Login';
 import LogoutIcon from '@mui/icons-material/Logout';
-import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
@@ -36,7 +35,6 @@ const MenuList: MenuListItem[] = [
   { name: 'Locations', icon: <AddLocationIcon />, href: '/locations' },
   { name: 'Trips', icon: <AirlineStopsIcon />, href: '/trips' },
   { name: 'Explore', icon: <TravelExploreIcon />, href: '/explore' },
-  // { name: 'Login', icon: <LoginIcon />, href: '/login' },
   { name: 'Logout', icon: <LogoutIcon />, href: '/signin' },
   { name: 'Sign in', icon: <LoginIcon />, href: '/signin' },
 ];

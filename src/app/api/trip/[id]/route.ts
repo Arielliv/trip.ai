@@ -3,8 +3,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { HttpStatusCode } from 'axios';
 import dbConnect from '@/lib/dbConnect';
 import Trip, { ITrip } from '@/models/Trip';
+import { auth } from '@/auth';
 
-export async function GET(_: NextRequest, { params }: { params: { id: string } }) {
+export const GET = async (_: NextRequest, { params }: { params: { id: string } }) => {
   try {
     await dbConnect();
     const trip = await Trip.findById(params.id);
@@ -15,9 +16,9 @@ export async function GET(_: NextRequest, { params }: { params: { id: string } }
   } catch (error) {
     return NextResponse.json({ message: error }, { status: HttpStatusCode.BadRequest });
   }
-}
+};
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export const PUT = async (req: NextRequest, { params }: { params: { id: string } }) => {
   try {
     await dbConnect();
     const trip = await Trip.findById(params.id);
@@ -33,7 +34,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   } catch (error) {
     return NextResponse.json({ message: error }, { status: HttpStatusCode.BadRequest });
   }
-}
+};
 
 export async function DELETE(_: NextRequest, { params }: { params: { id: string } }) {
   try {

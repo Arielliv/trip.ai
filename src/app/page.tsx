@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import styles from './page.module.css';
 import { DataTestIds } from '@/app/constants';
-import ProtectedPage from '@/app/components/protectedPage';
+import ProtectedPage from '@/app/components/ProtectedPage';
 import { fetchTrips } from '@/lib/data';
 
 const Home = async () => {

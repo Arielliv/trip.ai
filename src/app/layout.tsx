@@ -8,6 +8,7 @@ import SideNav from '@/app/components/SideNav';
 import theme from '../../theme';
 import { NextAuthProvider } from './components/NextAuthProvider';
 import { auth } from '@/auth';
+import NoSsr from '@/app/components/NoSsr';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -30,7 +31,9 @@ export default async function RootLayout({
           <NextAuthProvider session={session}>
             <ThemeProvider theme={theme}>
               <CssBaseline />
-              <SideNav>{children}</SideNav>
+              <NoSsr>
+                <SideNav>{children}</SideNav>
+              </NoSsr>
             </ThemeProvider>
           </NextAuthProvider>
         </AppRouterCacheProvider>

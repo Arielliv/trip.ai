@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import Trip, { ITrip } from '@/models/Trip';
 import dbConnect from '@/lib/dbConnect';
 
-export async function POST(req: NextRequest) {
+export const POST = async (req: NextRequest) => {
   try {
     await dbConnect();
     const body: ITrip = await req.json();
@@ -15,9 +15,9 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     return NextResponse.json({ message: error }, { status: HttpStatusCode.BadRequest });
   }
-}
+};
 
-export async function GET() {
+export const GET = async () => {
   try {
     await dbConnect();
     const trips = await Trip.find();
@@ -25,4 +25,4 @@ export async function GET() {
   } catch (error) {
     return NextResponse.json({ error });
   }
-}
+};

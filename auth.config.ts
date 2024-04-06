@@ -3,16 +3,18 @@ import GoogleProvider from 'next-auth/providers/google';
 
 export const authConfig = {
   pages: {
-    signIn: '/login',
+    signIn: '/signin',
+    signOut: '/signin',
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
+      console.log('asd');
       if (isLoggedIn) {
         return true;
         // Redirect unauthenticated users to login page
       } else {
-        return Response.redirect(new URL('/login', nextUrl));
+        return Response.redirect(new URL('/signin', nextUrl));
       }
     },
   },

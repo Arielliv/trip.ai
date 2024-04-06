@@ -10,7 +10,6 @@ const ProtectedPage = ({ children }: React.PropsWithChildren) => {
   const router = useRouter();
 
   useEffect(() => {
-    console.log(session);
     // If not authenticated, redirect to the login page
     if (status === 'loading') return; // Do nothing while loading
     if (!isUser) router.push('/signin');

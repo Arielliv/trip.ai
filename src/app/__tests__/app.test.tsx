@@ -21,7 +21,7 @@ describe('Page', () => {
   });
 
   it('should show one trip when there is one trip available', async () => {
-    driver.givenFetchTripsMock([{ _id: '1', name: 'Sample Trip' }]);
+    driver.givenFetchTripsMock([{ _id: '1', name: 'Sample Trip' } as any]);
 
     // Render the Home component
     render(await Home());
