@@ -3,7 +3,9 @@
 FROM node:20
 
 ARG MONGODB_URI
+ARG NEXTAUTH_SECRET
 ENV MONGODB_URI=${MONGODB_URI}
+ENV NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
 
 # Create and change to the app directory.
 WORKDIR /usr/src/app
