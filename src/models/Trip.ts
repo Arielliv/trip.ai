@@ -1,3 +1,4 @@
+/* v8 ignore start */
 import { Schema, Document, Types, models, model } from 'mongoose';
 import { Role, TransportationType, Visibility } from '@/models/constants';
 import { Permission } from '@/models/shared/types';
@@ -79,3 +80,5 @@ const TripSchema: Schema = new Schema({
 
 const Trip = models.Trip || model<ITrip>('Trip', TripSchema);
 export default Trip;
+
+/* v8 ignore stop */

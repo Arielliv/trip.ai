@@ -1,3 +1,4 @@
+/* v8 ignore start */
 import { Schema, Document, Types, models, model } from 'mongoose';
 
 interface User extends Document {
@@ -16,3 +17,5 @@ const UserSchema: Schema = new Schema({
 
 const User = models.User || model<User>('User', UserSchema);
 export default User;
+
+/* v8 ignore stop */

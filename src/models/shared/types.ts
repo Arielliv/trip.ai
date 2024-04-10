@@ -1,3 +1,4 @@
+/* v8 ignore start */
 import { Types } from 'mongoose';
 import { Role } from '@/models/constants';
 
@@ -19,3 +20,5 @@ export interface Address {
   country: string;
   postalCode: string;
 }
+
+/* v8 ignore stop */

@@ -1,3 +1,4 @@
+/* v8 ignore start */
 import { Schema, Document, Types, models, model } from 'mongoose';
 import { LocationType, Role, Visibility } from '@/models/constants';
 import { Address, Coordinate, Permission } from '@/models/shared/types';
@@ -54,3 +55,5 @@ const LocationSchema: Schema = new Schema({
 
 const Location = models.Location || model<Location>('Location', LocationSchema);
 export default Location;
+
+/* v8 ignore stop */

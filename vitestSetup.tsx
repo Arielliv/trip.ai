@@ -1,4 +1,5 @@
 // vitestSetup.ts
+import '@testing-library/jest-dom/vitest';
 import { afterEach, beforeAll, beforeEach, vi } from 'vitest';
 import { useSession } from 'next-auth/react';
 
@@ -26,6 +27,12 @@ beforeAll(() => {
   vi.mock('next/navigation', () => ({
     redirect: vi.fn(),
     ...require('next-router-mock'),
+  }));
+  vi.mock('@react-google-maps/api', () => ({
+    GoogleMap: vi.fn(({ children }) => <div data-testid="google-map">{children}</div>),
+    Marker: vi.fn(() => <div data-testid="marker"></div>),
+    LoadScript: vi.fn(({ children }) => <div data-testid="load-script">{children}</div>),
+    Autocomplete: vi.fn(() => <div data-testid="autocomplete"></div>),
   }));
 });
 
