@@ -1,3 +1,4 @@
+/* v8 ignore start */
 import type { NextAuthConfig } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 
@@ -25,3 +26,5 @@ export const authConfig = {
     }),
   ], // Add providers with an empty array for now
 } satisfies NextAuthConfig;
+
+/* v8 ignore stop */

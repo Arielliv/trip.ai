@@ -1,3 +1,4 @@
+/* v8 ignore start */
 export enum LocationType {
   General = 'general',
   Hotel = 'hotel',
@@ -21,3 +22,5 @@ export enum TransportationType {
   Car = 'car',
   // Add other types as needed
 }
+
+/* v8 ignore stop */

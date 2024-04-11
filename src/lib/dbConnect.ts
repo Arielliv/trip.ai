@@ -1,3 +1,4 @@
+/* v8 ignore start */
 import mongoose from 'mongoose';
 
 declare global {
@@ -39,3 +40,4 @@ async function dbConnect() {
 }
 
 export default dbConnect;
+/* v8 ignore stop */

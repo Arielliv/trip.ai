@@ -1,4 +1,4 @@
-import { defineConfig } from 'vitest/config';
+import { configDefaults, defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import { fileURLToPath, URL } from 'url';
 
@@ -10,8 +10,12 @@ export default defineConfig({
     },
   },
   test: {
+    globals: true,
     include: ['**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     environment: 'jsdom',
-    setupFiles: ['vitestSetup.ts'],
+    setupFiles: ['vitestSetup.tsx'],
+    coverage: {
+      reporter: ['text', 'json', 'html'],
+    },
   },
 });

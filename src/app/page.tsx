@@ -5,19 +5,10 @@ import ProtectedPage from '@/app/components/ProtectedPage';
 import { fetchTrips } from '@/lib/data';
 
 const Home = async () => {
-  const trips = await fetchTrips();
-
   return (
     <ProtectedPage>
       <main className={styles.main}>
         <div className={styles.description}>
-          <>
-            {trips?.map((trip) => (
-              <p key={trip._id} data-testid={DataTestIds.tripContainer}>
-                {trip.name}
-              </p>
-            ))}
-          </>
           <p>
             Get started by editing&nbsp;
             <code className={styles.code}>src/app/page.tsx</code>

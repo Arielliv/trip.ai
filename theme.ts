@@ -1,3 +1,4 @@
+/* v8 ignore start */
 'use client';
 import { Roboto } from 'next/font/google';
 import { createTheme } from '@mui/material/styles';
@@ -29,3 +30,5 @@ const theme = createTheme({
 });
 
 export default theme;
+
+/* v8 ignore stop */

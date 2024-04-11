@@ -1,18 +1,14 @@
 {
   "compilerOptions": {
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowJs": true,
     "skipLibCheck": true,
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
     "strict": true,
     "baseUrl": ".",
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
@@ -23,27 +19,16 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "*"
-      ],
-      "@/app/*": [
-        "src/app/*"
-      ],
-      "@/lib/*": [
-        "src/lib/*"
-      ],
-      "@/models/*": [
-        "src/models/*"
-      ]
+      "@/*": ["*"],
+      "@/app/*": ["src/app/*"],
+      "@/lib/*": ["src/lib/*"],
+      "@/models/*": ["src/models/*"],
+      "@/__mocks__/*": ["__mocks__/*"]
     }
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
-  ],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
   "exclude": [
-    "node_modules"
+    "node_modules", // This is standard, but explicitly listing it is fine.
+    ".next" // Exclude the .next directory to prevent TypeScript from type-checking Next.js' output.
   ]
 }

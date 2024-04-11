@@ -1,15 +1,7 @@
 {
-  "extends": [
-    "next/core-web-vitals",
-    "plugin:testing-library/react",
-    "prettier"
-  ],
-  "plugins": [
-    "prettier"
-  ],
+  "extends": ["next/core-web-vitals", "plugin:testing-library/react", "prettier"],
+  "plugins": ["prettier"],
   "rules": {
-    "prettier/prettier": [
-      "error"
-    ]
+    "prettier/prettier": ["error"]
   }
 }

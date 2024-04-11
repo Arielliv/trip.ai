@@ -1,3 +1,4 @@
+/* v8 ignore start */
 import NextAuth from 'next-auth';
 import clientPromise from '@/lib/mongoClient';
 import { MongoDBAdapter } from '@auth/mongodb-adapter';
@@ -13,3 +14,5 @@ export const {
   session: { strategy: 'jwt' },
   ...authConfig,
 });
+
+/* v8 ignore stop */
