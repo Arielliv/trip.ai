@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Autocomplete } from '@react-google-maps/api';
+import { Autocomplete, LoadScript } from '@react-google-maps/api';
 import TextField from '@mui/material/TextField';
 
 export interface SearchLocationProps {
@@ -10,10 +10,18 @@ export interface SearchLocationProps {
 }
 
 const SearchLocation = ({ onPlaceChange, onLoadAutocomplete }: SearchLocationProps) => {
+  const placesLibrary = ['places' as any];
+
   return (
-    <Autocomplete onPlaceChanged={onPlaceChange} onLoad={onLoadAutocomplete}>
-      <TextField label="Search location" variant="outlined" fullWidth />
-    </Autocomplete>
+    <LoadScript
+      libraries={placesLibrary}
+      onError={(error) => console.error('There was an error loading the Google Maps API:', error)}
+      googleMapsApiKey={process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || 'fallback_api_key_here'}
+    >
+      <Autocomplete onPlaceChanged={onPlaceChange} onLoad={onLoadAutocomplete}>
+        <TextField label="Search location" variant="outlined" fullWidth />
+      </Autocomplete>
+    </LoadScript>
   );
 };
 
