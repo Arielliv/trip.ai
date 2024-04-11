@@ -1,46 +1,73 @@
 'use client';
 
-import React, { useState } from 'react';
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import React from 'react';
+import { useForm } from 'react-hook-form';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import SearchLocation from '@/app/components/SearchLocation/SearchLocation';
+import { Box, TextField, FormControl, InputLabel, Select, MenuItem, Switch, FormControlLabel } from '@mui/material';
+import { useLocationContext } from '@/app/components/MyLocation/LocationDataContext';
 
-export interface LocationFormProps {
-  onPlaceChange: () => void;
-  onLoadAutocomplete: (autocomplete: google.maps.places.Autocomplete) => void;
-}
+const LocationForm = () => {
+  const { onPlaceChange, onLoadAutocomplete } = useLocationContext();
+  const {
+    handleSubmit,
+    control,
+    register,
+    watch,
+    formState: { isSubmitting },
+  } = useForm({
+    defaultValues: {
+      locationName: '',
+      locationType: '',
+      privacy: false, // false for private, true for public
+      note: '',
+    },
+  });
 
-const LocationForm = ({ onPlaceChange, onLoadAutocomplete }: LocationFormProps) => {
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      setLoading(false);
-      console.log('Form submitted');
-      // Here, implement what happens after form submission
-    }, 2000);
+  // todo: add onSubmit logic + add data type
+  const onSubmit = (data: any) => {
+    console.log(data);
+    // Simulate a submission delay
+    return new Promise<void>((resolve) => {
+      setTimeout(() => {
+        console.log('Form submission simulated');
+        resolve();
+      }, 2000);
+    });
+    // Perform your submission logic here
   };
 
+  const privacy = watch('privacy');
+
   return (
-    <Accordion style={{ position: 'absolute', bottom: 0, width: '100%', zIndex: 1000 }}>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>Search and Add Location</AccordionSummary>
-      <AccordionDetails>
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-          <SearchLocation onPlaceChange={onPlaceChange} onLoadAutocomplete={onLoadAutocomplete} />
-          {/* Additional form inputs can be added here */}
-          <Button type="submit" variant="contained" disabled={loading}>
-            {loading ? <CircularProgress size={24} /> : 'Submit'}
-          </Button>
-        </form>
-      </AccordionDetails>
-    </Accordion>
+    <Box sx={{ p: 2 }}>
+      <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <SearchLocation onPlaceChange={onPlaceChange} onLoadAutocomplete={onLoadAutocomplete} />
+
+        <TextField label="Location Name" variant="outlined" {...register('locationName')} />
+
+        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+          <FormControl fullWidth>
+            <InputLabel>Location Type</InputLabel>
+            <Select {...register('locationType')} label="Location Type" defaultValue="">
+              <MenuItem value="general">General</MenuItem>
+              <MenuItem value="hotel">Hotel</MenuItem>
+              <MenuItem value="restaurant">Restaurant</MenuItem>
+              {/* Add more location types as needed */}
+            </Select>
+          </FormControl>
+
+          <FormControlLabel control={<Switch {...register('privacy')} />} label={privacy ? 'Public' : 'Private'} />
+        </Box>
+
+        <TextField label="Note" variant="outlined" multiline rows={4} {...register('note')} />
+
+        <Button type="submit" variant="contained" disabled={isSubmitting}>
+          {isSubmitting ? <CircularProgress size={24} /> : 'Save'}
+        </Button>
+      </form>
+    </Box>
   );
 };
 

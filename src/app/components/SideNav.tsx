@@ -142,10 +142,7 @@ export default function SideNav({ children }: React.PropsWithChildren) {
             if (name === 'Logout' && !session) {
               return false;
             }
-            if (name === 'Sign in' && session) {
-              return false;
-            }
-            return true;
+            return !(name === 'Sign in' && session);
           }).map(({ name, icon, href }, index) => (
             <Link key={name} href={href}>
               <ListItem key={name} disablePadding>

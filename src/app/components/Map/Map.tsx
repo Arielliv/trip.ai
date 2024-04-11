@@ -3,6 +3,8 @@
 
 import React, { useState, useCallback, useEffect } from 'react';
 import { GoogleMap, Marker } from '@react-google-maps/api';
+import { useLocationContext } from '@/app/components/MyLocation/LocationDataContext';
+import { DataTestIds } from '@/app/constants';
 
 export interface MapMarker {
   id: string;
@@ -10,14 +12,8 @@ export interface MapMarker {
   lng: number;
 }
 
-export interface MapProps {
-  markers: MapMarker[];
-  focusMarker?: MapMarker;
-  center: { lat: number; lng: number };
-  zoom: number;
-}
-
-const Map = ({ markers, center, zoom, focusMarker }: MapProps) => {
+const Map = () => {
+  const { markers, mapCenter, zoom, currentMarker } = useLocationContext();
   const [map, setMap] = useState<google.maps.Map | null>(null);
 
   const onLoad = useCallback((mapInstance: google.maps.Map) => {
@@ -36,14 +32,14 @@ const Map = ({ markers, center, zoom, focusMarker }: MapProps) => {
   }, [map]);
 
   return (
-    <div style={{ height: '90vh', width: '100vw', position: 'relative' }}>
+    <div style={{ height: '100vh', width: '100vw', position: 'relative' }}>
       <GoogleMap
         mapContainerStyle={{ width: '100%', height: '100%' }}
         zoom={zoom}
-        center={center}
+        center={mapCenter}
         onLoad={onLoad}
         onUnmount={onUnmount}
-        data-testid="googleMap"
+        data-testid={DataTestIds.googleMap}
       >
         {markers.map((marker) => (
           <Marker
@@ -57,10 +53,12 @@ const Map = ({ markers, center, zoom, focusMarker }: MapProps) => {
             }}
             key={marker.id}
             position={{ lat: marker.lat, lng: marker.lng }}
-            data-testid="marker"
+            data-testid={DataTestIds.marker}
           />
         ))}
-        {focusMarker && <Marker position={{ lat: focusMarker.lat, lng: focusMarker.lng }} data-testid="focusMarker" />}
+        {currentMarker && (
+          <Marker position={{ lat: currentMarker.lat, lng: currentMarker.lng }} data-testid={DataTestIds.focusMarker} />
+        )}
       </GoogleMap>
     </div>
   );
