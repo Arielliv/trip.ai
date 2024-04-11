@@ -4,7 +4,7 @@ import { LocationType, Role, Visibility } from '@/models/constants';
 import { Address, Coordinate, Permission } from '@/models/shared/types';
 
 // Expanded to include more Google Maps data
-interface Location extends Document {
+export interface ILocation extends Document {
   trips: Types.ObjectId[];
   name: string; // Consider this for a human-friendly name, e.g., "Eiffel Tower"
   note: string;
@@ -53,7 +53,7 @@ const LocationSchema: Schema = new Schema({
   businessStatus: { type: String },
 });
 
-const Location = models.Location || model<Location>('Location', LocationSchema);
+const Location = models.Location || model<ILocation>('Location', LocationSchema);
 export default Location;
 
 /* v8 ignore stop */
