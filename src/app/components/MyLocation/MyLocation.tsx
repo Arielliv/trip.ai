@@ -4,7 +4,6 @@ import Map, { MapMarker } from '@/app/components/Map/Map';
 import LocationForm from '@/app/components/LocationForm/LocationForm';
 import React, { useState } from 'react';
 import { LoadScript } from '@react-google-maps/api';
-import { Button } from '@mui/material';
 
 const MyLocation = () => {
   const placesLibrary = ['places' as any];
