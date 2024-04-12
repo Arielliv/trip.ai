@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import SearchLocation from '@/app/components/SearchLocation/SearchLocation';
 import { Box, TextField, FormControl, InputLabel, Select, MenuItem, Switch, FormControlLabel } from '@mui/material';
+import Grid from '@mui/material/Unstable_Grid2';
 import { useLocationContext } from '@/app/components/MyLocation/LocationDataContext';
 
 const LocationForm = () => {
@@ -42,30 +43,39 @@ const LocationForm = () => {
 
   return (
     <Box sx={{ p: 2 }}>
-      <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        <SearchLocation onPlaceChange={onPlaceChange} onLoadAutocomplete={onLoadAutocomplete} />
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Grid container spacing={2} flexDirection="column">
+          <Grid xs={12}>
+            <SearchLocation onPlaceChange={onPlaceChange} onLoadAutocomplete={onLoadAutocomplete} />
+          </Grid>
+          <Grid xs={12}>
+            <TextField label="Location Name" variant="outlined" fullWidth {...register('locationName')} />
+          </Grid>
 
-        <TextField label="Location Name" variant="outlined" {...register('locationName')} />
-
-        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-          <FormControl fullWidth>
-            <InputLabel>Location Type</InputLabel>
-            <Select {...register('locationType')} label="Location Type" defaultValue="">
-              <MenuItem value="general">General</MenuItem>
-              <MenuItem value="hotel">Hotel</MenuItem>
-              <MenuItem value="restaurant">Restaurant</MenuItem>
-              {/* Add more location types as needed */}
-            </Select>
-          </FormControl>
-
-          <FormControlLabel control={<Switch {...register('privacy')} />} label={privacy ? 'Public' : 'Private'} />
-        </Box>
-
-        <TextField label="Note" variant="outlined" multiline rows={4} {...register('note')} />
-
-        <Button type="submit" variant="contained" disabled={isSubmitting}>
-          {isSubmitting ? <CircularProgress size={24} /> : 'Save'}
-        </Button>
+          <Grid xs={12} container spacing={2} alignItems="center">
+            <Grid xs={8}>
+              <FormControl fullWidth>
+                <InputLabel>Location Type</InputLabel>
+                <Select {...register('locationType')} label="Location Type" defaultValue="general" fullWidth>
+                  <MenuItem value="general">General</MenuItem>
+                  <MenuItem value="hotel">Hotel</MenuItem>
+                  <MenuItem value="restaurant">Restaurant</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid xs={4}>
+              <FormControlLabel control={<Switch {...register('privacy')} />} label={privacy ? 'Public' : 'Private'} />
+            </Grid>
+          </Grid>
+          <Grid xs={12}>
+            <TextField label="Note" variant="outlined" multiline rows={4} fullWidth {...register('note')} />
+          </Grid>
+          <Grid xs={12}>
+            <Button type="submit" variant="contained" fullWidth disabled={isSubmitting}>
+              {isSubmitting ? <CircularProgress size={24} /> : 'Save'}
+            </Button>
+          </Grid>
+        </Grid>
       </form>
     </Box>
   );

@@ -1,4 +1,4 @@
-import { Tab, Tabs } from '@mui/material';
+import { Box, Tab, Tabs } from '@mui/material';
 import LocationForm from '@/app/components/LocationForm/LocationForm';
 import React from 'react';
 import { TabPanel } from '@/app/components/TabPanel/TabPanel';
@@ -9,15 +9,15 @@ export const LocationTabs = () => {
     setSelectedTab(newValue);
   };
   return (
-    <>
+    <Box sx={{ width: '100%' }}>
       <Tabs variant="fullWidth" value={selectedTab} onChange={handleSelectTab} aria-label="Sidebar tabs">
         <Tab label="New location" value={'0'} />
-        <Tab label="My locations" />
+        <Tab label="Saved locations" />
       </Tabs>
       <TabPanel index={'0'} selectedTabIndex={selectedTab}>
         <LocationForm />
       </TabPanel>
       <TabPanel index={'1'} selectedTabIndex={selectedTab}></TabPanel>
-    </>
+    </Box>
   );
 };

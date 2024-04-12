@@ -1,7 +1,6 @@
 'use client';
 
 import Map from '@/app/components/Map/Map';
-import LocationForm from '@/app/components/LocationForm/LocationForm';
 import React from 'react';
 import { LoadScript } from '@react-google-maps/api';
 import { LocationDataProvider } from '@/app/components/MyLocation/LocationDataContext';
@@ -16,9 +15,7 @@ const MyLocation = () => {
     <LocationDataProvider>
       <Grid container sx={{ height: '100vh' }}>
         <Grid xs={3} sx={{ borderRight: 1, borderColor: 'divider' }}>
-          <Box sx={{ width: '100%' }}>
-            <LocationTabs />
-          </Box>
+          <LocationTabs />
         </Grid>
         <Grid xs={9} sx={{ overflow: 'hidden' }}>
           <Box sx={{ width: '100%', height: '100%' }}>
