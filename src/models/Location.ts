@@ -4,7 +4,7 @@ import { LocationType, Role, Visibility } from '@/models/constants';
 import { Address, Coordinate, Permission } from '@/models/shared/types';
 
 // Expanded to include more Google Maps data
-export interface ILocation extends Document {
+export interface ILocation {
   trips: Types.ObjectId[];
   name: string; // Consider this for a human-friendly name, e.g., "Eiffel Tower"
   note: string;
