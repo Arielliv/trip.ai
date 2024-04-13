@@ -19,6 +19,7 @@ export interface ILocation extends Document {
   permissions: Permission[];
   mapsUrl: string; // URL to the Google Maps page
   businessStatus: string; // Operational status of the business
+  imageUrl: string; // URL to the image of the location
 }
 
 const LocationSchema: Schema = new Schema({
@@ -51,6 +52,7 @@ const LocationSchema: Schema = new Schema({
   ],
   mapsUrl: { type: String },
   businessStatus: { type: String },
+  imageUrl: { type: String },
 });
 
 const Location = models.Location || model<ILocation>('Location', LocationSchema);
