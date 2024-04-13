@@ -2,10 +2,12 @@ import * as React from 'react';
 import { useJsApiLoader } from '@react-google-maps/api';
 import { CircularProgress } from '@mui/material';
 
+const placesLibrary = ['places' as any];
+
 export const GoogleMapLoader = ({ children }: React.PropsWithChildren) => {
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY || 'fallback_api_key_here',
-    libraries: ['places'],
+    libraries: placesLibrary,
   });
 
   if (loadError) {

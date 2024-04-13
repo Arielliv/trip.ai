@@ -20,12 +20,31 @@ export const POST = async (req: NextRequest) => {
   }
 };
 
-export const GET = async () => {
+export const GET = async (req: NextRequest) => {
+  const url = new URL(req.url);
+
+  const page = parseInt(url?.searchParams?.get('page') || '0', 10) || 0;
+  const limit = parseInt(url?.searchParams?.get('limit') || '0', 10) || 0;
+
   try {
     await dbConnect();
-    const locations = await Location.find();
-    return NextResponse.json(locations);
+
+    const locations = await Location.find()
+      .skip(page * limit)
+      .limit(limit);
+
+    // Optionally, get the total count of documents
+    const totalCount = await Location.countDocuments();
+
+    return NextResponse.json({
+      locations,
+      page,
+      limit,
+      totalCount,
+      totalPages: Math.ceil(totalCount / limit),
+    });
   } catch (error) {
-    return NextResponse.json({ error });
+    // @ts-ignore
+    return NextResponse.json({ error: error.message });
   }
 };
