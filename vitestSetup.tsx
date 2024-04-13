@@ -33,6 +33,7 @@ beforeAll(() => {
     Marker: vi.fn(() => <div data-testid="marker"></div>),
     LoadScript: vi.fn(({ children }) => <div data-testid="load-script">{children}</div>),
     Autocomplete: vi.fn(() => <div data-testid="autocomplete"></div>),
+    useJsApiLoader: vi.fn(() => ({ isLoaded: true })),
   }));
 });
 
