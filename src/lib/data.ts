@@ -14,3 +14,22 @@ export async function createLocation(newLocation: ILocation): Promise<ILocation>
   const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/locations`, newLocation);
   return res.data as ILocation;
 }
+
+export interface LocationPaginationResponse {
+  locations: ILocation[];
+  page: number;
+  limit: number;
+  totalCount: number;
+  totalPages: number;
+}
+
+export async function fetchLocations(page: number, limit: number = 10): Promise<LocationPaginationResponse> {
+  noStore();
+  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/locations`, {
+    params: {
+      page: page,
+      limit: limit,
+    },
+  });
+  return res.data as LocationPaginationResponse;
+}

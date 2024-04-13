@@ -4,3 +4,8 @@ export enum DataTestIds {
   focusMarker = 'focus-marker',
   marker = 'marker',
 }
+
+export enum MyLocationDataTestIds {
+  locationTabsContainer = 'location-tabs-container',
+  mapContainer = 'map-container',
+}
