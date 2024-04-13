@@ -64,30 +64,31 @@ const LocationForm = () => {
         user_id: new Types.ObjectId('615b1474edea400a9c3d83e4'),
         permissions: [],
         mapsUrl: '',
+        imageUrl: '',
         businessStatus: '',
         /*        trips: [new Types.ObjectId()],
-                                                                                                                                                        name: 'Eiffel Tower',
-                                                                                                                                                        note: 'Iconic landmark in Paris',
-                                                                                                                                                        type: LocationType.General,
-                                                                                                                                                        googlePlaceId: 'ChIJD7fiBh9u5kcRYJSMaMOCCwQ',
-                                                                                                                                                        formattedAddress: 'Champ de Mars, 5 Avenue Anatole France, 75007 Paris, France',
-                                                                                                                                                        placeTypes: ['tourist_attraction', 'point_of_interest', 'establishment'],
-                                                                                                                                                        coordinates: {
-                                                                                                                                                          latitude: 48.85837009999999,
-                                                                                                                                                          longitude: 2.2944813,
-                                                                                                                                                        },
-                                                                                                                                                        address: {
-                                                                                                                                                          street: 'Champ de Mars',
-                                                                                                                                                          city: 'Paris',
-                                                                                                                                                          state: 'Île-de-France',
-                                                                                                                                                          country: 'France',
-                                                                                                                                                          postalCode: '75007',
-                                                                                                                                                        },
-                                                                                                                                                        visibility: Visibility.Public,
-                                                                                                                                                        user_id: new Types.ObjectId(),
-                                                                                                                                                        permissions: [{ user_id: new Types.ObjectId(), role: Role.Owner }],
-                                                                                                                                                        mapsUrl: 'https://goo.gl/maps/teJjfHjWnVBnpx2B8',
-                                                                                                                                                        businessStatus: 'Operating',*/
+                                                                                                                                                                name: 'Eiffel Tower',
+                                                                                                                                                                note: 'Iconic landmark in Paris',
+                                                                                                                                                                type: LocationType.General,
+                                                                                                                                                                googlePlaceId: 'ChIJD7fiBh9u5kcRYJSMaMOCCwQ',
+                                                                                                                                                                formattedAddress: 'Champ de Mars, 5 Avenue Anatole France, 75007 Paris, France',
+                                                                                                                                                                placeTypes: ['tourist_attraction', 'point_of_interest', 'establishment'],
+                                                                                                                                                                coordinates: {
+                                                                                                                                                                  latitude: 48.85837009999999,
+                                                                                                                                                                  longitude: 2.2944813,
+                                                                                                                                                                },
+                                                                                                                                                                address: {
+                                                                                                                                                                  street: 'Champ de Mars',
+                                                                                                                                                                  city: 'Paris',
+                                                                                                                                                                  state: 'Île-de-France',
+                                                                                                                                                                  country: 'France',
+                                                                                                                                                                  postalCode: '75007',
+                                                                                                                                                                },
+                                                                                                                                                                visibility: Visibility.Public,
+                                                                                                                                                                user_id: new Types.ObjectId(),
+                                                                                                                                                                permissions: [{ user_id: new Types.ObjectId(), role: Role.Owner }],
+                                                                                                                                                                mapsUrl: 'https://goo.gl/maps/teJjfHjWnVBnpx2B8',
+                                                                                                                                                                businessStatus: 'Operating',*/
       };
       try {
         await createLocation(newLocation);
