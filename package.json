@@ -39,6 +39,7 @@
     "use-debounce": "^10.0.0"
   },
   "devDependencies": {
+    "@hookform/devtools": "^4.3.1",
     "@testing-library/jest-dom": "^6.4.2",
     "@testing-library/react": "^14.2.2",
     "@testing-library/user-event": "^14.5.2",

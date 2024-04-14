@@ -14,9 +14,7 @@ export const useFetchLocations = (initialPage = 0, limit = 10) => {
 
     setLoading(true);
     try {
-      console.log('Fetching locations...');
       const data = await fetchLocations(page, limit);
-      console.log('Fetched locations:', data.locations);
       setLocations((prev) => [...prev, ...data.locations]);
       setHasMore(data.locations.length === limit);
       setPage((prev) => prev + 1);

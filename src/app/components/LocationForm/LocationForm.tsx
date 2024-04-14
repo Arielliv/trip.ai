@@ -12,15 +12,8 @@ import { ILocation } from '@/models/Location';
 import { LocationType, Visibility } from '@/models/constants';
 import { createLocation } from '@/lib/data';
 import { Types } from 'mongoose';
-import { useLocationForm } from '@/app/hooks/useLocationForm';
-
-export interface LocationFormData {
-  locationName: string;
-  note: string;
-  locationType: string;
-  privacy: boolean;
-  place: google.maps.places.PlaceResult;
-}
+import { LocationFormData, useLocationForm } from '@/app/hooks/useLocationForm';
+import { DevTool } from '@hookform/devtools';
 
 const mapStringTypeToEnumType = (type: string) => {
   switch (type) {
@@ -66,29 +59,6 @@ const LocationForm = () => {
         mapsUrl: '',
         imageUrl: '',
         businessStatus: '',
-        /*        trips: [new Types.ObjectId()],
-                                                                                                                                                                name: 'Eiffel Tower',
-                                                                                                                                                                note: 'Iconic landmark in Paris',
-                                                                                                                                                                type: LocationType.General,
-                                                                                                                                                                googlePlaceId: 'ChIJD7fiBh9u5kcRYJSMaMOCCwQ',
-                                                                                                                                                                formattedAddress: 'Champ de Mars, 5 Avenue Anatole France, 75007 Paris, France',
-                                                                                                                                                                placeTypes: ['tourist_attraction', 'point_of_interest', 'establishment'],
-                                                                                                                                                                coordinates: {
-                                                                                                                                                                  latitude: 48.85837009999999,
-                                                                                                                                                                  longitude: 2.2944813,
-                                                                                                                                                                },
-                                                                                                                                                                address: {
-                                                                                                                                                                  street: 'Champ de Mars',
-                                                                                                                                                                  city: 'Paris',
-                                                                                                                                                                  state: 'Île-de-France',
-                                                                                                                                                                  country: 'France',
-                                                                                                                                                                  postalCode: '75007',
-                                                                                                                                                                },
-                                                                                                                                                                visibility: Visibility.Public,
-                                                                                                                                                                user_id: new Types.ObjectId(),
-                                                                                                                                                                permissions: [{ user_id: new Types.ObjectId(), role: Role.Owner }],
-                                                                                                                                                                mapsUrl: 'https://goo.gl/maps/teJjfHjWnVBnpx2B8',
-                                                                                                                                                                businessStatus: 'Operating',*/
       };
       try {
         await createLocation(newLocation);
@@ -102,6 +72,7 @@ const LocationForm = () => {
 
   return (
     <FormProvider {...formMethods}>
+      <DevTool id="new-location" placement="bottom-right" control={formMethods.control} />
       <Box sx={{ p: 2 }}>
         <form onSubmit={formMethods.handleSubmit(onSubmit)}>
           <Grid container spacing={2} flexDirection="column">

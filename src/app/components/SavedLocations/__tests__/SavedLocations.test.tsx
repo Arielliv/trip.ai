@@ -1,7 +1,5 @@
-import React from 'react';
-import { act, render, screen, waitFor } from '@testing-library/react';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
-import SavedLocations from '@/app/components/SavedLocations/SavedLocations';
+import { screen } from '@testing-library/react';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { SavedLocationsDriver } from '@/app/components/SavedLocations/__tests__/SavedLocations.driver';
 
 describe('SavedLocations', () => {
@@ -25,15 +23,11 @@ describe('SavedLocations', () => {
       totalPages: 1,
     });
 
-    render(<SavedLocations />);
+    await driver.created();
+    const Location = screen.getAllByTestId('saved-location');
 
-    setTimeout(async () => {
-      const Location = screen.getByTestId('saved-location');
-
-      expect(Location).toBe(true);
-      expect(await screen.findByText('Location 2')).toBeInTheDocument();
-      expect(screen.queryByText('No more locations')).not.toBeInTheDocument();
-    });
+    expect(Location).toHaveLength(2);
+    expect(await screen.findByText('Location 2')).toBeInTheDocument();
   });
 
   it('does not render locations if none are present in the database', async () => {
@@ -45,15 +39,11 @@ describe('SavedLocations', () => {
       totalPages: 0,
     });
 
-    render(<SavedLocations />);
-    setTimeout(async () => {
-      const loader = await screen.findByRole('progressbar');
-      expect(loader).toBeInTheDocument(); // Checks if the loader appears
+    await driver.created();
 
-      const message = await screen.findByText('No more locations');
-      expect(message).toBeInTheDocument(); // Should show end message
-      expect(screen.queryByText('Location 1')).not.toBeInTheDocument();
-      expect(screen.queryByText('Location 2')).not.toBeInTheDocument();
-    });
+    const message = await screen.findByText('No more locations');
+    expect(message).toBeInTheDocument(); // Should show end message
+    expect(screen.queryByText('Location 1')).not.toBeInTheDocument();
+    expect(screen.queryByText('Location 2')).not.toBeInTheDocument();
   });
 });
