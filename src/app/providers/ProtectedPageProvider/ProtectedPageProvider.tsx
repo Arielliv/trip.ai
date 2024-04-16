@@ -4,7 +4,7 @@ import React from 'react';
 import { useEffect } from 'react';
 import { redirect } from 'next/navigation';
 
-const ProtectedPage = ({ children }: React.PropsWithChildren) => {
+const ProtectedPageProvider = ({ children }: React.PropsWithChildren) => {
   const { data: session, status } = useSession();
   const isUser = !!session?.user;
 
@@ -22,4 +22,4 @@ const ProtectedPage = ({ children }: React.PropsWithChildren) => {
   return <div>Loading...</div>;
 };
 
-export default ProtectedPage;
+export default ProtectedPageProvider;

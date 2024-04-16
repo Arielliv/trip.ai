@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import MyLocation from '@/app/components/MyLocation/MyLocation';
-import { MyLocationDataTestIds } from '@/app/constants';
+import { MyLocationDataTestIds } from '@/app/components/constants/constants';
 
 describe('MyLocation', () => {
   it('renders correctly', () => {

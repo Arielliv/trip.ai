@@ -1,10 +1,10 @@
 // Use client directive for client-side components in Next.js
 'use client';
 
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, memo } from 'react';
 import { GoogleMap, Marker } from '@react-google-maps/api';
-import { useLocationContext } from '@/app/components/MyLocation/LocationDataContext';
-import { DataTestIds } from '@/app/constants';
+import { useLocationContext } from '@/app/providers/LocationDataProvider/LocationDataContext';
+import { DataTestIds } from '@/app/components/constants/constants';
 import { GoogleMapLoader } from '../GoogleMapLoader/GoogleMapLoader';
 
 export interface MapMarker {
@@ -63,4 +63,4 @@ const Map = () => {
   );
 };
 
-export default Map;
+export default memo(Map);

@@ -6,9 +6,11 @@ import SavedLocations from '@/app/components/SavedLocations/SavedLocations';
 
 export const LocationTabs = () => {
   const [selectedTab, setSelectedTab] = React.useState('0');
-  const handleSelectTab = (event: React.SyntheticEvent, newValue: string) => {
+
+  const handleSelectTab = (_event: React.SyntheticEvent, newValue: string) => {
     setSelectedTab(newValue);
   };
+
   return (
     <Box sx={{ width: '100%' }}>
       <Tabs variant="fullWidth" value={selectedTab} onChange={handleSelectTab} aria-label="Sidebar tabs">

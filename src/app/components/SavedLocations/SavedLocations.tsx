@@ -20,7 +20,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { useFetchLocations } from '@/app/hooks/useFetchLocations';
 
 const SavedLocations = () => {
-  const { locations, loadLocations, loading, hasMore, error } = useFetchLocations();
+  const { locations, loadLocations, loading, hasMore } = useFetchLocations();
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
 
@@ -40,7 +40,7 @@ const SavedLocations = () => {
     <InfiniteScroll
       dataLength={locations.length}
       next={loadLocations}
-      hasMore={hasMore}
+      hasMore={!loading && hasMore}
       loader={
         <Box display="flex" alignItems="center" justifyContent="center">
           <CircularProgress />

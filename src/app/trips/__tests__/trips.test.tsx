@@ -1,6 +1,5 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import Home from '@/app/page';
-import { DataTestIds } from '@/app/constants';
+import { render, screen } from '@testing-library/react';
+import { DataTestIds } from '@/app/components/constants/constants';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { tripsDriver } from '@/app/trips/__tests__/app.driver';
 import Trips from '@/app/trips/page';

@@ -1,12 +1,10 @@
 import Image from 'next/image';
 import styles from './page.module.css';
-import { DataTestIds } from '@/app/constants';
-import ProtectedPage from '@/app/components/ProtectedPage';
-import { fetchTrips } from '@/lib/data';
+import ProtectedPageProvider from '@/app/providers/ProtectedPageProvider/ProtectedPageProvider';
 
 const Home = async () => {
   return (
-    <ProtectedPage>
+    <ProtectedPageProvider>
       <main className={styles.main}>
         <div className={styles.description}>
           <p>
@@ -86,7 +84,7 @@ const Home = async () => {
           </a>
         </div>
       </main>
-    </ProtectedPage>
+    </ProtectedPageProvider>
   );
 };
 

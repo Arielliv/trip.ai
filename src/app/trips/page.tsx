@@ -1,12 +1,12 @@
-import ProtectedPage from '@/app/components/ProtectedPage';
+import ProtectedPageProvider from '@/app/providers/ProtectedPageProvider/ProtectedPageProvider';
 import { fetchTrips } from '@/lib/data';
-import { DataTestIds } from '@/app/constants';
+import { DataTestIds } from '@/app/components/constants/constants';
 
 const Trips = async () => {
   const trips = await fetchTrips();
 
   return (
-    <ProtectedPage>
+    <ProtectedPageProvider>
       <p>Trips Page</p>
       <>
         {trips?.map((trip) => (
@@ -15,7 +15,7 @@ const Trips = async () => {
           </p>
         ))}
       </>
-    </ProtectedPage>
+    </ProtectedPageProvider>
   );
 };
 

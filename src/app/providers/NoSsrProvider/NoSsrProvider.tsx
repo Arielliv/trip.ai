@@ -3,6 +3,6 @@
 import dynamic from 'next/dynamic';
 import React from 'react';
 
-const NoSsr = ({ children }: React.PropsWithChildren) => <>{children}</>;
+const NoSsrProvider = ({ children }: React.PropsWithChildren) => <>{children}</>;
 
-export default dynamic(() => Promise.resolve(NoSsr), { ssr: false });
+export default dynamic(() => Promise.resolve(NoSsrProvider), { ssr: false });

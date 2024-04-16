@@ -4,37 +4,38 @@ import React from 'react';
 import { Autocomplete } from '@react-google-maps/api';
 import TextField from '@mui/material/TextField';
 import { GoogleMapLoader } from '@/app/components/GoogleMapLoader/GoogleMapLoader';
-import { useController } from 'react-hook-form';
-import { useLocationForm } from '@/app/hooks/useLocationForm';
+import { usePlaceController } from '@/app/hooks/formControllers/usePlaceController';
 
 export interface SearchLocationProps {
-  onPlaceChange: () => void;
+  onAutoCompleteChange: (...event: any[]) => void;
+  onAutoCompleteEmpty: () => void;
   onLoadAutocomplete: (autocomplete: google.maps.places.Autocomplete) => void;
 }
 
-const SearchLocation = ({ onPlaceChange, onLoadAutocomplete }: SearchLocationProps) => {
-  const { control } = useLocationForm(); // Access form context
-  const {
-    field, // contains onChange, onBlur, value, ref
-    fieldState: { error },
-  } = useController({
-    name: 'place',
-    control,
-    rules: { required: 'Location is required' }, // Define rules here for validation
-    defaultValue: {}, // Default value for the field
-  });
+const SearchLocation = ({ onAutoCompleteChange, onLoadAutocomplete, onAutoCompleteEmpty }: SearchLocationProps) => {
+  const { error, ref } = usePlaceController();
+
+  const handleAutoCompleteOnChange = () => {
+    onAutoCompleteChange();
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.value === '') {
+      onAutoCompleteEmpty();
+    }
+  };
 
   return (
     <GoogleMapLoader>
-      <Autocomplete onPlaceChanged={onPlaceChange} onLoad={onLoadAutocomplete}>
+      <Autocomplete onPlaceChanged={handleAutoCompleteOnChange} onLoad={onLoadAutocomplete}>
         <TextField
-          {...field}
+          inputRef={ref}
           label="Search location"
           variant="outlined"
           fullWidth
+          onChange={handleChange}
           error={!!error}
           helperText={error ? error.message : ''}
-          inputRef={field.ref}
         />
       </Autocomplete>
     </GoogleMapLoader>

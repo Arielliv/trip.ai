@@ -1,22 +1,43 @@
 import { HttpStatusCode } from 'axios';
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
-import Location, { ILocation } from '@/models/Location';
+import Location, { ILocation, ILocationDto } from '@/models/Location';
+import { auth } from '@/auth';
 
 export const POST = async (req: NextRequest) => {
   try {
     await dbConnect();
-    const body: ILocation = await req.json();
-    if (body.name) {
-      const locations = await Location.create(body);
-      return NextResponse.json(
-        { locations, message: 'Your Location has been created' },
-        { status: HttpStatusCode.Created },
-      );
+
+    const session = await auth();
+
+    if (!session || !session.user || !session.user.email) {
+      return NextResponse.json({ message: 'Authentication required' }, { status: HttpStatusCode.Unauthorized });
     }
-    return NextResponse.json({ message: 'Location name is missing' }, { status: HttpStatusCode.BadRequest });
+
+    const user_id = session.user.id;
+    const locationData: ILocation = await req.json();
+
+    if (!locationData.name) {
+      return NextResponse.json({ message: 'Location name is missing' }, { status: HttpStatusCode.BadRequest });
+    }
+
+    const location: ILocationDto = await Location.create<ILocationDto>({ ...locationData, user_id });
+
+    return NextResponse.json(
+      {
+        location,
+        message: 'Your Location has been created',
+      },
+      { status: HttpStatusCode.Created },
+    );
   } catch (error) {
-    return NextResponse.json({ message: error }, { status: HttpStatusCode.BadRequest });
+    console.error('Failed to create location:', error);
+
+    return NextResponse.json(
+      // @ts-ignore
+      { message: 'Failed to create location', error: error.toString() },
+      { status: HttpStatusCode.InternalServerError },
+    );
   }
 };
 

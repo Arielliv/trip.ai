@@ -1,31 +1,39 @@
 // useLocationData.js
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import { MapMarker } from '@/app/components/Map/Map';
+import { usePlaceController } from '@/app/hooks/formControllers/usePlaceController';
 
-export interface LocationData {
+export interface LocationContextObject {
   markers: MapMarker[];
   mapCenter: { lat: number; lng: number };
   zoom: number;
+  place?: google.maps.places.PlaceResult | null;
   autocomplete: google.maps.places.Autocomplete | undefined;
-  place: google.maps.places.PlaceResult | {};
   currentMarker: MapMarker | undefined;
   onLoadAutocomplete: (autocomplete: google.maps.places.Autocomplete) => void;
-  onPlaceChange: () => void;
+  onAutoCompletePlaceChange: (onChange: (...event: any[]) => void) => void;
+  onAutoCompletePlaceEmpty: () => void;
 }
 
-export const useLocationData = (): LocationData => {
+export const useLocationData = (): LocationContextObject => {
   const [markers, setMarkers] = useState<MapMarker[]>([]);
   const [mapCenter, setMapCenter] = useState({ lat: -34.397, lng: 150.644 });
   const [zoom, setZoom] = useState(8);
   const [autocomplete, setAutocomplete] = useState<google.maps.places.Autocomplete>();
-  const [place, setPlace] = useState({});
   const [currentMarker, setCurrentMarker] = useState<MapMarker>();
+  const { onChange } = usePlaceController();
 
   const onLoadAutocomplete = (autocomplete: google.maps.places.Autocomplete) => {
     setAutocomplete(autocomplete);
   };
 
-  const onPlaceChange = useCallback(() => {
+  const onAutoCompletePlaceEmpty = () => {
+    setAutocomplete(undefined);
+    onChange(undefined);
+    setCurrentMarker(undefined);
+  };
+
+  const onAutoCompletePlaceChange = () => {
     if (autocomplete) {
       const place = autocomplete.getPlace();
       const location = place.geometry ? place.geometry.location : null;
@@ -40,7 +48,7 @@ export const useLocationData = (): LocationData => {
         };
 
         setMapCenter({ lat, lng });
-        setPlace(place);
+        onChange(place);
         setMarkers((prevMarkers) => [...prevMarkers, newMarker]);
         setCurrentMarker(newMarker);
         setZoom(15);
@@ -48,7 +56,16 @@ export const useLocationData = (): LocationData => {
     } else {
       console.log('Autocomplete is not loaded yet!');
     }
-  }, [autocomplete]);
+  };
 
-  return { markers, mapCenter, zoom, autocomplete, place, currentMarker, onLoadAutocomplete, onPlaceChange };
+  return {
+    markers,
+    mapCenter,
+    zoom,
+    autocomplete,
+    currentMarker,
+    onLoadAutocomplete,
+    onAutoCompletePlaceChange,
+    onAutoCompletePlaceEmpty,
+  };
 };

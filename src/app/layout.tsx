@@ -4,11 +4,11 @@ import './globals.css';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 import { ThemeProvider } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
-import SideNav from '@/app/components/SideNav';
+import SideNav from '@/app/components/SideNav/SideNav';
 import theme from '../../theme';
-import { NextAuthProvider } from './components/NextAuthProvider';
+import { NextAuthProvider } from '@/app/providers/NextAuthProvider/NextAuthProvider';
 import { auth } from '@/auth';
-import NoSsr from '@/app/components/NoSsr';
+import NoSsrProvider from '@/app/providers/NoSsrProvider/NoSsrProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -31,9 +31,9 @@ export default async function RootLayout({
           <NextAuthProvider session={session}>
             <ThemeProvider theme={theme}>
               <CssBaseline />
-              <NoSsr>
+              <NoSsrProvider>
                 <SideNav>{children}</SideNav>
-              </NoSsr>
+              </NoSsrProvider>
             </ThemeProvider>
           </NextAuthProvider>
         </AppRouterCacheProvider>

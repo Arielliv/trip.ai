@@ -1,7 +1,7 @@
 import React, { createContext, useContext } from 'react';
-import { LocationData, useLocationData } from '@/app/hooks/useLocationData';
+import { LocationContextObject, useLocationData } from '@/app/hooks/useLocationData';
 
-const defaultLocationData: LocationData = {
+const defaultLocationContextObject: LocationContextObject = {
   markers: [],
   mapCenter: { lat: -34.397, lng: 150.644 },
   zoom: 8,
@@ -9,10 +9,11 @@ const defaultLocationData: LocationData = {
   place: {},
   currentMarker: undefined,
   onLoadAutocomplete: () => {},
-  onPlaceChange: () => {},
+  onAutoCompletePlaceChange: () => {},
+  onAutoCompletePlaceEmpty: () => {},
 };
 // should be imported only for testing purposes
-export const LocationDataContext = createContext<LocationData>(defaultLocationData);
+export const LocationDataContext = createContext<LocationContextObject>(defaultLocationContextObject);
 
 export const LocationDataProvider = ({ children }: React.PropsWithChildren) => {
   const locationData = useLocationData();

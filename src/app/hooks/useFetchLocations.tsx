@@ -15,9 +15,9 @@ export const useFetchLocations = (initialPage = 0, limit = 10) => {
     setLoading(true);
     try {
       const data = await fetchLocations(page, limit);
-      setLocations((prev) => [...prev, ...data.locations]);
-      setHasMore(data.locations.length === limit);
+      setHasMore(data.locations.length < data.totalCount);
       setPage((prev) => prev + 1);
+      setLocations((prev) => [...prev, ...data.locations]);
     } catch (err) {
       // @ts-ignore
       setError(err.message);
@@ -25,7 +25,7 @@ export const useFetchLocations = (initialPage = 0, limit = 10) => {
     } finally {
       setLoading(false);
     }
-  }, [page, hasMore, loading, limit]);
+  }, [hasMore, limit, loading, page]);
 
   return { locations, loadLocations, hasMore, loading, error };
 };

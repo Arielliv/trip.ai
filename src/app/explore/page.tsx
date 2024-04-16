@@ -1,9 +1,9 @@
-import ProtectedPage from '@/app/components/ProtectedPage';
+import ProtectedPageProvider from '@/app/providers/ProtectedPageProvider/ProtectedPageProvider';
 
 export default function Page() {
   return (
-    <ProtectedPage>
+    <ProtectedPageProvider>
       <p>Explore Page</p>
-    </ProtectedPage>
+    </ProtectedPageProvider>
   );
 }

@@ -18,6 +18,15 @@ const nextConfig = {
     // Setup other custom Webpack configurations as needed
     return config;
   },
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/locations',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

@@ -8,6 +8,21 @@ export const authConfig = {
     signOut: '/signin',
   },
   callbacks: {
+    async jwt({ token, user }) {
+      // If it's the first time the JWT is created (user object exists), add the user ID
+      if (user?.id) {
+        token.uid = user.id;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      // Pass the user ID from the JWT to the session object
+      if (token.uid) {
+        // @ts-ignore
+        session.user.id = token.uid;
+      }
+      return session;
+    },
     authorized({ auth, request: { nextUrl } }) {
       const isLoggedIn = !!auth?.user;
 
