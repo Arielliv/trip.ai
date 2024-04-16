@@ -143,7 +143,7 @@ export default function SideNav({ children }: React.PropsWithChildren) {
               return false;
             }
             return !(name === 'Sign in' && session);
-          }).map(({ name, icon, href }, index) => (
+          }).map(({ name, icon, href }, _index) => (
             <Link key={name} href={href}>
               <ListItem key={name} disablePadding>
                 <ListItemButton selected={isSelected(href)}>
