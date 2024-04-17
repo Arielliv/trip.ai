@@ -23,7 +23,7 @@ describe('SavedLocations', () => {
       totalPages: 1,
     });
 
-    await driver.created();
+    await driver.created(mockLocations);
     const Location = screen.getAllByTestId('saved-location');
 
     expect(Location).toHaveLength(2);
@@ -39,7 +39,7 @@ describe('SavedLocations', () => {
       totalPages: 0,
     });
 
-    await driver.created();
+    await driver.created([]);
 
     const message = await screen.findByText('No more locations');
     expect(message).toBeInTheDocument(); // Should show end message

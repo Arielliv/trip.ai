@@ -15,7 +15,7 @@ export const useFetchLocations = (initialPage = 0, limit = 10) => {
     setLoading(true);
     try {
       const data = await fetchLocations(page, limit);
-      setHasMore(data.locations.length < data.totalCount);
+      setHasMore(data.locations.length === data.limit);
       setPage((prev) => prev + 1);
       setLocations((prev) => [...prev, ...data.locations]);
     } catch (err) {
@@ -27,5 +27,9 @@ export const useFetchLocations = (initialPage = 0, limit = 10) => {
     }
   }, [hasMore, limit, loading, page]);
 
-  return { locations, loadLocations, hasMore, loading, error };
+  const addLocation = (newLocation: ILocation) => {
+    setLocations((prevLocations) => [...prevLocations, newLocation]);
+  };
+
+  return { locations, loadLocations, hasMore, loading, error, addLocation };
 };

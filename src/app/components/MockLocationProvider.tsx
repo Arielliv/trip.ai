@@ -1,4 +1,5 @@
 // tests/utils/MockLocationProvider.js
+
 import { LocationDataContext } from '@/app/providers/LocationDataProvider/LocationDataContext';
 import React from 'react';
 

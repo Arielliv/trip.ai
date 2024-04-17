@@ -27,6 +27,7 @@ const nextConfig = {
       },
     ];
   },
+  // reactStrictMode: false // to not rendered twice
 };
 
 export default nextConfig;
