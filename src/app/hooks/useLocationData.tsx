@@ -12,10 +12,11 @@ export interface LocationContextObject {
   onLoadAutocomplete: (autocomplete: google.maps.places.Autocomplete) => void;
   onAutoCompletePlaceChange: (onChange: (...event: any[]) => void) => void;
   onAutoCompletePlaceEmpty: () => void;
+  handleFocusLocation: (coordinate: Omit<MapMarker, 'id'>) => void;
 }
 
 export const useLocationData = (): LocationContextObject => {
-  const [mapCenter, setMapCenter] = useState({ lat: -34.397, lng: 150.644 });
+  const [mapCenter, setMapCenter] = useState<Omit<MapMarker, 'id'>>({ lat: -34.397, lng: 150.644 });
   const [zoom, setZoom] = useState(8);
   const [autocomplete, setAutocomplete] = useState<google.maps.places.Autocomplete>();
   const [currentMarker, setCurrentMarker] = useState<MapMarker>();
@@ -55,6 +56,11 @@ export const useLocationData = (): LocationContextObject => {
     }
   };
 
+  const handleFocusLocation = (coordinate: Omit<MapMarker, 'id'>) => {
+    setMapCenter(coordinate);
+    setZoom(17);
+  };
+
   return {
     mapCenter,
     zoom,
@@ -63,5 +69,6 @@ export const useLocationData = (): LocationContextObject => {
     onLoadAutocomplete,
     onAutoCompletePlaceChange,
     onAutoCompletePlaceEmpty,
+    handleFocusLocation,
   };
 };
