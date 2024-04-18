@@ -10,7 +10,7 @@ import { NextAuthProvider } from '@/app/providers/NextAuthProvider/NextAuthProvi
 import { auth } from '@/auth';
 import NoSsrProvider from '@/app/providers/NoSsrProvider/NoSsrProvider';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ['latin'], display: 'swap' });
 
 export const metadata: Metadata = {
   title: 'Create Next App',

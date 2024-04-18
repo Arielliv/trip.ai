@@ -26,6 +26,8 @@ beforeAll(() => {
   }));
   vi.mock('next/navigation', () => ({
     redirect: vi.fn(),
+    usePathname: vi.fn(),
+    useSearchParams: vi.fn(),
     ...require('next-router-mock'),
   }));
   vi.mock('@react-google-maps/api', () => ({

@@ -21,7 +21,7 @@ export const LocationTabs = () => {
         <LocationForm />
       </TabPanel>
       <TabPanel index={'1'} selectedTabIndex={selectedTab}>
-        <SavedLocations />
+        <SavedLocations setSelectedTab={setSelectedTab} />
       </TabPanel>
     </Box>
   );
