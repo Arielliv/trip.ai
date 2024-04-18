@@ -1,7 +1,19 @@
 import { ILocation } from '@/models/Location';
-import { Visibility } from '@/models/constants';
+import { LocationType, Visibility } from '@/models/constants';
 import { LocationFormData } from '@/app/hooks/useLocationForm';
-import { mapStringTypeToEnumType } from '@/app/hooks/useOnFormSubmit';
+
+export const mapStringTypeToEnumType = (type: string) => {
+  switch (type) {
+    case 'general':
+      return LocationType.General;
+    case 'hotel':
+      return LocationType.Hotel;
+    case 'restaurant':
+      return LocationType.Restaurant;
+    default:
+      return LocationType.General;
+  }
+};
 
 export const mapLocationFormDataToLocationSchema = (locationFormData: LocationFormData): ILocation => {
   return {
@@ -40,7 +52,7 @@ export const mapLocationFormDataToLocationSchema = (locationFormData: LocationFo
     permissions: [],
     mapsUrl: locationFormData.place?.url,
     links: [locationFormData.place?.website!].filter((link) => link),
-    imageUrl: '',
+    imageUrl: locationFormData.place?.photos?.[0]?.getUrl({ maxWidth: 1000, maxHeight: 1000 }) ?? '',
   };
 };
 

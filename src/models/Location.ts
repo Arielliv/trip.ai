@@ -19,7 +19,7 @@ export interface ILocation {
   mapsUrl?: string;
   links?: string[];
   businessStatus?: string;
-  imageUrl: string;
+  imageUrl?: string;
 }
 
 export interface ILocationDto {
@@ -44,6 +44,7 @@ export interface ILocationDto {
 
 const LocationSchema: Schema = new Schema({
   trips: [{ type: Types.ObjectId, ref: 'Trip' }],
+  name: { type: String, required: true },
   googleName: { type: String, required: true }, // Added
   note: { type: String },
   type: { type: String, enum: Object.values(LocationType), required: true },

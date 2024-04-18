@@ -1,32 +1,21 @@
-import { render, screen } from '@testing-library/react';
-import { describe, expect, it } from 'vitest';
-import Map from '@/app/components/Map/Map';
-import { MockLocationProvider } from './MockLocationProvider';
+import { screen } from '@testing-library/react';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { MapDriver } from '@/app/components/Map/__tests__/Map.driver';
 
 describe('Map', () => {
-  const focusMarker = { id: '1', lat: 0, lng: 0 };
-  const value = {
-    markers: [],
-    mapCenter: { lat: 1, lng: 1 },
-    zoom: 15,
-    currentMarker: focusMarker,
-  };
+  let driver: MapDriver;
+
+  beforeEach(() => {
+    driver = new MapDriver();
+  });
 
   it('renders correctly', () => {
-    render(
-      <MockLocationProvider value={value}>
-        <Map />
-      </MockLocationProvider>,
-    );
+    driver.created([]);
     expect(screen.getByTestId('google-map')).toBeInTheDocument();
   });
 
   it('renders a map and no marker', () => {
-    render(
-      <MockLocationProvider value={{ ...value, markers: [], currentMarker: undefined }}>
-        <Map />
-      </MockLocationProvider>,
-    );
+    driver.created([]);
 
     expect(screen.getByTestId('google-map')).toBeInTheDocument();
     expect(screen.queryByTestId('marker')).not.toBeInTheDocument();
@@ -42,15 +31,12 @@ describe('Map', () => {
         // Mock other `google.maps` objects as needed for your tests
       },
     };
-    const markers = [{ id: '2', lat: 3, lng: 3 }];
-    render(
-      <MockLocationProvider value={{ ...value, markers }}>
-        <Map />
-      </MockLocationProvider>,
-    );
+    const markers = [{ id: '2', coordinates: { latitude: 3, longitude: 3 } }];
+
+    driver.created(markers);
 
     expect(screen.getByTestId('google-map')).toBeInTheDocument();
     const markersElements = screen.getAllByTestId('marker');
-    expect(markers).toHaveLength(markers.length);
+    expect(markersElements).toHaveLength(markers.length);
   });
 });

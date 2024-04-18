@@ -1,43 +1,22 @@
 'use client';
-import React, { useState, useEffect } from 'react';
-import {
-  CircularProgress,
-  List,
-  ListItem,
-  Card,
-  CardMedia,
-  CardContent,
-  CardActions,
-  Button,
-  IconButton,
-  Typography,
-  Menu,
-  MenuItem,
-  Box,
-} from '@mui/material';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import React from 'react';
+import { CircularProgress, List, ListItem, Box } from '@mui/material';
+
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { useFetchLocations } from '@/app/hooks/useFetchLocations';
+import { useLocationContext } from '@/app/providers/LocationDataProvider/LocationDataContext';
+
+import { LocationCard } from '@/app/components/LocationCard';
 
 const SavedLocations = () => {
-  const { locations, loadLocations, loading, hasMore } = useFetchLocations();
-  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const open = Boolean(anchorEl);
+  const { locations, loadLocations, loading, hasMore } = useLocationContext();
 
-  useEffect(() => {
-    void loadLocations();
-  }, [loadLocations]);
-
-  const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-  };
+  const handleEdit = () => console.log('Edit action');
+  const handleDelete = () => console.log('Edit action');
 
   return (
     <InfiniteScroll
+      height={'90vh'}
+      scrollableTarget="locationScrollableContiner"
       dataLength={locations.length}
       next={loadLocations}
       hasMore={!loading && hasMore}
@@ -50,26 +29,8 @@ const SavedLocations = () => {
     >
       <List>
         {locations.map((location, index) => (
-          <ListItem key={index} data-testid="saved-location">
-            <Card sx={{ display: 'flex', width: '100%' }}>
-              <CardMedia component="img" sx={{ width: 151 }} image={location.imageUrl} alt="Location image" />
-              <CardContent sx={{ flex: '1 0 auto' }}>
-                <Typography variant="h5" component="div">
-                  {location.name}
-                </Typography>
-              </CardContent>
-              <CardActions>
-                <Button size="small">Edit</Button>
-                <Button size="small">Delete</Button>
-                <IconButton onClick={handleMenuClick}>
-                  <MoreVertIcon />
-                </IconButton>
-                <Menu anchorEl={anchorEl} open={open} onClose={handleMenuClose}>
-                  <MenuItem onClick={handleMenuClose}>Action 1</MenuItem>
-                  <MenuItem onClick={handleMenuClose}>Action 2</MenuItem>
-                </Menu>
-              </CardActions>
-            </Card>
+          <ListItem key={`${location.googlePlaceId}-${index}`} data-testid="saved-location">
+            <LocationCard location={location} onEdit={handleEdit} onDelete={handleDelete} />
           </ListItem>
         ))}
       </List>

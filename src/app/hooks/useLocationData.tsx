@@ -4,7 +4,6 @@ import { MapMarker } from '@/app/components/Map/Map';
 import { usePlaceController } from '@/app/hooks/formControllers/usePlaceController';
 
 export interface LocationContextObject {
-  markers: MapMarker[];
   mapCenter: { lat: number; lng: number };
   zoom: number;
   place?: google.maps.places.PlaceResult | null;
@@ -16,7 +15,6 @@ export interface LocationContextObject {
 }
 
 export const useLocationData = (): LocationContextObject => {
-  const [markers, setMarkers] = useState<MapMarker[]>([]);
   const [mapCenter, setMapCenter] = useState({ lat: -34.397, lng: 150.644 });
   const [zoom, setZoom] = useState(8);
   const [autocomplete, setAutocomplete] = useState<google.maps.places.Autocomplete>();
@@ -49,7 +47,6 @@ export const useLocationData = (): LocationContextObject => {
 
         setMapCenter({ lat, lng });
         onChange(place);
-        setMarkers((prevMarkers) => [...prevMarkers, newMarker]);
         setCurrentMarker(newMarker);
         setZoom(15);
       }
@@ -59,7 +56,6 @@ export const useLocationData = (): LocationContextObject => {
   };
 
   return {
-    markers,
     mapCenter,
     zoom,
     autocomplete,

@@ -6,7 +6,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 import SearchLocation from '@/app/components/SearchLocation/SearchLocation';
 import { Box, FormControl, FormControlLabel, InputLabel, MenuItem, Select, Switch, TextField } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
-import { useLocationContext } from '@/app/providers/LocationDataProvider/LocationDataContext';
 import { useFormContext } from 'react-hook-form';
 import { useLocationNameController } from '@/app/hooks/formControllers/useLocationNameController';
 import { useOnFormSubmit } from '@/app/hooks/useOnFormSubmit';
@@ -14,15 +13,16 @@ import { useLocationTypeController } from '@/app/hooks/formControllers/useLocati
 import { useLocationPrivacyController } from '@/app/hooks/formControllers/useLocationPrivacy';
 import { useLocationNoteController } from '@/app/hooks/formControllers/useLocationNote';
 import { LocationFormData } from '@/app/hooks/useLocationForm';
+import { useLocationContext } from '@/app/providers/LocationDataProvider/LocationDataContext';
 
 const LocationForm = () => {
-  const { onAutoCompletePlaceChange, onLoadAutocomplete, onAutoCompletePlaceEmpty } = useLocationContext();
+  const { onAutoCompletePlaceChange, onLoadAutocomplete, onAutoCompletePlaceEmpty, addLocation } = useLocationContext();
   const { watch, handleSubmit, formState } = useFormContext<LocationFormData>();
   const { field: locationNameField, error: locationNameError } = useLocationNameController();
   const { field: locationTypeField } = useLocationTypeController();
   const { field: privacyField } = useLocationPrivacyController();
   const { field: noteField } = useLocationNoteController();
-  const { onSubmit } = useOnFormSubmit();
+  const { onSubmit } = useOnFormSubmit(addLocation);
 
   const privacy = watch('privacy');
 

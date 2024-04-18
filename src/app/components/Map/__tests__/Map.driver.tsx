@@ -1,23 +1,23 @@
 import { fetchLocations, LocationPaginationResponse } from '@/lib/data';
 import { vi } from 'vitest';
 import { act, render } from '@testing-library/react';
-import SavedLocations from '@/app/components/SavedLocations/SavedLocations';
 import React from 'react';
 import { MockLocationProvider } from '../../MockLocationProvider';
-import { ILocation } from '@/models/Location';
+import Map from '@/app/components/Map/Map';
 
-export class SavedLocationsDriver {
-  async created(locations: Partial<ILocation>[]) {
+export class MapDriver {
+  async created(locations: any[]) {
+    const focusMarker = { id: '1', lat: 0, lng: 0 };
     const value = {
-      markers: [],
       mapCenter: { lat: 1, lng: 1 },
       zoom: 15,
       currentMarker: null,
-      locations,
+      locations: locations ? locations : [],
+      focusMarker,
     };
     render(
       <MockLocationProvider value={value}>
-        <SavedLocations />
+        <Map />
       </MockLocationProvider>,
     );
     await act(vi.runAllTimers);
