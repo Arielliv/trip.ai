@@ -1,19 +1,18 @@
 'use client';
 import React, { useCallback } from 'react';
 import { CircularProgress, List, ListItem, Box } from '@mui/material';
-
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useLocationContext } from '@/app/providers/LocationDataProvider/LocationDataContext';
-
 import { LocationCard } from '@/app/components/LocationCard';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { MapMarker } from '@/app/components/Map/Map';
 
 export interface SavedLocationsProps {
   setSelectedTab: (tab: string) => void;
 }
 
 const SavedLocations = ({ setSelectedTab }: SavedLocationsProps) => {
-  const { locations, loadLocations, loading, hasMore } = useLocationContext();
+  const { locations, loadLocations, loading, hasMore, handleFocusLocation } = useLocationContext();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -34,6 +33,7 @@ const SavedLocations = ({ setSelectedTab }: SavedLocationsProps) => {
   };
 
   const handleDelete = () => console.log('Edit action');
+  const handleSelect = (coordinate: Omit<MapMarker, 'id'>) => handleFocusLocation(coordinate);
 
   return (
     <InfiniteScroll
@@ -52,7 +52,7 @@ const SavedLocations = ({ setSelectedTab }: SavedLocationsProps) => {
       <List>
         {locations.map((location, index) => (
           <ListItem key={`${location.googlePlaceId}-${index}`} data-testid="saved-location">
-            <LocationCard location={location} onEdit={handleEdit} onDelete={handleDelete} />
+            <LocationCard location={location} onEdit={handleEdit} onDelete={handleDelete} onSelect={handleSelect} />
           </ListItem>
         ))}
       </List>

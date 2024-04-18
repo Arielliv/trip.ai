@@ -15,14 +15,17 @@ import {
 import Edit from '@mui/icons-material/Edit';
 import Delete from '@mui/icons-material/Delete';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { MapMarker } from '@/app/components/Map/Map';
 
 export interface LocationCardProps {
   location: ILocation;
   onEdit: (id: string) => void;
   onDelete: () => void;
+  onSelect: (coordinate: Omit<MapMarker, 'id'>) => void;
 }
 
-export function LocationCard({ location, onEdit, onDelete }: LocationCardProps) {
+export function LocationCard({ location, onEdit, onDelete, onSelect }: LocationCardProps) {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
 
@@ -32,6 +35,10 @@ export function LocationCard({ location, onEdit, onDelete }: LocationCardProps) 
 
   const handleMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleSelect = () => {
+    onSelect({ lat: location.coordinates.latitude, lng: location.coordinates.longitude });
   };
 
   const handleOnEditLocation = () => {
@@ -46,8 +53,8 @@ export function LocationCard({ location, onEdit, onDelete }: LocationCardProps) 
         flexDirection: 'row',
         // padding: 1,
         borderRadius: '10px',
-        maxWidth: 300,
-        minWidth: 280,
+        width: '100%',
+        maxHeight: 150,
       }}
     >
       <CardMedia
@@ -90,13 +97,18 @@ export function LocationCard({ location, onEdit, onDelete }: LocationCardProps) 
           {location.note}
         </Typography>
         <Divider light sx={{ mt: 1, mb: 1 }} />
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignContent: 'flex-end', alignSelf: 'flex-end' }}>
-          <IconButton sx={{ color: 'text.secondary' }} onClick={handleOnEditLocation}>
-            <Edit />
-          </IconButton>
-          <IconButton sx={{ color: 'text.secondary', marginLeft: 1 }} onClick={onDelete}>
-            <Delete />
-          </IconButton>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignContent: 'flex-end', alignSelf: 'flex-end' }}>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
+            <IconButton sx={{ color: 'text.secondary' }} onClick={handleOnEditLocation}>
+              <Edit />
+            </IconButton>
+            <IconButton sx={{ color: 'text.secondary', marginLeft: 1 }} onClick={onDelete}>
+              <Delete />
+            </IconButton>
+            <IconButton sx={{ color: 'text.secondary', marginLeft: 1 }} onClick={handleSelect}>
+              <VisibilityIcon />
+            </IconButton>
+          </Box>
           <IconButton onClick={handleMenuClick}>
             <MoreVertIcon />
           </IconButton>
