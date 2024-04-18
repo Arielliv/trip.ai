@@ -4,6 +4,7 @@ import { LocationType, Role, Visibility } from '@/models/constants';
 import { Address, Coordinate, Permission } from '@/models/shared/types';
 
 export interface ILocation {
+  _id: string;
   trips: Types.ObjectId[];
   name: string;
   googleName: string;

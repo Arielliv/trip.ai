@@ -8,10 +8,12 @@ import { useLocationContext } from '@/app/providers/LocationDataProvider/Locatio
 import { LocationCard } from '@/app/components/LocationCard';
 
 const SavedLocations = () => {
-  const { locations, loadLocations, loading, hasMore } = useLocationContext();
+  const { locations, loadLocations, loading, hasMore, removeLocation } = useLocationContext();
 
   const handleEdit = () => console.log('Edit action');
-  const handleDelete = () => console.log('Edit action');
+  const handleDelete = (id: string) => {
+    removeLocation(id);
+  };
 
   return (
     <InfiniteScroll

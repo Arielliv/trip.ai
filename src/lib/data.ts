@@ -15,6 +15,10 @@ export async function createLocation(newLocation: ILocation): Promise<ILocation>
   return res.data as ILocation;
 }
 
+export async function deleteLocation(locationId: string) {
+  return axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/location/${locationId}`);
+}
+
 export interface LocationPaginationResponse {
   locations: ILocation[];
   page: number;

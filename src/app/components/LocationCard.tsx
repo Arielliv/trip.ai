@@ -19,7 +19,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 export interface LocationCardProps {
   location: ILocation;
   onEdit: () => void;
-  onDelete: () => void;
+  onDelete: (id: string) => void;
 }
 export function LocationCard({ location, onEdit, onDelete }: LocationCardProps) {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
@@ -31,6 +31,10 @@ export function LocationCard({ location, onEdit, onDelete }: LocationCardProps) 
 
   const handleMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleDelete = () => {
+    onDelete(location._id);
   };
 
   return (
@@ -89,7 +93,7 @@ export function LocationCard({ location, onEdit, onDelete }: LocationCardProps) 
           <IconButton sx={{ color: 'text.secondary' }} onClick={onEdit}>
             <Edit />
           </IconButton>
-          <IconButton sx={{ color: 'text.secondary', marginLeft: 1 }} onClick={onDelete}>
+          <IconButton sx={{ color: 'text.secondary', marginLeft: 1 }} onClick={handleDelete}>
             <Delete />
           </IconButton>
           <IconButton onClick={handleMenuClick}>
