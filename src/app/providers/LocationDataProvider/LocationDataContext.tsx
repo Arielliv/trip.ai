@@ -12,6 +12,7 @@ const defaultLocationContextObject: LocationContextObject = {
   onLoadAutocomplete: () => {},
   onAutoCompletePlaceChange: () => {},
   onAutoCompletePlaceEmpty: () => {},
+  handleFocusLocation: (_coordinate) => {},
 };
 
 export interface SavedLocationsContextObject {

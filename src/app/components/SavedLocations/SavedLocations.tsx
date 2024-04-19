@@ -1,19 +1,19 @@
 'use client';
 import React from 'react';
 import { CircularProgress, List, ListItem, Box } from '@mui/material';
-
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { useLocationContext } from '@/app/providers/LocationDataProvider/LocationDataContext';
-
 import { LocationCard } from '@/app/components/LocationCard';
+import { MapMarker } from '@/app/components/Map/Map';
 
 const SavedLocations = () => {
-  const { locations, loadLocations, loading, hasMore, removeLocation } = useLocationContext();
+  const { locations, loadLocations, loading, hasMore, handleFocusLocation, removeLocation } = useLocationContext();
 
   const handleEdit = () => console.log('Edit action');
   const handleDelete = (id: string) => {
     removeLocation(id);
   };
+  const handleSelect = (coordinate: Omit<MapMarker, 'id'>) => handleFocusLocation(coordinate);
 
   return (
     <InfiniteScroll
@@ -32,7 +32,7 @@ const SavedLocations = () => {
       <List>
         {locations.map((location, index) => (
           <ListItem key={`${location.googlePlaceId}-${index}`} data-testid="saved-location">
-            <LocationCard location={location} onEdit={handleEdit} onDelete={handleDelete} />
+            <LocationCard location={location} onEdit={handleEdit} onDelete={handleDelete} onSelect={handleSelect} />
           </ListItem>
         ))}
       </List>
