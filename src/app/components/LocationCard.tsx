@@ -20,10 +20,11 @@ import { MapMarker } from '@/app/components/Map/Map';
 
 export interface LocationCardProps {
   location: ILocation;
-  onEdit: () => void;
+  onEdit: (id: string) => void;
   onDelete: () => void;
   onSelect: (coordinate: Omit<MapMarker, 'id'>) => void;
 }
+
 export function LocationCard({ location, onEdit, onDelete, onSelect }: LocationCardProps) {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
@@ -38,6 +39,10 @@ export function LocationCard({ location, onEdit, onDelete, onSelect }: LocationC
 
   const handleSelect = () => {
     onSelect({ lat: location.coordinates.latitude, lng: location.coordinates.longitude });
+  };
+
+  const handleOnEditLocation = () => {
+    onEdit(location._id!);
   };
 
   return (
@@ -94,7 +99,7 @@ export function LocationCard({ location, onEdit, onDelete, onSelect }: LocationC
         <Divider light sx={{ mt: 1, mb: 1 }} />
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignContent: 'flex-end', alignSelf: 'flex-end' }}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
-            <IconButton sx={{ color: 'text.secondary' }} onClick={onEdit}>
+            <IconButton sx={{ color: 'text.secondary' }} onClick={handleOnEditLocation}>
               <Edit />
             </IconButton>
             <IconButton sx={{ color: 'text.secondary', marginLeft: 1 }} onClick={onDelete}>
