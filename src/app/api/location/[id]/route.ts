@@ -38,9 +38,8 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
 
 export async function DELETE(_: NextRequest, { params }: { params: { id: string } }) {
   try {
-    console.log('Going to delete location with id:' + params.id);
     const objectIdToDelete = new ObjectId(params.id);
-    console.log('Trying to delete location object form db:', objectIdToDelete);
+    console.log('Trying to delete a location form db:', objectIdToDelete);
     await dbConnect();
     const location = await Location.findById(objectIdToDelete);
     if (location) {
@@ -49,7 +48,7 @@ export async function DELETE(_: NextRequest, { params }: { params: { id: string 
     }
     return NextResponse.json({ message: `Location ${params.id} not found` }, { status: HttpStatusCode.NotFound });
   } catch (error) {
-    console.log('Got error trying to delete location file', error);
+    console.error('Got an error trying to delete location file', error);
     return NextResponse.json({ message: error }, { status: HttpStatusCode.BadRequest });
   }
 }

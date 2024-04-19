@@ -1,7 +1,6 @@
 import { useState, useCallback } from 'react';
-import { fetchLocations } from '@/lib/data';
+import { fetchLocations, deleteLocation } from '@/lib/data';
 import { ILocation } from '@/models/Location';
-import { deleteLocation } from '@/src/lib/data';
 
 export const useFetchLocations = (initialPage = 0, limit = 10) => {
   const [locations, setLocations] = useState<ILocation[]>([]);
