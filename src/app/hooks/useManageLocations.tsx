@@ -9,6 +9,7 @@ export interface LocationsManagerContextObject {
   isEditMode: boolean;
   loading: boolean;
   hasMore: boolean;
+  removeLocation: (id: string) => void;
 }
 
 export const useManageLocations = (initialPage = 0, limit = 10) => {
@@ -46,7 +47,6 @@ export const useManageLocations = (initialPage = 0, limit = 10) => {
     setLocations(filterLocations);
   };
 
-  return { locations, loadLocations, hasMore, loading, error, addLocation, removeLocation };
   const getLocationById = useCallback(
     (id: string | null): ILocation | undefined => {
       if (!id) return;
