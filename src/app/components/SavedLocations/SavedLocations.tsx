@@ -2,10 +2,10 @@
 import React, { useCallback } from 'react';
 import { CircularProgress, List, ListItem, Box } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { useLocationContext } from '@/app/providers/LocationDataProvider/LocationDataContext';
 import { LocationCard } from '@/app/components/LocationCard';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { MapMarker } from '@/app/components/Map/Map';
+import { useLocationContext } from '@/app/providers/LocationContextFormProvider/LocationContextFormProvider';
 
 export interface SavedLocationsProps {
   setSelectedTab: (tab: string) => void;

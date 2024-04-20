@@ -1,8 +1,8 @@
 import { LocationFormData, useLocationForm } from '@/app/hooks/useLocationForm';
 import { createLocation } from '@/lib/data';
 import { SubmitHandler } from 'react-hook-form';
-import { mapLocationFormDataToLocationSchema } from '@/models/mappers/mapGoogleDataToILocation';
 import { ILocation } from '@/models/Location';
+import { mapLocationFormDataToLocationSchema } from '@/models/mappers/mapLocationFormDataToLocationSchema';
 
 export const useOnFormSubmit = (addLocation: (newLocation: ILocation) => void) => {
   const { formState } = useLocationForm();

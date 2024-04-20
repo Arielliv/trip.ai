@@ -17,7 +17,7 @@ export class SavedLocationsDriver {
     };
     render(
       <MockLocationProvider value={value}>
-        <SavedLocations />
+        <SavedLocations setSelectedTab={() => {}} />
       </MockLocationProvider>,
     );
     await act(vi.runAllTimers);
