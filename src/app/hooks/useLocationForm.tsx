@@ -15,8 +15,8 @@ export const defaultLocationFormData = {
   place: null, // initialize the place
 };
 
-export const useLocationForm = () => {
+export const useLocationForm = (editableLocation?: LocationFormData) => {
   return useForm<LocationFormData>({
-    defaultValues: defaultLocationFormData,
+    defaultValues: editableLocation ? editableLocation : defaultLocationFormData,
   });
 };

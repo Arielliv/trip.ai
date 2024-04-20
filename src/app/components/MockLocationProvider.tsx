@@ -1,6 +1,6 @@
 // tests/utils/MockLocationProvider.js
 import React from 'react';
-import { LocationDataContext } from '../providers/LocationFormProvider/LocationContextFormProvider';
+import { LocationDataContext } from '@/app/providers/LocationContextFormProvider/LocationContextFormProvider';
 
 export const MockLocationProvider = ({ children, value }: React.PropsWithChildren & any) => {
   return <LocationDataContext.Provider value={value}>{children}</LocationDataContext.Provider>;

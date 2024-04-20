@@ -13,7 +13,7 @@ import { useLocationTypeController } from '@/app/hooks/formControllers/useLocati
 import { useLocationPrivacyController } from '@/app/hooks/formControllers/useLocationPrivacy';
 import { useLocationNoteController } from '@/app/hooks/formControllers/useLocationNote';
 import { LocationFormData } from '@/app/hooks/useLocationForm';
-import { useLocationContext } from '@/app/providers/LocationFormProvider/LocationContextFormProvider';
+import { useLocationContext } from '@/app/providers/LocationContextFormProvider/LocationContextFormProvider';
 import { usePlaceController } from '@/app/hooks/formControllers/usePlaceController';
 
 const LocationForm = () => {

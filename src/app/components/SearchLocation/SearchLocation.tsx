@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Autocomplete } from '@react-google-maps/api';
 import TextField from '@mui/material/TextField';
 import { GoogleMapLoader } from '@/app/components/GoogleMapLoader/GoogleMapLoader';
@@ -13,23 +13,37 @@ export interface SearchLocationProps {
 }
 
 const SearchLocation = ({ onAutoCompleteChange, onLoadAutocomplete, onAutoCompleteEmpty }: SearchLocationProps) => {
-  const { error, ref } = usePlaceController();
+  const { error, ref, isDirty, value } = usePlaceController();
+  const [inputValue, setInputValue] = useState('');
+
+  useEffect(() => {
+    if (!isDirty && value?.formatted_address) {
+      setInputValue(value.formatted_address);
+      onAutoCompleteChange();
+    }
+  }, [value?.formatted_address, onAutoCompleteChange, isDirty]);
 
   const handleAutoCompleteOnChange = () => {
     onAutoCompleteChange();
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(event.target.value);
     if (event.target.value === '') {
       onAutoCompleteEmpty();
     }
   };
 
+  const handleAutoCompleteLoad = (autocomplete: google.maps.places.Autocomplete) => {
+    onLoadAutocomplete(autocomplete);
+  };
+
   return (
     <GoogleMapLoader>
-      <Autocomplete onPlaceChanged={handleAutoCompleteOnChange} onLoad={onLoadAutocomplete}>
+      <Autocomplete onPlaceChanged={handleAutoCompleteOnChange} onLoad={handleAutoCompleteLoad}>
         <TextField
           inputRef={ref}
+          value={inputValue} // Bind TextField value to state
           label="Search location"
           variant="outlined"
           fullWidth

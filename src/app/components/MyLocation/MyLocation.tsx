@@ -6,7 +6,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { Box } from '@mui/material';
 import { LocationTabs } from '@/app/components/LocationTabs/LocationTabs';
 import { MyLocationDataTestIds } from '@/app/components/constants/constants';
-import { LocationContextFormProvider } from '../../providers/LocationFormProvider/LocationContextFormProvider';
+import { LocationContextFormProvider } from '@/app/providers/LocationContextFormProvider/LocationContextFormProvider';
 
 const MyLocation = () => {
   return (

@@ -12,9 +12,13 @@ export interface LocationContextObject {
   onAutoCompletePlaceChange: (onChange: (...event: any[]) => void) => void;
   onAutoCompletePlaceEmpty: (onChange: (...event: any[]) => void) => void;
   handleFocusLocation: (coordinate: Omit<MapMarker, 'id'>) => void;
+  handleFocusEditLocation: (mapMarker: MapMarker, zoomValue: number) => void;
+  setMap: (map: google.maps.Map | null) => void;
+  map: google.maps.Map | null;
 }
 
 export const useLocationData = (): LocationContextObject => {
+  const [map, setMap] = useState<google.maps.Map | null>(null);
   const [mapCenter, setMapCenter] = useState<Omit<MapMarker, 'id'>>({ lat: -34.397, lng: 150.644 });
   const [zoom, setZoom] = useState(8);
   const [autocomplete, setAutocomplete] = useState<google.maps.places.Autocomplete>();
@@ -33,25 +37,32 @@ export const useLocationData = (): LocationContextObject => {
   const onAutoCompletePlaceChange = (onChange: (...event: any[]) => void) => {
     if (autocomplete) {
       const place = autocomplete.getPlace();
+      if (!place) {
+        return;
+      }
       const location = place.geometry ? place.geometry.location : null;
 
       if (location) {
         const lat = location.lat();
         const lng = location.lng();
-        const newMarker = {
+        const newMarker: MapMarker = {
           id: place.place_id || 'tempid',
           lat,
           lng,
         };
+        handleFocusEditLocation(newMarker, 15);
 
-        setMapCenter({ lat, lng });
         onChange(place);
-        setCurrentMarker(newMarker);
-        setZoom(15);
       }
     } else {
       console.log('Autocomplete is not loaded yet!');
     }
+  };
+
+  const handleFocusEditLocation = (mapMarker: MapMarker, zoomValue: number) => {
+    setMapCenter({ lat: mapMarker.lat, lng: mapMarker.lng });
+    setCurrentMarker(mapMarker);
+    setZoom(zoomValue);
   };
 
   const handleFocusLocation = (coordinate: Omit<MapMarker, 'id'>) => {
@@ -60,6 +71,8 @@ export const useLocationData = (): LocationContextObject => {
   };
 
   return {
+    map,
+    setMap,
     mapCenter,
     zoom,
     autocomplete,
@@ -68,5 +81,6 @@ export const useLocationData = (): LocationContextObject => {
     onAutoCompletePlaceChange,
     onAutoCompletePlaceEmpty,
     handleFocusLocation,
+    handleFocusEditLocation,
   };
 };

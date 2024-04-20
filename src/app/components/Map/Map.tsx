@@ -1,11 +1,11 @@
 // Use client directive for client-side components in Next.js
 'use client';
 
-import React, { useState, useCallback, memo } from 'react';
+import React, { useCallback, memo } from 'react';
 import { GoogleMap, Marker } from '@react-google-maps/api';
 import { DataTestIds } from '@/app/components/constants/constants';
 import { GoogleMapLoader } from '../GoogleMapLoader/GoogleMapLoader';
-import { useLocationContext } from '@/app/providers/LocationFormProvider/LocationContextFormProvider';
+import { useLocationContext } from '@/app/providers/LocationContextFormProvider/LocationContextFormProvider';
 
 export interface MapMarker {
   id: string;
@@ -25,16 +25,18 @@ const markerIcon = {
 };
 
 const Map = () => {
-  const { locations, mapCenter, zoom, currentMarker } = useLocationContext();
-  const [map, setMap] = useState<google.maps.Map | null>(null);
+  const { locations, mapCenter, zoom, currentMarker, setMap } = useLocationContext();
 
-  const onLoad = useCallback((mapInstance: google.maps.Map) => {
-    setMap(mapInstance);
-  }, []);
+  const onLoad = useCallback(
+    (mapInstance: google.maps.Map) => {
+      setMap(mapInstance);
+    },
+    [setMap],
+  );
 
   const onUnmount = useCallback(() => {
     setMap(null);
-  }, []);
+  }, [setMap]);
 
   return (
     <GoogleMapLoader>
