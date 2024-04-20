@@ -8,7 +8,7 @@ import { usePlaceController } from '@/app/hooks/formControllers/usePlaceControll
 
 export interface SearchLocationProps {
   onAutoCompleteChange: (...event: any[]) => void;
-  onAutoCompleteEmpty: () => void;
+  onAutoCompleteEmpty: (...event: any[]) => void;
   onLoadAutocomplete: (autocomplete: google.maps.places.Autocomplete) => void;
 }
 

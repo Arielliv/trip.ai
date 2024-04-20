@@ -13,7 +13,8 @@ import { useLocationTypeController } from '@/app/hooks/formControllers/useLocati
 import { useLocationPrivacyController } from '@/app/hooks/formControllers/useLocationPrivacy';
 import { useLocationNoteController } from '@/app/hooks/formControllers/useLocationNote';
 import { LocationFormData } from '@/app/hooks/useLocationForm';
-import { useLocationContext } from '@/app/providers/LocationDataProvider/LocationDataContext';
+import { useLocationContext } from '@/app/providers/LocationFormProvider/LocationContextFormProvider';
+import { usePlaceController } from '@/app/hooks/formControllers/usePlaceController';
 
 const LocationForm = () => {
   const { onAutoCompletePlaceChange, onLoadAutocomplete, onAutoCompletePlaceEmpty, addLocation } = useLocationContext();
@@ -23,16 +24,25 @@ const LocationForm = () => {
   const { field: privacyField } = useLocationPrivacyController();
   const { field: noteField } = useLocationNoteController();
   const { onSubmit } = useOnFormSubmit(addLocation);
+  const { onChange: onPlaceChange } = usePlaceController();
 
   const privacy = watch('privacy');
+
+  const handlePlaceChange = (_event: React.ChangeEvent<HTMLInputElement>) => {
+    onAutoCompletePlaceChange(onPlaceChange);
+  };
+
+  const handlePlaceEmpty = (_event: React.ChangeEvent<HTMLInputElement>) => {
+    onAutoCompletePlaceEmpty(onPlaceChange);
+  };
 
   return (
     <Box sx={{ p: 2 }}>
       <Grid container spacing={2} flexDirection="column">
         <Grid xs={12}>
           <SearchLocation
-            onAutoCompleteEmpty={onAutoCompletePlaceEmpty}
-            onAutoCompleteChange={onAutoCompletePlaceChange}
+            onAutoCompleteEmpty={handlePlaceEmpty}
+            onAutoCompleteChange={handlePlaceChange}
             onLoadAutocomplete={onLoadAutocomplete}
           />
         </Grid>

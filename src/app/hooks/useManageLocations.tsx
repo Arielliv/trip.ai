@@ -2,7 +2,7 @@ import { useState, useCallback } from 'react';
 import { fetchLocations } from '@/lib/data';
 import { ILocation } from '@/models/Location';
 
-export const useFetchLocations = (initialPage = 0, limit = 10) => {
+export const useManageLocations = (initialPage = 0, limit = 10) => {
   const [locations, setLocations] = useState<ILocation[]>([]);
   const [page, setPage] = useState(initialPage);
   const [hasMore, setHasMore] = useState(true);

@@ -1,7 +1,6 @@
 // useLocationData.js
 import { useState } from 'react';
 import { MapMarker } from '@/app/components/Map/Map';
-import { usePlaceController } from '@/app/hooks/formControllers/usePlaceController';
 
 export interface LocationContextObject {
   mapCenter: { lat: number; lng: number };
@@ -11,7 +10,7 @@ export interface LocationContextObject {
   currentMarker: MapMarker | undefined;
   onLoadAutocomplete: (autocomplete: google.maps.places.Autocomplete) => void;
   onAutoCompletePlaceChange: (onChange: (...event: any[]) => void) => void;
-  onAutoCompletePlaceEmpty: () => void;
+  onAutoCompletePlaceEmpty: (onChange: (...event: any[]) => void) => void;
   handleFocusLocation: (coordinate: Omit<MapMarker, 'id'>) => void;
 }
 
@@ -20,19 +19,18 @@ export const useLocationData = (): LocationContextObject => {
   const [zoom, setZoom] = useState(8);
   const [autocomplete, setAutocomplete] = useState<google.maps.places.Autocomplete>();
   const [currentMarker, setCurrentMarker] = useState<MapMarker>();
-  const { onChange } = usePlaceController();
 
   const onLoadAutocomplete = (autocomplete: google.maps.places.Autocomplete) => {
     setAutocomplete(autocomplete);
   };
 
-  const onAutoCompletePlaceEmpty = () => {
+  const onAutoCompletePlaceEmpty = (onChange: (...event: any[]) => void) => {
     setAutocomplete(undefined);
     onChange(undefined);
     setCurrentMarker(undefined);
   };
 
-  const onAutoCompletePlaceChange = () => {
+  const onAutoCompletePlaceChange = (onChange: (...event: any[]) => void) => {
     if (autocomplete) {
       const place = autocomplete.getPlace();
       const location = place.geometry ? place.geometry.location : null;

@@ -5,7 +5,7 @@ import React, { useState, useCallback, memo } from 'react';
 import { GoogleMap, Marker } from '@react-google-maps/api';
 import { DataTestIds } from '@/app/components/constants/constants';
 import { GoogleMapLoader } from '../GoogleMapLoader/GoogleMapLoader';
-import { useLocationContext } from '@/app/providers/LocationDataProvider/LocationDataContext';
+import { useLocationContext } from '@/app/providers/LocationFormProvider/LocationContextFormProvider';
 
 export interface MapMarker {
   id: string;
