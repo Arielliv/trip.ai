@@ -38,7 +38,7 @@ export function LocationCard({ location, onEdit, onDelete, onSelect }: LocationC
   };
 
   const handleDelete = () => {
-    onDelete(location._id);
+    onDelete(location._id!);
   };
 
   const handleSelect = () => {
