@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { fetchLocations } from '@/lib/data';
+import { fetchLocations, deleteLocation } from '@/lib/data';
 import { ILocation } from '@/models/Location';
 
 export interface LocationsManagerContextObject {
@@ -40,6 +40,13 @@ export const useManageLocations = (initialPage = 0, limit = 10) => {
     setLocations((prevLocations) => [...prevLocations, newLocation]);
   };
 
+  const removeLocation = (id: string) => {
+    deleteLocation(id);
+    const filterLocations = locations.filter((location) => location._id !== id);
+    setLocations(filterLocations);
+  };
+
+  return { locations, loadLocations, hasMore, loading, error, addLocation, removeLocation };
   const getLocationById = useCallback(
     (id: string | null): ILocation | undefined => {
       if (!id) return;
@@ -48,5 +55,5 @@ export const useManageLocations = (initialPage = 0, limit = 10) => {
     [locations],
   );
 
-  return { locations, loadLocations, hasMore, loading, error, addLocation, getLocationById };
+  return { locations, loadLocations, hasMore, loading, error, addLocation, getLocationById, removeLocation };
 };
