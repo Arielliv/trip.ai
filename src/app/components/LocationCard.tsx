@@ -21,7 +21,7 @@ import { MapMarker } from '@/app/components/Map/Map';
 export interface LocationCardProps {
   location: ILocation;
   onEdit: (id: string) => void;
-  onDelete: () => void;
+  onDelete: (id: string) => void;
   onSelect: (coordinate: Omit<MapMarker, 'id'>) => void;
 }
 
@@ -35,6 +35,10 @@ export function LocationCard({ location, onEdit, onDelete, onSelect }: LocationC
 
   const handleMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleDelete = () => {
+    onDelete(location._id!);
   };
 
   const handleSelect = () => {
@@ -102,7 +106,7 @@ export function LocationCard({ location, onEdit, onDelete, onSelect }: LocationC
             <IconButton sx={{ color: 'text.secondary' }} onClick={handleOnEditLocation}>
               <Edit />
             </IconButton>
-            <IconButton sx={{ color: 'text.secondary', marginLeft: 1 }} onClick={onDelete}>
+            <IconButton sx={{ color: 'text.secondary', marginLeft: 1 }} onClick={handleDelete}>
               <Delete />
             </IconButton>
             <IconButton sx={{ color: 'text.secondary', marginLeft: 1 }} onClick={handleSelect}>

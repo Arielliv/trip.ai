@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { fetchLocations } from '@/lib/data';
+import { fetchLocations, deleteLocation } from '@/lib/data';
 import { ILocation } from '@/models/Location';
 
 export const useFetchLocations = (initialPage = 0, limit = 10) => {
@@ -31,5 +31,11 @@ export const useFetchLocations = (initialPage = 0, limit = 10) => {
     setLocations((prevLocations) => [...prevLocations, newLocation]);
   };
 
-  return { locations, loadLocations, hasMore, loading, error, addLocation };
+  const removeLocation = (id: string) => {
+    deleteLocation(id);
+    const filterLocations = locations.filter((location) => location._id !== id);
+    setLocations(filterLocations);
+  };
+
+  return { locations, loadLocations, hasMore, loading, error, addLocation, removeLocation };
 };

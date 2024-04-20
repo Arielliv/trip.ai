@@ -12,7 +12,12 @@ export async function fetchTrips(): Promise<ITrip[]> {
 export async function createLocation(newLocation: ILocation): Promise<ILocation> {
   noStore();
   const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/locations`, newLocation);
-  return res.data as ILocation;
+  console.log(`${res.data.message} with id ${res.data.id}`);
+  return res.data.location as ILocation;
+}
+
+export async function deleteLocation(locationId: string) {
+  return axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/location/${locationId}`);
 }
 
 export interface LocationPaginationResponse {

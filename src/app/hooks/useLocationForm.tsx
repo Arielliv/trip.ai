@@ -1,6 +1,7 @@
 import { useForm } from 'react-hook-form';
 
 export interface LocationFormData {
+  _id: string;
   locationName: string;
   note: string;
   locationType: string;

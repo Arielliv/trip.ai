@@ -19,6 +19,7 @@ export interface SavedLocationsContextObject {
   locations: ILocation[];
   loadLocations: () => void;
   addLocation: (newLocation: ILocation) => void;
+  removeLocation: (id: string) => void;
   loading: boolean;
   hasMore: boolean;
 }
@@ -27,6 +28,7 @@ const defaultSavedLocationsContext: SavedLocationsContextObject = {
   locations: [],
   loadLocations: () => {},
   addLocation: (_newLocation: ILocation) => {},
+  removeLocation: (_id: string) => {},
   loading: false,
   hasMore: false,
 };
@@ -38,7 +40,7 @@ export const LocationDataContext = createContext<LocationContextObject & SavedLo
 
 export const LocationDataProvider = ({ children }: React.PropsWithChildren) => {
   const locationData = useLocationData();
-  const { locations, loadLocations, loading, hasMore, addLocation } = useFetchLocations();
+  const { locations, loadLocations, loading, hasMore, addLocation, removeLocation } = useFetchLocations();
 
   // Load locations initially or when parameters change
   useEffect(() => {
@@ -46,7 +48,9 @@ export const LocationDataProvider = ({ children }: React.PropsWithChildren) => {
   }, [loadLocations]);
 
   return (
-    <LocationDataContext.Provider value={{ ...locationData, locations, loadLocations, loading, hasMore, addLocation }}>
+    <LocationDataContext.Provider
+      value={{ ...locationData, locations, loadLocations, loading, hasMore, addLocation, removeLocation }}
+    >
       {children}
     </LocationDataContext.Provider>
   );

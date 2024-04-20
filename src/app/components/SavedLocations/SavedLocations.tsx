@@ -12,7 +12,7 @@ export interface SavedLocationsProps {
 }
 
 const SavedLocations = ({ setSelectedTab }: SavedLocationsProps) => {
-  const { locations, loadLocations, loading, hasMore, handleFocusLocation } = useLocationContext();
+  const { locations, loadLocations, loading, hasMore, handleFocusLocation, removeLocation } = useLocationContext();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -32,7 +32,9 @@ const SavedLocations = ({ setSelectedTab }: SavedLocationsProps) => {
     setSelectedTab('0');
   };
 
-  const handleDelete = () => console.log('Edit action');
+  const handleDelete = (id: string) => {
+    removeLocation(id);
+  };
   const handleSelect = (coordinate: Omit<MapMarker, 'id'>) => handleFocusLocation(coordinate);
 
   return (

@@ -17,6 +17,7 @@ export const mapStringTypeToEnumType = (type: string) => {
 
 export const mapLocationFormDataToLocationSchema = (locationFormData: LocationFormData): ILocation => {
   return {
+    _id: locationFormData._id,
     name: locationFormData.locationName,
     trips: [],
     googleName: locationFormData.place?.name || '',

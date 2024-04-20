@@ -11,8 +11,8 @@ export const useOnFormSubmit = (addLocation: (newLocation: ILocation) => void) =
     if (Object.keys(formState.errors).length === 0) {
       try {
         const newLocation = mapLocationFormDataToLocationSchema(data);
-        await createLocation(newLocation);
-        addLocation(newLocation);
+        const locationFromDB = await createLocation(newLocation);
+        addLocation(locationFromDB);
       } catch (error) {
         console.error('Error saving data:', error);
       }
