@@ -21,6 +21,7 @@ const defaultSavedLocationsContext: LocationsManagerContextObject = {
   locations: [],
   loadLocations: () => {},
   addLocation: (_newLocation: ILocation) => {},
+  editLocation: (_updatedLocation: ILocation) => {},
   removeLocation: (_id: string) => {},
   isEditMode: false,
   loading: false,

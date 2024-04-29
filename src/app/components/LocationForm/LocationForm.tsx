@@ -17,13 +17,20 @@ import { useLocationContext } from '@/app/providers/LocationContextFormProvider/
 import { usePlaceController } from '@/app/hooks/formControllers/usePlaceController';
 
 const LocationForm = () => {
-  const { onAutoCompletePlaceChange, onLoadAutocomplete, onAutoCompletePlaceEmpty, addLocation } = useLocationContext();
+  const {
+    onAutoCompletePlaceChange,
+    onLoadAutocomplete,
+    onAutoCompletePlaceEmpty,
+    addLocation,
+    editLocation,
+    isEditMode,
+  } = useLocationContext();
   const { watch, handleSubmit, formState } = useFormContext<LocationFormData>();
   const { field: locationNameField, error: locationNameError } = useLocationNameController();
   const { field: locationTypeField } = useLocationTypeController();
   const { field: privacyField } = useLocationPrivacyController();
   const { field: noteField } = useLocationNoteController();
-  const { onSubmit } = useOnFormSubmit(addLocation);
+  const { onSubmit } = useOnFormSubmit(addLocation, editLocation, isEditMode);
   const { onChange: onPlaceChange } = usePlaceController();
 
   const privacy = watch('privacy');
