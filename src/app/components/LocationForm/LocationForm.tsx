@@ -23,7 +23,7 @@ const LocationForm = () => {
     onAutoCompletePlaceEmpty,
     addLocation,
     editLocation,
-    isEditMode,
+    isEditMode
   } = useLocationContext();
   const { watch, handleSubmit, formState } = useFormContext<LocationFormData>();
   const { field: locationNameField, error: locationNameError } = useLocationNameController();
@@ -48,6 +48,7 @@ const LocationForm = () => {
       <Grid container spacing={2} flexDirection="column">
         <Grid xs={12}>
           <SearchLocation
+            isEditMode={isEditMode}
             onAutoCompleteEmpty={handlePlaceEmpty}
             onAutoCompleteChange={handlePlaceChange}
             onLoadAutocomplete={onLoadAutocomplete}
