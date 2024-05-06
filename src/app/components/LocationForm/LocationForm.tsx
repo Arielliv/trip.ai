@@ -17,7 +17,8 @@ import { useLocationContext } from '@/app/providers/LocationContextFormProvider/
 import { usePlaceController } from '@/app/hooks/formControllers/usePlaceController';
 
 const LocationForm = () => {
-  const { onAutoCompletePlaceChange, onLoadAutocomplete, onAutoCompletePlaceEmpty, addLocation } = useLocationContext();
+  const { onAutoCompletePlaceChange, onLoadAutocomplete, onAutoCompletePlaceEmpty, addLocation, isEditMode } =
+    useLocationContext();
   const { watch, handleSubmit, formState } = useFormContext<LocationFormData>();
   const { field: locationNameField, error: locationNameError } = useLocationNameController();
   const { field: locationTypeField } = useLocationTypeController();
@@ -41,6 +42,7 @@ const LocationForm = () => {
       <Grid container spacing={2} flexDirection="column">
         <Grid xs={12}>
           <SearchLocation
+            isEditMode={isEditMode}
             onAutoCompleteEmpty={handlePlaceEmpty}
             onAutoCompleteChange={handlePlaceChange}
             onLoadAutocomplete={onLoadAutocomplete}

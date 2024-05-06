@@ -10,18 +10,26 @@ export interface SearchLocationProps {
   onAutoCompleteChange: (...event: any[]) => void;
   onAutoCompleteEmpty: (...event: any[]) => void;
   onLoadAutocomplete: (autocomplete: google.maps.places.Autocomplete) => void;
+  isEditMode: boolean;
 }
 
-const SearchLocation = ({ onAutoCompleteChange, onLoadAutocomplete, onAutoCompleteEmpty }: SearchLocationProps) => {
+const SearchLocation = ({
+  onAutoCompleteChange,
+  onLoadAutocomplete,
+  onAutoCompleteEmpty,
+  isEditMode,
+}: SearchLocationProps) => {
   const { error, ref, isDirty, value } = usePlaceController();
   const [inputValue, setInputValue] = useState('');
 
   useEffect(() => {
-    if (!isDirty && value?.formatted_address) {
+    if (isEditMode && !isDirty && value?.formatted_address) {
       setInputValue(value.formatted_address);
       onAutoCompleteChange();
+    } else if (!isEditMode && value?.formatted_address) {
+      setInputValue(value.formatted_address);
     }
-  }, [value?.formatted_address, onAutoCompleteChange, isDirty]);
+  }, [value?.formatted_address, onAutoCompleteChange, isDirty, isEditMode]);
 
   const handleAutoCompleteOnChange = () => {
     onAutoCompleteChange();
