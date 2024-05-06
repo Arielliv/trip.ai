@@ -1,8 +1,10 @@
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { DataTestIds } from '@/app/components/constants/constants';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { tripsDriver } from '@/app/trips/__tests__/app.driver';
-import Trips from '@/app/trips/page';
+import { TripsPaginationResponse } from '@/lib/types';
+import { Types } from 'mongoose';
+import { Visibility } from '@/models/constants';
 
 describe('Trips', () => {
   let driver: tripsDriver;
@@ -12,13 +14,28 @@ describe('Trips', () => {
   });
 
   it('should show one trip when there is one trip available', async () => {
-    driver.givenFetchTripsMock([{ _id: '1', name: 'Sample Trip' } as any]);
+    const dummyTripsPaginationResponse: TripsPaginationResponse = {
+      trips: [
+        {
+          name: 'Discover Italy',
+          participants_ids: [new Types.ObjectId()],
+          permissions: [],
+          locations: [],
+          locations_order: [new Types.ObjectId()],
+          visibility: Visibility.Public,
+          transportations: [],
+          reviews: [],
+        },
+      ],
+      page: 0,
+      limit: 10,
+      totalCount: 200,
+      totalPages: 10,
+    };
+    driver.givenFetchTripsMock(dummyTripsPaginationResponse);
+    await driver.created();
+    driver.clickOnTabAt(1);
 
-    // Render the Home component
-    render(await Trips());
-
-    // Query for elements by the test ID and assert their count
-    const tripElements = screen.getAllByTestId(DataTestIds.tripContainer);
-    expect(tripElements).toHaveLength(1);
+    expect(screen.getByTestId(DataTestIds.savedTripAt(0))).toBeInTheDocument();
   });
 });

@@ -1,7 +1,31 @@
 /* v8 ignore start */
 import { Schema, Document, Types, models, model } from 'mongoose';
-import { Role, TransportationType, Visibility } from '@/models/constants';
-import { Permission } from '@/models/shared/types';
+import { LocationType, Role, TransportationType, Visibility } from '@/models/constants';
+import { Address, Coordinate, Permission } from '@/models/shared/types';
+
+export interface ITrip {
+  _id?: string;
+  name: string;
+  participants_ids: Types.ObjectId[];
+  permissions: Permission[];
+  locations: TripLocation[];
+  locations_order: Types.ObjectId[];
+  visibility: Visibility;
+  transportations: Transportation[];
+  reviews: Review[];
+}
+
+export interface ITripDto {
+  owner: Types.ObjectId;
+  name: string;
+  participants_ids: Types.ObjectId[];
+  permissions: Permission[];
+  locations: TripLocation[];
+  locations_order: Types.ObjectId[];
+  visibility: Visibility;
+  transportations: Transportation[];
+  reviews: Review[];
+}
 
 export interface Transportation {
   origin: Types.ObjectId;
@@ -24,18 +48,6 @@ export interface Review {
   rate: number;
   description: string;
   images: string[]; // Array of image URLs
-}
-
-export interface ITrip extends Document {
-  name: string;
-  owner: Types.ObjectId;
-  participants_ids: Types.ObjectId[];
-  permissions: Permission[];
-  locations: TripLocation[];
-  locations_order: Types.ObjectId[];
-  visibility: Visibility;
-  transportations: Transportation[];
-  reviews: Review[];
 }
 
 const TripLocationSchema: Schema = new Schema({

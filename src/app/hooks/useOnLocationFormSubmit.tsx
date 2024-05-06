@@ -4,7 +4,7 @@ import { SubmitHandler } from 'react-hook-form';
 import { ILocation } from '@/models/Location';
 import { mapLocationFormDataToLocationSchema } from '@/models/mappers/mapLocationFormDataToLocationSchema';
 
-export const useOnFormSubmit = (addLocation: (newLocation: ILocation) => void) => {
+export const useOnLocationFormSubmit = (addLocation: (newLocation: ILocation) => void) => {
   const { formState } = useLocationForm();
 
   const onSubmit: SubmitHandler<LocationFormData> = async (data): Promise<void> => {

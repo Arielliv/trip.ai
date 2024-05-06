@@ -8,13 +8,13 @@ import { Box, FormControl, FormControlLabel, InputLabel, MenuItem, Select, Switc
 import Grid from '@mui/material/Unstable_Grid2';
 import { useFormContext } from 'react-hook-form';
 import { useLocationNameController } from '@/app/hooks/formControllers/useLocationNameController';
-import { useOnFormSubmit } from '@/app/hooks/useOnFormSubmit';
 import { useLocationTypeController } from '@/app/hooks/formControllers/useLocationTypeController';
 import { useLocationPrivacyController } from '@/app/hooks/formControllers/useLocationPrivacy';
 import { useLocationNoteController } from '@/app/hooks/formControllers/useLocationNote';
 import { LocationFormData } from '@/app/hooks/useLocationForm';
 import { useLocationContext } from '@/app/providers/LocationContextFormProvider/LocationContextFormProvider';
 import { usePlaceController } from '@/app/hooks/formControllers/usePlaceController';
+import { useOnLocationFormSubmit } from '@/app/hooks/useOnLocationFormSubmit';
 
 const LocationForm = () => {
   const { onAutoCompletePlaceChange, onLoadAutocomplete, onAutoCompletePlaceEmpty, addLocation, isEditMode } =
@@ -24,7 +24,7 @@ const LocationForm = () => {
   const { field: locationTypeField } = useLocationTypeController();
   const { field: privacyField } = useLocationPrivacyController();
   const { field: noteField } = useLocationNoteController();
-  const { onSubmit } = useOnFormSubmit(addLocation);
+  const { onSubmit } = useOnLocationFormSubmit(addLocation);
   const { onChange: onPlaceChange } = usePlaceController();
 
   const privacy = watch('privacy');

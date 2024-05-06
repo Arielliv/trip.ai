@@ -56,5 +56,3 @@ export const mapLocationFormDataToLocationSchema = (locationFormData: LocationFo
     imageUrl: locationFormData.place?.photos?.[0]?.getUrl({ maxWidth: 1000, maxHeight: 1000 }) ?? '',
   };
 };
-
-// If you need a function to convert back or another direction, let me know!

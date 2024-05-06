@@ -4,9 +4,11 @@ import Map from '@/app/components/Map/Map';
 import React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
 import { Box } from '@mui/material';
-import { LocationTabs } from '@/app/components/LocationTabs/LocationTabs';
 import { MyLocationDataTestIds } from '@/app/components/constants/constants';
 import { LocationContextFormProvider } from '@/app/providers/LocationContextFormProvider/LocationContextFormProvider';
+import LocationForm from '@/app/components/LocationForm/LocationForm';
+import SavedLocations from '@/app/components/SavedLocations/SavedLocations';
+import { CustomizedTabs } from '@/app/components/CustomaziedTabs/CustomizedTabs';
 
 const MyLocation = () => {
   return (
@@ -17,7 +19,12 @@ const MyLocation = () => {
           sx={{ borderRight: 1, borderColor: 'divider' }}
           data-testid={MyLocationDataTestIds.locationTabsContainer}
         >
-          <LocationTabs />
+          <CustomizedTabs
+            tabs={[
+              { title: 'New location', element: LocationForm },
+              { title: 'Saved locations', element: SavedLocations },
+            ]}
+          />
         </Grid>
         <Grid xs={9} sx={{ overflow: 'hidden' }} data-testid={MyLocationDataTestIds.mapContainer}>
           <Box sx={{ width: '100%', height: '100%' }}>
