@@ -19,7 +19,6 @@ export const useOnFormSubmit = (
       try {
         const locationData = mapLocationFormDataToLocationSchema(data);
         isEditMode ? editLocation(await updateLocation(locationData)) : addLocation(await createLocation(locationData));
-        //TODO: do we need to remove the id query here?
         router.replace(pathname);
       } catch (error) {
         console.error('Error saving data:', error);
