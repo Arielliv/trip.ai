@@ -38,6 +38,7 @@ export const authConfig = {
     GoogleProvider({
       clientId: (process.env.GOOGLE_CLIENT_ID as string) ?? '',
       clientSecret: (process.env.GOOGLE_CLIENT_SECRET as string) ?? '',
+      allowDangerousEmailAccountLinking: true,
     }),
   ], // Add providers with an empty array for now
 } satisfies NextAuthConfig;
