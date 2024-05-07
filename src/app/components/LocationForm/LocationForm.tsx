@@ -31,7 +31,7 @@ const LocationForm = () => {
   const { field: locationTypeField } = useLocationTypeController();
   const { field: privacyField } = useLocationPrivacyController();
   const { field: noteField } = useLocationNoteController();
-  const { onSubmit } = useOnFormSubmit(addLocation, editLocation, isEditMode);
+  const { onSubmit } = useOnFormSubmit(addLocation);
   const { onChange: onPlaceChange } = usePlaceController();
 
   const privacy = watch('privacy');
