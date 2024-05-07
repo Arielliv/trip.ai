@@ -24,6 +24,7 @@ const LocationForm = () => {
     addLocation,
     editLocation,
     isEditMode,
+    clearFormOnEditState,
   } = useLocationContext();
   const { watch, handleSubmit, formState } = useFormContext<LocationFormData>();
   const { field: locationNameField, error: locationNameError } = useLocationNameController();
@@ -91,6 +92,11 @@ const LocationForm = () => {
             onClick={!formState.isSubmitting ? handleSubmit(onSubmit) : undefined}
           >
             {formState.isSubmitting ? <CircularProgress size={24} /> : 'Save'}
+          </Button>
+        </Grid>
+        <Grid xs={12}>
+          <Button color="secondary" variant="outlined" fullWidth onClick={clearFormOnEditState}>
+            {'Clear'}
           </Button>
         </Grid>
       </Grid>

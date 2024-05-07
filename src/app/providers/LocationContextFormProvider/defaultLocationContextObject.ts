@@ -31,4 +31,5 @@ const defaultSavedLocationsContext: LocationsManagerContextObject = {
 export const defaultLocationContext = {
   ...defaultLocationContextObject,
   ...defaultSavedLocationsContext,
+  clearFormOnEditState: () => {},
 };
