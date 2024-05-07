@@ -17,8 +17,15 @@ import { useLocationContext } from '@/app/providers/LocationContextFormProvider/
 import { usePlaceController } from '@/app/hooks/formControllers/usePlaceController';
 
 const LocationForm = () => {
-  const { onAutoCompletePlaceChange, onLoadAutocomplete, onAutoCompletePlaceEmpty, addLocation, isEditMode } =
-    useLocationContext();
+  const {
+    onAutoCompletePlaceChange,
+    onLoadAutocomplete,
+    onAutoCompletePlaceEmpty,
+    addLocation,
+    editLocation,
+    isEditMode,
+    clearFormOnEditState,
+  } = useLocationContext();
   const { watch, handleSubmit, formState } = useFormContext<LocationFormData>();
   const { field: locationNameField, error: locationNameError } = useLocationNameController();
   const { field: locationTypeField } = useLocationTypeController();
@@ -85,6 +92,11 @@ const LocationForm = () => {
             onClick={!formState.isSubmitting ? handleSubmit(onSubmit) : undefined}
           >
             {formState.isSubmitting ? <CircularProgress size={24} /> : 'Save'}
+          </Button>
+        </Grid>
+        <Grid xs={12}>
+          <Button color="secondary" variant="outlined" fullWidth onClick={clearFormOnEditState}>
+            {'Clear'}
           </Button>
         </Grid>
       </Grid>
