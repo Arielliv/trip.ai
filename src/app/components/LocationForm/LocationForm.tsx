@@ -23,7 +23,7 @@ const LocationForm = () => {
     onAutoCompletePlaceEmpty,
     addLocation,
     editLocation,
-    isEditMode
+    isEditMode,
   } = useLocationContext();
   const { watch, handleSubmit, formState } = useFormContext<LocationFormData>();
   const { field: locationNameField, error: locationNameError } = useLocationNameController();
