@@ -29,36 +29,32 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
       return NextResponse.json({ message: 'Authentication required' }, { status: HttpStatusCode.Unauthorized });
     }
 
-    // const user_id = session.user.id;
-    const location = await Location.findById(params.id);
-
-    if (!location) {
-      return NextResponse.json({ message: `Location ${params.id} not found` }, { status: HttpStatusCode.NotFound });
-    }
-
-    //TODO: check user_id is permitted to edit the location
-    // if (location.user_id !== user_id) {
-    //   return NextResponse.json(
-    //     { message: 'You do not have permission to update this location' },
-    //     { status: HttpStatusCode.Forbidden },
-    //   );
-    // }
-
     const body: ILocation = await req.json();
 
     if (!body.name) {
       return NextResponse.json({ message: 'Location name is missing' }, { status: HttpStatusCode.BadRequest });
     }
 
-    //TODO: update 'search location'
-    location.name = body.name ?? location.name;
-    location.type = body.type ?? location.type;
-    location.visibility = body.visibility ?? location.visibility;
-    location.note = body.note ?? location.note;
+    const updatedLocation = await Location.findOneAndUpdate(
+      { _id: params.id, user_id: session.user.id },
+      { $set: body },
+      { new: true },
+    );
 
-    await location.save();
+    if (!updatedLocation) {
+      return NextResponse.json(
+        { message: `Location ${params.id} not found / user not authorized` },
+        { status: HttpStatusCode.NotFound },
+      );
+    }
 
-    return NextResponse.json({ location, message: 'Location updated successfully' }, { status: HttpStatusCode.Ok });
+    return NextResponse.json(
+      {
+        location: updatedLocation,
+        message: 'Location updated successfully',
+      },
+      { status: HttpStatusCode.Ok },
+    );
   } catch (error) {
     console.error('Failed to update location:', error);
 
