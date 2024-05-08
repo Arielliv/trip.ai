@@ -77,7 +77,10 @@ const LocationForm = () => {
             </FormControl>
           </Grid>
           <Grid xs={4}>
-            <FormControlLabel control={<Switch {...privacyField} />} label={privacy ? 'Public' : 'Private'} />
+            <FormControlLabel
+              control={<Switch checked={privacy} {...privacyField} />}
+              label={privacy ? 'Public' : 'Private'}
+            />
           </Grid>
         </Grid>
         <Grid xs={12}>

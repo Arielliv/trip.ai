@@ -49,7 +49,7 @@ export const mapLocationFormDataToLocationSchema = (locationFormData: LocationFo
           ac.types.includes('postal_code'),
         )?.long_name || '',
     },
-    visibility: locationFormData.privacy ? Visibility.Public : Visibility.Public,
+    visibility: locationFormData.privacy ? Visibility.Public : Visibility.Private,
     permissions: [],
     mapsUrl: locationFormData.place?.url,
     links: [locationFormData.place?.website!].filter((link) => link),
