@@ -1,14 +1,14 @@
 import { useController } from 'react-hook-form';
 
 import { LocationFormData } from '@/app/hooks/useLocationForm';
-import { FormFieldPath } from '@/app/components/constants/formFieldPath';
+import { LocationFormFieldPath } from '@/app/components/constants/locationFormFieldPath';
 
 export const usePlaceController = () => {
   const {
     field: { value, onChange, ref },
     fieldState: { error, isDirty },
-  } = useController<LocationFormData, FormFieldPath.Place>({
-    name: FormFieldPath.Place,
+  } = useController<LocationFormData, LocationFormFieldPath.Place>({
+    name: LocationFormFieldPath.Place,
     rules: { required: 'Must include place for new location' },
   });
 

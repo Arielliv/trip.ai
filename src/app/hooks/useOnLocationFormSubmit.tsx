@@ -5,7 +5,7 @@ import { ILocation } from '@/models/Location';
 import { mapLocationFormDataToLocationSchema } from '@/models/mappers/mapLocationFormDataToLocationSchema';
 import { useLocationContext } from '@/app/providers/LocationContextFormProvider/LocationContextFormProvider';
 
-export const useOnFormSubmit = (addLocation: (newLocation: ILocation) => void) => {
+export const useOnLocationFormSubmit = (addLocation: (newLocation: ILocation) => void) => {
   const { formState } = useLocationForm();
   const { editLocation, isEditMode } = useLocationContext();
 
