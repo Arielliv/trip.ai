@@ -6,6 +6,7 @@ export interface LocationsManagerContextObject {
   locations: ILocation[];
   loadLocations: () => void;
   addLocation: (newLocation: ILocation) => void;
+  editLocation: (updatedLocation: ILocation) => void;
   isEditMode: boolean;
   loading: boolean;
   hasMore: boolean;
@@ -41,6 +42,18 @@ export const useManageLocations = (initialPage = 0, limit = 10) => {
     setLocations((prevLocations) => [...prevLocations, newLocation]);
   };
 
+  const editLocation = (updatedLocation: ILocation) => {
+    setLocations((prevLocations) => {
+      return prevLocations.map((location) => {
+        if (location._id === updatedLocation._id) {
+          return updatedLocation;
+        } else {
+          return location;
+        }
+      });
+    });
+  };
+
   const removeLocation = (id: string) => {
     deleteLocation(id);
     const filterLocations = locations.filter((location) => location._id !== id);
@@ -55,5 +68,15 @@ export const useManageLocations = (initialPage = 0, limit = 10) => {
     [locations],
   );
 
-  return { locations, loadLocations, hasMore, loading, error, addLocation, getLocationById, removeLocation };
+  return {
+    locations,
+    loadLocations,
+    hasMore,
+    loading,
+    error,
+    addLocation,
+    getLocationById,
+    removeLocation,
+    editLocation,
+  };
 };

@@ -1,6 +1,6 @@
 'use client';
 import React, { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { FormProvider } from 'react-hook-form';
 import { Alert, Snackbar } from '@mui/material';
 import { LocationsManagerContextObject, useManageLocations } from '@/app/hooks/useManageLocations';
@@ -11,7 +11,11 @@ import { mapILocationToLocationFormData } from '@/models/mappers/mapILocationToL
 import { fetchPlaceDetailsFromGoogleAPIById } from '@/app/providers/LocationContextFormProvider/utils/fetchPlaceDetailsFromGoogleAPIById';
 import { DevTool } from '@hookform/devtools';
 
-export const LocationDataContext = createContext<LocationContextObject & LocationsManagerContextObject>(
+export interface FormHandlers {
+  clearFormOnEditState(): void;
+}
+
+export const LocationDataContext = createContext<LocationContextObject & LocationsManagerContextObject & FormHandlers>(
   defaultLocationContext,
 );
 
@@ -21,6 +25,8 @@ export const LocationContextFormProvider = ({ children }: { children: React.Reac
   const locationData = useLocationData();
   const { handleFocusEditLocation } = locationData;
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
   const locationId = searchParams.get('id');
   const formMethods = useLocationForm();
   const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -31,6 +37,7 @@ export const LocationContextFormProvider = ({ children }: { children: React.Reac
   } = formMethods;
 
   const handleFetchDetails = useCallback(async () => {
+    if (isSubmitSuccessful) return;
     if (!locationId) return;
 
     const location = getLocationById(locationId);
@@ -66,19 +73,30 @@ export const LocationContextFormProvider = ({ children }: { children: React.Reac
 
   useEffect(() => {
     if (isSubmitSuccessful) {
+      if (locationId) {
+        router.push(pathname);
+        setSnackbarMessage('Location updated successfully!');
+      } else {
+        setSnackbarMessage('Location saved successfully!');
+      }
       reset(defaultLocationFormData);
-      setSnackbarMessage('Location saved successfully!');
       setOpenSnackbar(true);
     }
-  }, [reset, isSubmitSuccessful]);
+  }, [reset, isSubmitSuccessful, locationId, router, pathname]);
 
-  const contextValue = useMemo<LocationContextObject & LocationsManagerContextObject>(
+  const clearFormOnEditState = useCallback(async () => {
+    router.push(pathname);
+    reset(defaultLocationFormData);
+  }, [router, pathname, reset]);
+
+  const contextValue = useMemo<LocationContextObject & LocationsManagerContextObject & FormHandlers>(
     () => ({
       ...locationData,
       ...manageLocations,
       isEditMode: Boolean(locationId),
+      clearFormOnEditState,
     }),
-    [locationData, manageLocations, locationId],
+    [locationData, manageLocations, locationId, clearFormOnEditState],
   );
 
   return (

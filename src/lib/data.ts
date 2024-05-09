@@ -29,6 +29,13 @@ export async function createLocation(newLocation: ILocation): Promise<ILocation>
   return res.data.location as ILocation;
 }
 
+export async function updateLocation(updatedLocation: ILocation): Promise<ILocation> {
+  noStore();
+  const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/location/${updatedLocation._id}`, updatedLocation);
+  console.log(`${res.data.message} with id ${res.data.id}`);
+  return res.data.location as ILocation;
+}
+
 export async function deleteLocation(locationId: string) {
   return axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/location/${locationId}`);
 }
