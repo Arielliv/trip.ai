@@ -10,14 +10,13 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import { Columns } from '@/app/components/constants/constants';
 import { createEmptyRow } from '@/app/components/LocationsTable/TableComponents/TableToolbar/TableToolbar';
+import { useLocationsInTripController } from '@/app/hooks/formControllers/useLocationsInTripController';
+import { mapRowToLocation } from '@/models/mappers/mapRowToLocation';
 
-const initRows: GridRowModel[] = [
-  { [Columns.Id]: 1, [Columns.LocationName]: 'Hello' },
-  { [Columns.Id]: 2, [Columns.LocationName]: 'DataGridPro' },
-  { [Columns.Id]: 3, [Columns.LocationName]: 'MUI' },
-];
+const initRows: GridRowModel[] = [];
 
 export const useManageLocationTable = () => {
+  const { append, deleteLocationById, updateLocationById, moveLocationInArray } = useLocationsInTripController();
   const [rows, setRows] = useState<GridRowModel[]>(initRows);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const [loading, setLoading] = useState(false);
@@ -36,6 +35,7 @@ export const useManageLocationTable = () => {
   };
 
   const handleDeleteClick = (id: GridRowId) => () => {
+    deleteLocationById(id.toString());
     setRows(rows.filter((row: GridRowModel) => row.id !== id));
   };
 
@@ -52,7 +52,8 @@ export const useManageLocationTable = () => {
   };
 
   const processRowUpdate = (newRow: GridRowModel) => {
-    const updatedRow = { ...newRow, isNew: false };
+    const updatedRow: GridRowModel & { isNew: boolean } = { ...newRow, isNew: false };
+    updateLocationById(updatedRow.id, mapRowToLocation(newRow));
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
     return updatedRow;
   };
@@ -72,6 +73,7 @@ export const useManageLocationTable = () => {
 
   const handleRowOrderChange = async (params: GridRowOrderChangeParams) => {
     setLoading(true);
+    moveLocationInArray(params.oldIndex, params.targetIndex);
     const newRows = await updateRowPosition(params.oldIndex, params.targetIndex, rows);
     setRows(newRows);
     setLoading(false);
@@ -79,7 +81,9 @@ export const useManageLocationTable = () => {
 
   const addNewRow = () => {
     const id = uuidv4().toString();
-    setRows((oldRows) => [...oldRows, createEmptyRow(id)]);
+    const newRow = createEmptyRow(id);
+    append(mapRowToLocation(newRow));
+    setRows((oldRows) => [...oldRows, newRow]);
     setRowModesModel((oldModel) => ({
       ...oldModel,
       [id]: { mode: GridRowModes.Edit, fieldToFocus: Columns.LocationName },

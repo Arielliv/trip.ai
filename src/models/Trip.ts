@@ -1,7 +1,7 @@
 /* v8 ignore start */
-import { Schema, Document, Types, models, model } from 'mongoose';
-import { LocationType, Role, TransportationType, Visibility } from '@/models/constants';
-import { Address, Coordinate, Permission } from '@/models/shared/types';
+import { Schema, Types, models, model } from 'mongoose';
+import { Role, TransportationType, Visibility } from '@/models/constants';
+import { Permission } from '@/models/shared/types';
 
 export interface ITrip {
   _id?: string;
@@ -34,13 +34,14 @@ export interface Transportation {
 }
 
 export interface TripLocation {
-  location: Types.ObjectId; // Reference to a Location document
-  time: {
-    start: Date;
-    end: Date;
+  location_id: Types.ObjectId; // Reference to a Location document
+  dateRange: Date[];
+  duration: {
+    value: number;
+    timeUnit: string;
   };
-  note: string;
-  ticket: string; // Trip-specific URL or document identifier
+  additionalInfo: string;
+  cost: number;
 }
 
 export interface Review {
