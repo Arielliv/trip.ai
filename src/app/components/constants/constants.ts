@@ -16,3 +16,13 @@ export enum MyLocationDataTestIds {
   locationTabsContainer = 'location-tabs-container',
   mapContainer = 'map-container',
 }
+
+export enum Columns {
+  Id = 'id',
+  LocationName = 'Location Name',
+  Duration = 'Duration',
+  Date = 'Date',
+  AdditionalInfo = 'Additional Info',
+  Cost = 'Cost',
+  Type = 'Type',
+}

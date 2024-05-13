@@ -10,7 +10,7 @@ export interface LocationsManagerContextObject {
   isEditMode: boolean;
   loading: boolean;
   hasMore: boolean;
-  removeLocation: (id: string) => void;
+  removeLocation: (id: string) => Promise<void>;
 }
 
 export const useManageLocations = (initialPage = 0, limit = 10) => {
@@ -54,8 +54,8 @@ export const useManageLocations = (initialPage = 0, limit = 10) => {
     });
   };
 
-  const removeLocation = (id: string) => {
-    deleteLocation(id);
+  const removeLocation = async (id: string) => {
+    await deleteLocation(id);
     const filterLocations = locations.filter((location) => location._id !== id);
     setLocations(filterLocations);
   };

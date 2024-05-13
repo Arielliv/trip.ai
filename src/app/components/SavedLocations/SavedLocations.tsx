@@ -33,8 +33,9 @@ const SavedLocations = ({ setSelectedTab }: SavedLocationsProps) => {
   };
 
   const handleDelete = (id: string) => {
-    removeLocation(id);
+    return removeLocation(id);
   };
+
   const handleSelect = (coordinate: Omit<MapMarker, 'id'>) => handleFocusLocation(coordinate);
 
   return (

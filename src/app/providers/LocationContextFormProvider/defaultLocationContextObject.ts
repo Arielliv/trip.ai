@@ -22,7 +22,7 @@ const defaultSavedLocationsContext: LocationsManagerContextObject = {
   loadLocations: () => {},
   addLocation: (_newLocation: ILocation) => {},
   editLocation: (_updatedLocation: ILocation) => {},
-  removeLocation: (_id: string) => {},
+  removeLocation: (_id: string) => Promise.resolve(),
   isEditMode: false,
   loading: false,
   hasMore: false,
