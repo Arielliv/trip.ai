@@ -1,6 +1,6 @@
 import { Visibility } from '@/models/constants';
-import { ITrip, TripLocation } from '@/models/Trip';
-import { LocationInTrip, TripFormData } from '@/app/hooks/useTripForm';
+import { ILocationInTrip, ITrip } from '@/models/Trip';
+import { LocationInTripFormData, TripFormData } from '@/app/hooks/useTripForm';
 
 export const mapITripToTripFormData = (trip: ITrip | undefined): TripFormData | undefined => {
   if (!trip) {
@@ -15,13 +15,13 @@ export const mapITripToTripFormData = (trip: ITrip | undefined): TripFormData | 
   };
 };
 
-export const mapLocationInTripToLocationsFormData = (locationInTrip: TripLocation): LocationInTrip => {
+export const mapLocationInTripToLocationsFormData = (locationInTrip: ILocationInTrip): LocationInTripFormData => {
   return {
-    id: locationInTrip.location_id.toString() || '',
-    duration: `${locationInTrip.duration.value} ${locationInTrip.duration.timeUnit}`,
+    id: locationInTrip.id ?? '',
+    duration: `${locationInTrip.duration?.value} ${locationInTrip.duration?.timeUnit}` ?? '',
     // @ts-ignore
     date: locationInTrip.dateRange,
-    AdditionalInfo: locationInTrip?.additionalInfo,
-    cost: locationInTrip?.cost,
+    AdditionalInfo: locationInTrip?.additionalInfo ?? '',
+    cost: locationInTrip?.cost ?? 0,
   };
 };

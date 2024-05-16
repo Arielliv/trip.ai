@@ -1,5 +1,5 @@
 import { useFieldArray } from 'react-hook-form';
-import { LocationInTrip, TripFormData } from '@/app/hooks/useTripForm';
+import { LocationInTripFormData, TripFormData } from '@/app/hooks/useTripForm';
 import { TripFormFieldPath } from '@/app/components/constants/locationFormFieldPath';
 
 export const useLocationsInTripController = () => {
@@ -13,7 +13,7 @@ export const useLocationsInTripController = () => {
     return fields.findIndex((location) => location.id === id);
   };
 
-  const updateLocationById = (id: string, updatedLocation: LocationInTrip) => {
+  const updateLocationById = (id: string, updatedLocation: LocationInTripFormData) => {
     const index = getRowIndexById(id);
     if (index !== -1) {
       update(index, updatedLocation);

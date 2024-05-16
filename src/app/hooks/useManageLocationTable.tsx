@@ -9,11 +9,17 @@ import {
 } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import { Columns } from '@/app/components/constants/constants';
-import { createEmptyRow } from '@/app/components/LocationsTable/TableComponents/TableToolbar/TableToolbar';
 import { useLocationsInTripController } from '@/app/hooks/formControllers/useLocationsInTripController';
 import { mapRowToLocation } from '@/models/mappers/mapRowToLocation';
 
 const initRows: GridRowModel[] = [];
+
+export const createEmptyRow = (id: string): GridRowModel => ({
+  id,
+  [Columns.AdditionalInfo]: '',
+  [Columns.Type]: '',
+  isNew: true,
+});
 
 export const useManageLocationTable = () => {
   const { append, deleteLocationById, updateLocationById, moveLocationInArray } = useLocationsInTripController();
@@ -26,6 +32,7 @@ export const useManageLocationTable = () => {
       event.defaultMuiPrevented = true;
     }
   };
+
   const handleEditClick = (id: GridRowId) => () => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.Edit } });
   };
@@ -86,7 +93,7 @@ export const useManageLocationTable = () => {
     setRows((oldRows) => [...oldRows, newRow]);
     setRowModesModel((oldModel) => ({
       ...oldModel,
-      [id]: { mode: GridRowModes.Edit, fieldToFocus: Columns.LocationName },
+      [id]: { mode: GridRowModes.Edit, fieldToFocus: Columns.connectedLocationData },
     }));
   };
 
