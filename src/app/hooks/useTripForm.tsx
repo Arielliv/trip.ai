@@ -1,8 +1,10 @@
 import { useForm } from 'react-hook-form';
 import { DateRange } from '@mui/x-date-pickers-pro';
+import { ILocation } from '@/models/Location';
 
-export interface LocationInTrip {
+export interface LocationInTripFormData {
   id: string;
+  connectedLocationData: ILocation;
   duration: string;
   date: DateRange<Date>;
   AdditionalInfo: string;
@@ -12,11 +14,11 @@ export interface TripFormData {
   _id: string;
   tripName: string;
   privacy: boolean;
-  locations: LocationInTrip[];
+  locations: LocationInTripFormData[];
   //todo add more fields
 }
 export const defaultTripFormData = {
-  locationName: '',
+  tripName: '',
   privacy: false, // false for private, true for public
 };
 

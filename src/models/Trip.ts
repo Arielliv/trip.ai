@@ -8,11 +8,22 @@ export interface ITrip {
   name: string;
   participants_ids: Types.ObjectId[];
   permissions: Permission[];
-  locations: TripLocation[];
-  locations_order: Types.ObjectId[];
+  locations: ILocationInTrip[];
   visibility: Visibility;
   transportations: Transportation[];
   reviews: Review[];
+}
+
+export interface ILocationInTrip {
+  location_id?: string; // Reference to a Location document
+  id?: string;
+  dateRange: Date[];
+  duration?: {
+    value: number;
+    timeUnit: string;
+  };
+  additionalInfo?: string;
+  cost?: number;
 }
 
 export interface ITripDto {
@@ -20,8 +31,7 @@ export interface ITripDto {
   name: string;
   participants_ids: Types.ObjectId[];
   permissions: Permission[];
-  locations: TripLocation[];
-  locations_order: Types.ObjectId[];
+  locations: LocationInTrip[];
   visibility: Visibility;
   transportations: Transportation[];
   reviews: Review[];
@@ -33,8 +43,9 @@ export interface Transportation {
   type: TransportationType;
 }
 
-export interface TripLocation {
+export interface LocationInTrip {
   location_id: Types.ObjectId; // Reference to a Location document
+  id: string;
   dateRange: Date[];
   duration: {
     value: number;
@@ -51,14 +62,16 @@ export interface Review {
   images: string[]; // Array of image URLs
 }
 
-const TripLocationSchema: Schema = new Schema({
-  location: { type: Types.ObjectId, ref: 'Location', required: true },
-  time: {
-    start: { type: Date, required: true },
-    end: { type: Date, required: true },
+const LocationInTripSchema: Schema = new Schema({
+  location_id: { type: Types.ObjectId, ref: 'Location', required: true },
+  id: { type: String, required: true },
+  dateRange: [{ type: Date }, { type: Date }],
+  duration: {
+    value: { type: Number },
+    timeUnit: { type: String },
   },
-  note: { type: String },
-  ticket: { type: String },
+  additionalInfo: { type: String },
+  cost: { type: Number },
 });
 
 const TripSchema: Schema = new Schema({
@@ -71,8 +84,7 @@ const TripSchema: Schema = new Schema({
       role: { type: String, enum: Object.values(Role), required: true },
     },
   ],
-  locations: [TripLocationSchema],
-  locations_order: [{ type: Types.ObjectId }],
+  locations: [LocationInTripSchema],
   visibility: { type: String, enum: Object.values(Visibility), required: true },
   transportations: [
     {

@@ -1,19 +1,44 @@
 import { HttpStatusCode } from 'axios';
 import { NextRequest, NextResponse } from 'next/server';
-import Trip, { ITrip } from '@/models/Trip';
+import Trip, { ITrip, ITripDto } from '@/models/Trip';
 import dbConnect from '@/lib/dbConnect';
+import { auth } from '@/auth';
 
 export const POST = async (req: NextRequest) => {
   try {
     await dbConnect();
-    const body: ITrip = await req.json();
-    if (body.name) {
-      const trips = await Trip.create(body);
-      return NextResponse.json({ trips, message: 'Your trip has been created' }, { status: HttpStatusCode.Created });
+
+    const session = await auth();
+
+    if (!session || !session.user || !session.user.email) {
+      return NextResponse.json({ message: 'Authentication required' }, { status: HttpStatusCode.Unauthorized });
     }
-    return NextResponse.json({ message: 'Trip name is missing' }, { status: HttpStatusCode.BadRequest });
+
+    const owner = session.user.id;
+    const tripData: ITrip = await req.json();
+
+    if (!tripData.name) {
+      return NextResponse.json({ message: 'Trip name is missing' }, { status: HttpStatusCode.BadRequest });
+    }
+    console.log(`new trip: ${JSON.stringify(tripData)}, ${JSON.stringify(tripData)}`);
+
+    const trip: ITripDto = await Trip.create<ITripDto>({ ...tripData, owner });
+
+    return NextResponse.json(
+      {
+        location: trip,
+        message: 'Your Trip has been created',
+      },
+      { status: HttpStatusCode.Created },
+    );
   } catch (error) {
-    return NextResponse.json({ message: error }, { status: HttpStatusCode.BadRequest });
+    console.error('Failed to create Trip:', error);
+
+    return NextResponse.json(
+      // @ts-ignore
+      { message: 'Failed to create location', error: error.toString() },
+      { status: HttpStatusCode.InternalServerError },
+    );
   }
 };
 

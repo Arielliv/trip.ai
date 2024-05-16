@@ -18,8 +18,7 @@ export enum MyLocationDataTestIds {
 }
 
 export enum Columns {
-  Id = 'id',
-  LocationName = 'Location Name',
+  connectedLocationData = 'connectedLocationData',
   Duration = 'Duration',
   Date = 'Date',
   AdditionalInfo = 'Additional Info',

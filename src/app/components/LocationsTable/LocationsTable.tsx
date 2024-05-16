@@ -43,12 +43,28 @@ export const LocationsTable = () => {
 
   const columns: GridColDef[] = [
     {
-      field: Columns.LocationName,
-      headerName: Columns.LocationName,
+      field: Columns.connectedLocationData,
+      headerName: Columns.connectedLocationData,
       type: 'singleSelect',
       editable: true,
       align: 'left',
       width: 175,
+      valueGetter: (_value, row) => {
+        if (row[Columns.connectedLocationData]) {
+          return row[Columns.connectedLocationData];
+        } else {
+          return 'Not specified';
+        }
+      },
+      valueSetter: (value, row) => {
+        const selectedLocation = locations.find((location) => location.name === value);
+        return { ...row, [Columns.connectedLocationData]: selectedLocation };
+      },
+      renderCell: ({ value }) => {
+        if (value) {
+          return value.name;
+        }
+      },
       valueOptions: () => locations.map((location) => location.name),
     },
     {
@@ -96,6 +112,13 @@ export const LocationsTable = () => {
       align: 'left',
       editable: false,
       width: 150,
+      valueGetter: (_value, row) => {
+        if (row[Columns.connectedLocationData]) {
+          return row[Columns.connectedLocationData].type;
+        } else {
+          return 'Not specified';
+        }
+      },
     },
     {
       field: 'actions',
