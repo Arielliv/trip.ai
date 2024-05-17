@@ -14,7 +14,7 @@ export const POST = async (req: NextRequest) => {
       return NextResponse.json({ message: 'Authentication required' }, { status: HttpStatusCode.Unauthorized });
     }
 
-    const owner = session.user.id;
+    const owner_id = session.user.id;
     const tripData: ITrip = await req.json();
 
     if (!tripData.name) {
@@ -22,7 +22,7 @@ export const POST = async (req: NextRequest) => {
     }
     console.log(`new trip: ${JSON.stringify(tripData)}, ${JSON.stringify(tripData)}`);
 
-    const trip: ITripDto = await Trip.create<ITripDto>({ ...tripData, owner });
+    const trip: ITripDto = await Trip.create<ITripDto>({ ...tripData, owner_id });
 
     return NextResponse.json(
       {
@@ -42,12 +42,31 @@ export const POST = async (req: NextRequest) => {
   }
 };
 
-export const GET = async () => {
+export const GET = async (req: NextRequest) => {
+  const url = new URL(req.url);
+
+  const page = parseInt(url?.searchParams?.get('page') || '0', 10) || 0;
+  const limit = parseInt(url?.searchParams?.get('limit') || '0', 10) || 0;
+
   try {
     await dbConnect();
-    const trips = await Trip.find();
-    return NextResponse.json(trips);
+
+    const trips = await Trip.find()
+      .skip(page * limit)
+      .limit(limit);
+
+    // Optionally, get the total count of documents
+    const totalCount = await Trip.countDocuments();
+
+    return NextResponse.json({
+      trips,
+      page,
+      limit,
+      totalCount,
+      totalPages: Math.ceil(totalCount / limit),
+    });
   } catch (error) {
-    return NextResponse.json({ error });
+    // @ts-ignore
+    return NextResponse.json({ error: error.message });
   }
 };

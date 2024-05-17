@@ -35,12 +35,13 @@ const SavedTrips = ({ setSelectedTab }: SavedTripsProps) => {
   const handleDelete = (id: string) => {
     removeTrip(id);
   };
+
   const handleSelect = (coordinate: Omit<MapMarker, 'id'>) => {};
 
   return (
     <InfiniteScroll
       height={'90vh'}
-      scrollableTarget="locationScrollableContiner"
+      scrollableTarget="tripsScrollableContiner"
       dataLength={trips.length}
       next={loadTrips}
       hasMore={!loading && hasMore}
