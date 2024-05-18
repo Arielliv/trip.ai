@@ -32,7 +32,7 @@ const mapLocationInTripDataToLocationInTripSchema = (locationInTrip: LocationInT
     ...(locationInTrip.id && { id: locationInTrip.id }),
     ...(locationInTrip.date && { dateRange: locationInTrip.date.filter((date): date is Date => date !== null) }),
     ...(parsedDuration && { duration: parsedDuration }),
-    ...(locationInTrip.AdditionalInfo && { additionalInfo: locationInTrip.AdditionalInfo }),
+    ...(locationInTrip.additionalInfo && { additionalInfo: locationInTrip.additionalInfo }),
     ...(locationInTrip.cost && { cost: locationInTrip.cost }),
   };
 };

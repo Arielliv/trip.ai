@@ -9,8 +9,8 @@ import {
 } from '@mui/x-data-grid';
 import { v4 as uuidv4 } from 'uuid';
 import { Columns } from '@/app/components/constants/constants';
-import { useLocationsInTripController } from '@/app/hooks/formControllers/useLocationsInTripController';
 import { mapRowToLocation } from '@/models/mappers/mapRowToLocation';
+import { LocationInTripFormData } from '@/app/hooks/useTripForm';
 
 const initRows: GridRowModel[] = [];
 
@@ -21,8 +21,35 @@ export const createEmptyRow = (id: string): GridRowModel => ({
   isNew: true,
 });
 
-export const useManageLocationTable = () => {
-  const { append, deleteLocationById, updateLocationById, moveLocationInArray } = useLocationsInTripController();
+export interface ManageLocationTableHook {
+  handleRowModesModelChange: (newRowModesModel: GridRowModesModel) => void;
+  processRowUpdate: (
+    newRow: GridRowModel,
+    updateLocationById: (id: string, updatedLocation: LocationInTripFormData) => void,
+  ) => GridRowModel & { isNew: boolean };
+  handleCancelClick: (id: GridRowId) => () => void;
+  handleDeleteClick: (id: GridRowId, deleteLocationById: (id: string) => void) => () => void;
+  handleSaveClick: (id: GridRowId) => () => void;
+  handleEditClick: (id: GridRowId) => () => void;
+  handleRowEditStop: GridEventListener<'rowEditStop'>;
+  updateRowPosition: (
+    initialIndex: number,
+    newIndex: number,
+    rows: Array<GridRowModel>,
+  ) => Promise<Array<GridRowModel>>;
+  handleRowOrderChange: (
+    params: GridRowOrderChangeParams,
+    moveLocationInArray: (from: number, to: number) => void,
+  ) => Promise<void>;
+  addNewRow: (append: (location: LocationInTripFormData) => void) => void;
+  isRowInEditMode: (id: GridRowId) => boolean;
+  rows: GridRowModel[];
+  rowModesModel: GridRowModesModel;
+  loadTripLocations: (locations: LocationInTripFormData[]) => void;
+  clearTripLocations: () => void;
+}
+
+export const useManageLocationTable = (): ManageLocationTableHook => {
   const [rows, setRows] = useState<GridRowModel[]>(initRows);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const [loading, setLoading] = useState(false);
@@ -41,7 +68,7 @@ export const useManageLocationTable = () => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
   };
 
-  const handleDeleteClick = (id: GridRowId) => () => {
+  const handleDeleteClick = (id: GridRowId, deleteLocationById: (id: string) => void) => () => {
     deleteLocationById(id.toString());
     setRows(rows.filter((row: GridRowModel) => row.id !== id));
   };
@@ -58,7 +85,10 @@ export const useManageLocationTable = () => {
     }
   };
 
-  const processRowUpdate = (newRow: GridRowModel) => {
+  const processRowUpdate = (
+    newRow: GridRowModel,
+    updateLocationById: (id: string, updatedLocation: LocationInTripFormData) => void,
+  ) => {
     const updatedRow: GridRowModel & { isNew: boolean } = { ...newRow, isNew: false };
     updateLocationById(updatedRow.id, mapRowToLocation(newRow));
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
@@ -78,7 +108,10 @@ export const useManageLocationTable = () => {
     });
   };
 
-  const handleRowOrderChange = async (params: GridRowOrderChangeParams) => {
+  const handleRowOrderChange = async (
+    params: GridRowOrderChangeParams,
+    moveLocationInArray: (from: number, to: number) => void,
+  ) => {
     setLoading(true);
     moveLocationInArray(params.oldIndex, params.targetIndex);
     const newRows = await updateRowPosition(params.oldIndex, params.targetIndex, rows);
@@ -86,19 +119,38 @@ export const useManageLocationTable = () => {
     setLoading(false);
   };
 
-  const addNewRow = () => {
+  const addNewRow = (append: (location: LocationInTripFormData) => void) => {
     const id = uuidv4().toString();
     const newRow = createEmptyRow(id);
     append(mapRowToLocation(newRow));
     setRows((oldRows) => [...oldRows, newRow]);
     setRowModesModel((oldModel) => ({
       ...oldModel,
-      [id]: { mode: GridRowModes.Edit, fieldToFocus: Columns.connectedLocationData },
+      [id]: { mode: GridRowModes.Edit, fieldToFocus: Columns.ConnectedLocationData },
     }));
   };
 
   const isEditMode = (id: GridRowId) => {
     return rowModesModel[id]?.mode === GridRowModes.Edit;
+  };
+
+  const loadTripLocations = (locations: LocationInTripFormData[]) => {
+    const rows = locations.map((location) => {
+      return {
+        id: location.id,
+        [Columns.ConnectedLocationData]: location?.connectedLocationData?.name,
+        [Columns.Date]: location?.date,
+        [Columns.Duration]: location?.duration,
+        [Columns.AdditionalInfo]: location?.additionalInfo,
+        [Columns.Cost]: location?.cost,
+        [Columns.Type]: location?.connectedLocationData?.type,
+      };
+    });
+    setRows(rows);
+  };
+
+  const clearTripLocations = () => {
+    setRows([]);
   };
 
   return {
@@ -114,6 +166,8 @@ export const useManageLocationTable = () => {
     rows,
     rowModesModel,
     addNewRow,
-    isEditMode,
+    isRowInEditMode: isEditMode,
+    loadTripLocations,
+    clearTripLocations,
   };
 };

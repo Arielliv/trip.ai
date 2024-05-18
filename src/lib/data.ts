@@ -1,8 +1,14 @@
-import { ITrip } from '@/models/Trip';
+import { IFullTrip, ITrip } from '@/models/Trip';
 import { unstable_noStore as noStore } from 'next/dist/server/web/spec-extension/unstable-no-store';
 import axios from 'axios';
 import { ILocation } from '@/models/Location';
 import { LocationsPaginationResponse, TripsPaginationResponse } from '@/lib/types';
+
+export async function fetchTripById(id: string): Promise<IFullTrip> {
+  noStore();
+  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/trip/${id}`);
+  return res.data as IFullTrip;
+}
 
 export async function fetchTrips(page: number, limit: number = 10): Promise<TripsPaginationResponse> {
   noStore();
@@ -27,6 +33,13 @@ export async function createLocation(newLocation: ILocation): Promise<ILocation>
   const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/locations`, newLocation);
   console.log(`${res.data.message} with id ${res.data.id}`);
   return res.data.location as ILocation;
+}
+
+export async function updateTrip(updatedTrip: ITrip): Promise<ITrip> {
+  noStore();
+  const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/trip/${updatedTrip._id}`, updatedTrip);
+  console.log(`${res.data.message} with id ${res.data.id}`);
+  return res.data.trip as ITrip;
 }
 
 export async function updateLocation(updatedLocation: ILocation): Promise<ILocation> {

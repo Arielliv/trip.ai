@@ -23,7 +23,7 @@ export enum MyTripsDataTestIds {
 }
 
 export enum Columns {
-  connectedLocationData = 'connectedLocationData',
+  ConnectedLocationData = 'ConnectedLocationData',
   Duration = 'Duration',
   Date = 'Date',
   AdditionalInfo = 'Additional Info',

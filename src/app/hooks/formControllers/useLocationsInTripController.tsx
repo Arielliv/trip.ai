@@ -1,8 +1,16 @@
-import { useFieldArray } from 'react-hook-form';
+import { FieldArrayWithId, useFieldArray } from 'react-hook-form';
 import { LocationInTripFormData, TripFormData } from '@/app/hooks/useTripForm';
 import { TripFormFieldPath } from '@/app/components/constants/locationFormFieldPath';
 
-export const useLocationsInTripController = () => {
+export interface LocationsInTripController {
+  fields: FieldArrayWithId<TripFormData, TripFormFieldPath.Locations>[];
+  append: (location: LocationInTripFormData) => void;
+  deleteLocationById: (id: string) => void;
+  updateLocationById: (id: string, updatedLocation: LocationInTripFormData) => void;
+  moveLocationInArray: (from: number, to: number) => void;
+}
+
+export const useLocationsInTripController = (): LocationsInTripController => {
   const { fields, append, remove, move, update } = useFieldArray<TripFormData, TripFormFieldPath.Locations>({
     name: TripFormFieldPath.Locations,
     // @ts-expect-error: prevents react-hook-form from changing the id
