@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { fetchTrips } from '@/lib/data';
+import { deleteTrip, fetchTrips } from '@/lib/data';
 
 import { ITrip } from '@/models/Trip';
 
@@ -42,8 +42,8 @@ export const useManageTrips = (initialPage = 0, limit = 10) => {
     setTrips((prevTrips) => [...prevTrips, newTrip]);
   };
 
-  const removeTrip = (id: string) => {
-    // deleteTrip(id);
+  const removeTrip = async (id: string) => {
+    await deleteTrip(id);
     const filterTrips = trips.filter((trip) => trip._id !== id);
     setTrips(filterTrips);
   };

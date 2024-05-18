@@ -71,7 +71,7 @@ export const LocationsTable = () => {
       field: Columns.Duration,
       type: 'custom',
       headerName: Columns.Duration,
-      width: 250,
+      width: 220,
       editable: true,
       renderEditCell: (params) => <DurationInput {...params} />,
       renderCell: ({ value }) => <DurationView value={value} />,
@@ -93,7 +93,7 @@ export const LocationsTable = () => {
       editable: true,
       valueFormatter: (value) => (value ? value : 'No additional info was provided'),
       align: 'left',
-      width: 300,
+      width: 200,
     },
     {
       field: Columns.Cost,
@@ -101,7 +101,7 @@ export const LocationsTable = () => {
       type: 'number',
       align: 'left',
       editable: true,
-      width: 150,
+      width: 100,
       valueFormatter: (value) => currencyFormatter.format(value ? value : 0),
       cellClassName: 'font-tabular-nums',
     },
@@ -135,7 +135,7 @@ export const LocationsTable = () => {
   return (
     <Box
       sx={{
-        height: 500,
+        height: '100%',
         width: '100%',
         '& .actions': {
           color: 'text.secondary',

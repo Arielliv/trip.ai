@@ -17,6 +17,7 @@ import Delete from '@mui/icons-material/Delete';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { MapMarker } from '@/app/components/Map/Map';
+import { LongTextNote } from '@/app/components/LongTextNote/LongTextNote';
 
 export interface LocationCardProps {
   location: ILocation;
@@ -58,7 +59,11 @@ export function LocationCard({ location, onEdit, onDelete, onSelect }: LocationC
         // padding: 1,
         borderRadius: '10px',
         width: '100%',
-        maxHeight: 150,
+        maxHeight: 160,
+        '&:hover': {
+          backgroundColor: 'action.hover',
+          transition: 'background-color 0.3s ease',
+        },
       }}
     >
       <CardMedia
@@ -90,16 +95,9 @@ export function LocationCard({ location, onEdit, onDelete, onSelect }: LocationC
           </Typography>
           <Rating name="rating" value={0} size="small" readOnly sx={{ verticalAlign: 'text-top' }} />
         </Box>
-        <Typography
-          component="p"
-          sx={{
-            fontSize: 14,
-            color: 'grey.500',
-            mb: '1.275rem',
-          }}
-        >
-          {location.note}
-        </Typography>
+        <Box mb={1}>
+          <LongTextNote value={location.note ?? ''} />
+        </Box>
         <Divider light sx={{ mt: 1, mb: 1 }} />
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignContent: 'flex-end', alignSelf: 'flex-end' }}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>

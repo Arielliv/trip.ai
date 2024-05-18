@@ -27,7 +27,7 @@ export interface ILocationInTrip {
 }
 
 export interface ITripDto {
-  owner: Types.ObjectId;
+  owner_id: Types.ObjectId;
   name: string;
   participants_ids: Types.ObjectId[];
   permissions: Permission[];
@@ -76,7 +76,7 @@ const LocationInTripSchema: Schema = new Schema({
 
 const TripSchema: Schema = new Schema({
   name: { type: String, required: true },
-  owner: { type: Types.ObjectId, required: true },
+  owner_id: { type: Types.ObjectId, required: true },
   participants_ids: [{ type: Types.ObjectId }],
   permissions: [
     {

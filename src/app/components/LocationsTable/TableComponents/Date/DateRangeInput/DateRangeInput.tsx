@@ -7,12 +7,13 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFnsV3';
 
 export const DateRangeInput = ({ id, value, field, hasFocus }: GridRenderEditCellParams) => {
   const apiRef = useGridApiContext();
-  const ref = useRef();
+  const ref = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
     if (hasFocus) {
-      // @ts-ignore
-      ref.current.focus();
+      if (ref.current) {
+        ref.current.focus();
+      }
     }
   }, [hasFocus]);
 
@@ -32,7 +33,6 @@ export const DateRangeInput = ({ id, value, field, hasFocus }: GridRenderEditCel
     >
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <DateRangePicker
-          // @ts-ignore
           ref={ref}
           localeText={{ start: 'Start', end: 'End' }}
           value={value}

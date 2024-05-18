@@ -1,11 +1,10 @@
 'use client';
 import React, { useCallback } from 'react';
-import { CircularProgress, List, ListItem, Box } from '@mui/material';
+import { CircularProgress, List, Box } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { MapMarker } from '@/app/components/Map/Map';
 import { useTripContext } from '@/app/providers/TripContextFormProvider/TripContextFormProvider';
-import { DataTestIds } from '@/app/components/constants/constants';
+import { TripListItem } from '@/app/components/TripListItem/TripListItem';
 
 export interface SavedTripsProps {
   setSelectedTab: (tab: string) => void;
@@ -27,20 +26,27 @@ const SavedTrips = ({ setSelectedTab }: SavedTripsProps) => {
     [searchParams],
   );
 
-  const handleEdit = (id: string) => {
+  const handleEdit = (id?: string) => {
+    if (!id) return;
+
     router.push(pathname + '?' + createQueryString('id', id));
     setSelectedTab('0');
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = (id?: string) => {
+    if (!id) return;
+
     removeTrip(id);
   };
-  const handleSelect = (coordinate: Omit<MapMarker, 'id'>) => {};
+
+  const handleSelect = (id?: string) => {
+    if (!id) return;
+  };
 
   return (
     <InfiniteScroll
       height={'90vh'}
-      scrollableTarget="locationScrollableContiner"
+      scrollableTarget="tripsScrollableContiner"
       dataLength={trips.length}
       next={loadTrips}
       hasMore={!loading && hasMore}
@@ -51,12 +57,16 @@ const SavedTrips = ({ setSelectedTab }: SavedTripsProps) => {
       }
       endMessage={<p style={{ textAlign: 'center' }}>No more trips</p>}
     >
-      <List>
+      <List sx={{ justifyContent: 'center' }}>
         {trips.map((trip, index) => (
-          <ListItem key={index} data-testid={DataTestIds.savedTripAt(index)}>
-            <div>{trip.name}</div>
-            {/*<LocationCard location={location} onEdit={handleEdit} onDelete={handleDelete} onSelect={handleSelect} />*/}
-          </ListItem>
+          <TripListItem
+            key={trip._id}
+            trip={trip}
+            index={index}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+            handleSelect={handleSelect}
+          />
         ))}
       </List>
     </InfiniteScroll>

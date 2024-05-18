@@ -20,7 +20,7 @@ export const mapLocationInTripToLocationsFormData = (locationInTrip: ILocationIn
     id: locationInTrip.id ?? '',
     duration: `${locationInTrip.duration?.value} ${locationInTrip.duration?.timeUnit}` ?? '',
     // @ts-ignore
-    date: locationInTrip.dateRange,
+    date: locationInTrip.dateRange.map((date) => new Date(date)) ?? [],
     AdditionalInfo: locationInTrip?.additionalInfo ?? '',
     cost: locationInTrip?.cost ?? 0,
   };

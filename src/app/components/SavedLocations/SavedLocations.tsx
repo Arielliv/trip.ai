@@ -2,7 +2,7 @@
 import React, { useCallback } from 'react';
 import { CircularProgress, List, ListItem, Box } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { LocationCard } from '@/app/components/LocationCard';
+import { LocationCard } from '@/app/components/LocationCard/LocationCard';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { MapMarker } from '@/app/components/Map/Map';
 import { useLocationContext } from '@/app/providers/LocationContextFormProvider/LocationContextFormProvider';
