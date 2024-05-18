@@ -60,6 +60,10 @@ export function LocationCard({ location, onEdit, onDelete, onSelect }: LocationC
         borderRadius: '10px',
         width: '100%',
         maxHeight: 160,
+        '&:hover': {
+          backgroundColor: 'action.hover',
+          transition: 'background-color 0.3s ease',
+        },
       }}
     >
       <CardMedia
