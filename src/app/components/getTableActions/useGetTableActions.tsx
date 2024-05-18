@@ -6,7 +6,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import React from 'react';
 
 export interface TableActionsParams {
-  isInEditMode: (id: GridRowId) => boolean;
+  isRowInEditMode: (id: GridRowId) => boolean;
   handleSaveClick: (id: GridRowId) => void;
   handleCancelClick: (id: GridRowId) => void;
   handleEditClick: (id: GridRowId) => void;
@@ -17,10 +17,10 @@ export const useGetTableActions = ({
   handleCancelClick,
   handleEditClick,
   handleDeleteClick,
-  isInEditMode,
+  isRowInEditMode,
 }: TableActionsParams) => {
   const getTableActions = (id: GridRowId) => {
-    if (isInEditMode(id)) {
+    if (isRowInEditMode(id)) {
       return [
         <GridActionsCellItem
           key={`${id}-save`}

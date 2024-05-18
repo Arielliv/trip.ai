@@ -2,15 +2,19 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { HttpStatusCode } from 'axios';
 import dbConnect from '@/lib/dbConnect';
-import Trip, { ITrip } from '@/models/Trip';
+import Trip, { IFullTrip, ITrip } from '@/models/Trip';
+import { mapTripToFullTrip } from '@/models/mappers/mapTripToFullTrip';
 import { auth } from '@/auth';
 
 export const GET = async (_: NextRequest, { params }: { params: { id: string } }) => {
   try {
     await dbConnect();
-    const trip = await Trip.findById(params.id);
+    const trip = await Trip.findById(params.id).populate({
+      path: 'locations.location_id',
+      model: 'Location',
+    });
     if (trip) {
-      return NextResponse.json({ trip });
+      return NextResponse.json(mapTripToFullTrip(trip) as IFullTrip);
     }
     return NextResponse.json({ message: `Trip ${params.id} not found` }, { status: HttpStatusCode.NotFound });
   } catch (error) {
@@ -21,18 +25,46 @@ export const GET = async (_: NextRequest, { params }: { params: { id: string } }
 export const PUT = async (req: NextRequest, { params }: { params: { id: string } }) => {
   try {
     await dbConnect();
-    const trip = await Trip.findById(params.id);
-    if (trip) {
-      const body: ITrip = await req.json();
-      if (body.name) {
-        trip.name = body.name;
-      }
-      trip.save();
-      return NextResponse.json({ trip });
+
+    const session = await auth();
+
+    if (!session || !session.user || !session.user.email) {
+      return NextResponse.json({ message: 'Authentication required' }, { status: HttpStatusCode.Unauthorized });
     }
-    return NextResponse.json({ message: `Trip ${params.id} not found` }, { status: HttpStatusCode.NotFound });
+
+    const body: ITrip = await req.json();
+
+    if (!body.name) {
+      return NextResponse.json({ message: 'Trip name is missing' }, { status: HttpStatusCode.BadRequest });
+    }
+
+    const updatedTrip = await Trip.findOneAndUpdate(
+      { _id: params.id, owner_id: session.user.id },
+      { $set: body },
+      { new: true },
+    );
+
+    if (!updatedTrip) {
+      return NextResponse.json(
+        { message: `Trip ${params.id} not found / user not authorized` },
+        { status: HttpStatusCode.NotFound },
+      );
+    }
+
+    return NextResponse.json(
+      {
+        trip: updatedTrip,
+        message: 'Trip updated successfully',
+      },
+      { status: HttpStatusCode.Ok },
+    );
   } catch (error) {
-    return NextResponse.json({ message: error }, { status: HttpStatusCode.BadRequest });
+    console.error('Failed to update trip:', error);
+
+    return NextResponse.json(
+      { message: 'Failed to update trip', error: error },
+      { status: HttpStatusCode.InternalServerError },
+    );
   }
 };
 

@@ -5,10 +5,10 @@ import { Columns } from '@/app/components/constants/constants';
 export const mapRowToLocation = (row: GridRowModel): LocationInTripFormData => {
   return {
     id: row.id,
-    connectedLocationData: row[Columns.connectedLocationData],
+    connectedLocationData: row[Columns.ConnectedLocationData],
     duration: row[Columns.Duration],
     date: row[Columns.Date],
-    AdditionalInfo: row[Columns.AdditionalInfo],
+    additionalInfo: row[Columns.AdditionalInfo],
     cost: row[Columns.Cost],
   };
 };

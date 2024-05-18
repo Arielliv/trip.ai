@@ -1,8 +1,8 @@
-import { GridColDef, GridSlots } from '@mui/x-data-grid';
-import React, { useEffect } from 'react';
+import { GridColDef, GridRowId, GridSlots } from '@mui/x-data-grid';
+import React, { useCallback, useEffect } from 'react';
 import { Box } from '@mui/material';
 import { useManageLocations } from '@/app/hooks/useManageLocations';
-import { DataGridPro } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridRowModel, GridRowOrderChangeParams } from '@mui/x-data-grid-pro';
 import { DateRangeInput } from '@/app/components/LocationsTable/TableComponents/Date/DateRangeInput/DateRangeInput';
 import { DurationInput } from '@/app/components/LocationsTable/TableComponents/Duration/DurationInput/DurationInput';
 import { TableToolbar } from '@/app/components/LocationsTable/TableComponents/TableToolbar/TableToolbar';
@@ -11,9 +11,16 @@ import { currencyFormatter } from '@/app/components/currencyFormatter/currencyFo
 import { useGetTableActions } from '@/app/components/getTableActions/useGetTableActions';
 import { DurationView } from '@/app/components/LocationsTable/TableComponents/Duration/DurationView/DurationView';
 import { DateView } from '@/app/components/LocationsTable/TableComponents/Date/DateView/DateView';
-import { useManageLocationTable } from '@/app/hooks/useManageLocationTable';
+import { useTripContext } from '@/app/providers/TripContextFormProvider/TripContextFormProvider';
+import { useLocationsInTripController } from '@/app/hooks/formControllers/useLocationsInTripController';
+import { useFormContext } from 'react-hook-form';
+import { TripFormData } from '@/app/hooks/useTripForm';
+import { useOnTripFormSubmit } from '@/app/hooks/useOnTripFormSubmit';
 
 export const LocationsTable = () => {
+  const { onSubmit } = useOnTripFormSubmit();
+  const { handleSubmit } = useFormContext<TripFormData>();
+  const { append, deleteLocationById, updateLocationById, moveLocationInArray } = useLocationsInTripController();
   const {
     processRowUpdate,
     handleRowEditStop,
@@ -26,12 +33,34 @@ export const LocationsTable = () => {
     handleSaveClick,
     handleCancelClick,
     addNewRow,
-    isEditMode: isInEditMode,
-  } = useManageLocationTable();
+    isRowInEditMode,
+  } = useTripContext();
+
+  const onDelete = (id: GridRowId) => {
+    handleDeleteClick(id, deleteLocationById);
+  };
+
+  const onProcessRowUpdate = useCallback(
+    async (newRow: GridRowModel) => {
+      const updatedRow = processRowUpdate(newRow, updateLocationById);
+      await handleSubmit(onSubmit)(); // The extra parentheses are used to call the returned function immediately
+
+      return updatedRow;
+    },
+    [processRowUpdate, updateLocationById, handleSubmit, onSubmit],
+  );
+  const onRowOrderChange = (params: GridRowOrderChangeParams) => {
+    return handleRowOrderChange(params, moveLocationInArray);
+  };
+
+  const onAddNewRow = () => {
+    addNewRow(append);
+  };
+
   const { getTableActions } = useGetTableActions({
-    isInEditMode,
+    isRowInEditMode,
     handleEditClick,
-    handleDeleteClick,
+    handleDeleteClick: onDelete,
     handleSaveClick,
     handleCancelClick,
   });
@@ -43,22 +72,22 @@ export const LocationsTable = () => {
 
   const columns: GridColDef[] = [
     {
-      field: Columns.connectedLocationData,
-      headerName: Columns.connectedLocationData,
+      field: Columns.ConnectedLocationData,
+      headerName: Columns.ConnectedLocationData,
       type: 'singleSelect',
       editable: true,
       align: 'left',
       width: 175,
       valueGetter: (_value, row) => {
-        if (row[Columns.connectedLocationData]) {
-          return row[Columns.connectedLocationData];
+        if (row[Columns.ConnectedLocationData]) {
+          return row[Columns.ConnectedLocationData];
         } else {
           return 'Not specified';
         }
       },
       valueSetter: (value, row) => {
         const selectedLocation = locations.find((location) => location.name === value);
-        return { ...row, [Columns.connectedLocationData]: selectedLocation };
+        return { ...row, [Columns.ConnectedLocationData]: selectedLocation };
       },
       renderCell: ({ value }) => {
         if (value) {
@@ -113,8 +142,8 @@ export const LocationsTable = () => {
       editable: false,
       width: 150,
       valueGetter: (_value, row) => {
-        if (row[Columns.connectedLocationData]) {
-          return row[Columns.connectedLocationData].type;
+        if (row[Columns.ConnectedLocationData]) {
+          return row[Columns.ConnectedLocationData].type;
         } else {
           return 'Not specified';
         }
@@ -152,15 +181,15 @@ export const LocationsTable = () => {
         editMode="row"
         rowModesModel={rowModesModel}
         rowReordering
-        onRowOrderChange={handleRowOrderChange}
+        onRowOrderChange={onRowOrderChange}
         onRowModesModelChange={handleRowModesModelChange}
         onRowEditStop={handleRowEditStop}
-        processRowUpdate={processRowUpdate}
+        processRowUpdate={onProcessRowUpdate}
         slots={{
           toolbar: TableToolbar as GridSlots['toolbar'],
         }}
         slotProps={{
-          toolbar: { addNewRow },
+          toolbar: { addNewRow: onAddNewRow },
         }}
       />
     </Box>

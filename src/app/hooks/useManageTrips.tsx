@@ -1,16 +1,17 @@
 import { useState, useCallback } from 'react';
-import { deleteTrip, fetchTrips } from '@/lib/data';
-
-import { ITrip } from '@/models/Trip';
+import { deleteTrip, fetchTripById, fetchTrips } from '@/lib/data';
+import { IFullTrip, ITrip } from '@/models/Trip';
 
 export interface TripsManagerContextObject {
   trips: ITrip[];
   loadTrips: () => void;
   addTrip: (newTrip: ITrip) => void;
+  editTrip: (updatedTrip: ITrip) => void;
   isEditMode: boolean;
   loading: boolean;
   hasMore: boolean;
   removeTrip: (id: string) => void;
+  getFullTripById: (id: string | null) => Promise<ITrip | undefined>;
 }
 
 export const useManageTrips = (initialPage = 0, limit = 10) => {
@@ -42,6 +43,18 @@ export const useManageTrips = (initialPage = 0, limit = 10) => {
     setTrips((prevTrips) => [...prevTrips, newTrip]);
   };
 
+  const editTrip = (updatedTrip: ITrip) => {
+    setTrips((prevTrips) => {
+      return prevTrips.map((trip) => {
+        if (trip._id === updatedTrip._id) {
+          return updatedTrip;
+        } else {
+          return trip;
+        }
+      });
+    });
+  };
+
   const removeTrip = async (id: string) => {
     await deleteTrip(id);
     const filterTrips = trips.filter((trip) => trip._id !== id);
@@ -56,5 +69,9 @@ export const useManageTrips = (initialPage = 0, limit = 10) => {
     [trips],
   );
 
-  return { trips, loadTrips, hasMore, loading, error, addTrip, getTripById, removeTrip };
+  const getFullTripById = useCallback((id: string | null): Promise<IFullTrip | undefined> => {
+    if (!id) return Promise.resolve(undefined);
+    return fetchTripById(id);
+  }, []);
+  return { getFullTripById, trips, loadTrips, hasMore, loading, error, addTrip, getTripById, removeTrip, editTrip };
 };

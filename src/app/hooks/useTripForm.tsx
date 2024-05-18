@@ -7,7 +7,7 @@ export interface LocationInTripFormData {
   connectedLocationData: ILocation;
   duration: string;
   date: DateRange<Date>;
-  AdditionalInfo: string;
+  additionalInfo: string;
   cost: number;
 }
 export interface TripFormData {
