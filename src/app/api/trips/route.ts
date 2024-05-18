@@ -26,7 +26,7 @@ export const POST = async (req: NextRequest) => {
 
     return NextResponse.json(
       {
-        location: trip,
+        trip,
         message: 'Your Trip has been created',
       },
       { status: HttpStatusCode.Created },

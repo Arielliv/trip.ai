@@ -40,6 +40,10 @@ export async function deleteLocation(locationId: string) {
   return axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/location/${locationId}`);
 }
 
+export async function deleteTrip(tripId: string) {
+  return axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/trip/${tripId}`);
+}
+
 export async function fetchLocations(page: number, limit: number = 10): Promise<LocationsPaginationResponse> {
   noStore();
   const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/locations`, {

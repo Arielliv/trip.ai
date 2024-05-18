@@ -8,8 +8,8 @@ export const LocationsTableView = () => {
     <Grid container xs={12} justifyContent={'center'} padding={1}>
       <Grid container xs={11}>
         <Grid xs={12}>
-          <Typography padding={1} variant="h3">
-            Locations Table
+          <Typography padding={1} variant="h4">
+            Trip Dashboard
           </Typography>
         </Grid>
         <Grid xs={12} padding={1}>
