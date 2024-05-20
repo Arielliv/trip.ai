@@ -48,7 +48,7 @@ export const TripContextFormProvider = ({ children }: { children: React.ReactNod
     };
 
     fetchDetails();
-  }, [tripId]);
+  }, [tripId, formMethods, getFullTripById, loadTripLocations]);
 
   useEffect(() => {
     void loadTrips();

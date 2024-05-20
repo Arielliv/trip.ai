@@ -61,7 +61,7 @@ export const LocationContextFormProvider = ({ children }: { children: React.Reac
     } catch (error) {
       console.error('Failed to fetch place details:', error);
     }
-  }, [locationId, getLocationById, locationData.map, formMethods]);
+  }, [locationId, getLocationById, locationData.map, formMethods, handleFocusEditLocation, isSubmitSuccessful]);
 
   useEffect(() => {
     void handleFetchDetails();
