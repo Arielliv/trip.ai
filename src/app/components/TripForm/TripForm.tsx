@@ -3,15 +3,17 @@
 import React from 'react';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
-import { Box, FormControl, FormControlLabel, InputLabel, MenuItem, Select, Switch, TextField } from '@mui/material';
+import { Box, FormControl, FormControlLabel, InputLabel, Switch, TextField } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useFormContext } from 'react-hook-form';
 import { useLocationPrivacyController } from '@/app/hooks/formControllers/useLocationPrivacy';
-import { TripFormData } from '@/app/hooks/useTripForm';
+import { TripFormData, useTripForm } from '@/app/hooks/useTripForm';
 import { useTripNameController } from '@/app/hooks/formControllers/useTripNameController';
 import { useOnTripFormSubmit } from '@/app/hooks/useOnTripFormSubmit';
+import { useTripContext } from '@/app/providers/TripContextFormProvider/TripContextFormProvider';
 
 const TripForm = () => {
+  const { clearFormOnEditState } = useTripContext();
   const { watch, handleSubmit, formState } = useFormContext<TripFormData>();
   const { field: tripNameField, error: tripNameError } = useTripNameController();
   const { field: privacyField } = useLocationPrivacyController();
@@ -51,6 +53,11 @@ const TripForm = () => {
             onClick={!formState.isSubmitting ? handleSubmit(onSubmit) : undefined}
           >
             {formState.isSubmitting ? <CircularProgress size={24} /> : 'Save'}
+          </Button>
+        </Grid>
+        <Grid xs={12}>
+          <Button color="secondary" variant="outlined" fullWidth onClick={clearFormOnEditState}>
+            {'Clear'}
           </Button>
         </Grid>
       </Grid>

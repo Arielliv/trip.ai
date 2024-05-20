@@ -1,7 +1,7 @@
 import { HttpStatusCode } from 'axios';
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
-import Location, { ILocation, ILocationDto } from '@/models/Location';
+import Location, { ILocation, ITripDto } from '@/models/Location';
 import { UserPermission } from '@/models/userPermission';
 import { IUserPermission } from '@/models/userPermission';
 import { auth } from '@/auth';
@@ -25,7 +25,7 @@ export const POST = async (req: NextRequest) => {
       return NextResponse.json({ message: 'Location name is missing' }, { status: HttpStatusCode.BadRequest });
     }
     const userPermission = await createUserPermission(user_id, LocationPermissionEnum.edit.toString());
-    const location: ILocationDto = await Location.create<ILocationDto>({
+    const location: ITripDto = await Location.create<ITripDto>({
       ...locationData,
       user_id,
       permissions: [userPermission._id],

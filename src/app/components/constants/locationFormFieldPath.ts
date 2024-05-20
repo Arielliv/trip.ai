@@ -8,5 +8,6 @@ export enum LocationFormFieldPath {
 
 export enum TripFormFieldPath {
   TripName = 'tripName',
+  Locations = 'locations',
   Privacy = 'privacy',
 }

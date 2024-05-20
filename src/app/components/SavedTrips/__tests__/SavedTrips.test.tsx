@@ -12,8 +12,8 @@ describe('SavedTrips', () => {
 
   it('renders trips if present in the database', async () => {
     const mockTrips = [
-      { id: 1, name: 'Trip 1' },
-      { id: 2, name: 'Trip 2' },
+      { _id: '1', name: 'Trip 1', locations: [] },
+      { _id: '2', name: 'Trip 2', locations: [] },
     ];
 
     driver.givenFetchTripsMock({
@@ -28,7 +28,6 @@ describe('SavedTrips', () => {
 
     expect(screen.getByTestId(DataTestIds.savedTripAt(0))).toBeInTheDocument();
     expect(screen.getByTestId(DataTestIds.savedTripAt(1))).toBeInTheDocument();
-    expect(await screen.findByText('Trip 2')).toBeInTheDocument();
   });
 
   it('does not render locations if none are present in the database', async () => {

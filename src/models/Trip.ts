@@ -1,26 +1,61 @@
 /* v8 ignore start */
-import { Schema, Document, Types, models, model } from 'mongoose';
-import { LocationType, Role, TransportationType, Visibility } from '@/models/constants';
-import { Address, Coordinate, Permission } from '@/models/shared/types';
+import { Schema, Types, models, model } from 'mongoose';
+import { Role, TransportationType, Visibility } from '@/models/constants';
+import { Permission } from '@/models/shared/types';
+import { ILocation } from '@/models/Location';
+
+export interface IFullTrip {
+  _id?: string;
+  name: string;
+  participants_ids: Types.ObjectId[];
+  permissions: Permission[];
+  locations: IFullLocationInTrip[];
+  visibility: Visibility;
+  transportations: Transportation[];
+  reviews: Review[];
+}
+
+export interface IFullLocationInTrip {
+  connectedLocationData: ILocation;
+  id?: string;
+  dateRange: Date[];
+  duration?: {
+    value: number;
+    timeUnit: string;
+  };
+  additionalInfo?: string;
+  cost?: number;
+}
 
 export interface ITrip {
   _id?: string;
   name: string;
   participants_ids: Types.ObjectId[];
   permissions: Permission[];
-  locations: TripLocation[];
-  locations_order: Types.ObjectId[];
+  locations: ILocationInTrip[];
   visibility: Visibility;
   transportations: Transportation[];
   reviews: Review[];
 }
 
+export interface ILocationInTrip {
+  location_id?: string | ILocation; // Reference to a Location document
+  id?: string;
+  dateRange: Date[];
+  duration?: {
+    value: number;
+    timeUnit: string;
+  };
+  additionalInfo?: string;
+  cost?: number;
+}
+
 export interface ITripDto {
-  owner: Types.ObjectId;
+  owner_id: Types.ObjectId;
   name: string;
   participants_ids: Types.ObjectId[];
-  locations: TripLocation[];
-  locations_order: Types.ObjectId[];
+  permissions: Permission[];
+  locations: LocationInTrip[];
   visibility: Visibility;
   transportations: Transportation[];
   reviews: Review[];
@@ -32,14 +67,16 @@ export interface Transportation {
   type: TransportationType;
 }
 
-export interface TripLocation {
-  location: Types.ObjectId; // Reference to a Location document
-  time: {
-    start: Date;
-    end: Date;
+export interface LocationInTrip {
+  location_id: Types.ObjectId; // Reference to a Location document
+  id: string;
+  dateRange: Date[];
+  duration: {
+    value: number;
+    timeUnit: string;
   };
-  note: string;
-  ticket: string; // Trip-specific URL or document identifier
+  additionalInfo: string;
+  cost: number;
 }
 
 export interface Review {
@@ -49,22 +86,23 @@ export interface Review {
   images: string[]; // Array of image URLs
 }
 
-const TripLocationSchema: Schema = new Schema({
-  location: { type: Types.ObjectId, ref: 'Location', required: true },
-  time: {
-    start: { type: Date, required: true },
-    end: { type: Date, required: true },
+const LocationInTripSchema: Schema = new Schema({
+  location_id: { type: Types.ObjectId, ref: 'Location', required: true },
+  id: { type: String, required: true },
+  dateRange: [{ type: Date }, { type: Date }],
+  duration: {
+    value: { type: Number },
+    timeUnit: { type: String },
   },
-  note: { type: String },
-  ticket: { type: String },
+  additionalInfo: { type: String },
+  cost: { type: Number },
 });
 
 const TripSchema: Schema = new Schema({
   name: { type: String, required: true },
-  owner: { type: Types.ObjectId, required: true },
+  owner_id: { type: Types.ObjectId, required: true },
   participants_ids: [{ type: Types.ObjectId }],
-  locations: [TripLocationSchema],
-  locations_order: [{ type: Types.ObjectId }],
+  locations: [LocationInTripSchema],
   visibility: { type: String, enum: Object.values(Visibility), required: true },
   transportations: [
     {
