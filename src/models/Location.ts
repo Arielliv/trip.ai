@@ -2,7 +2,7 @@
 import { Schema, Types, models, model } from 'mongoose';
 import { LocationType, Role, Visibility } from '@/models/constants';
 import { Address, Coordinate } from '@/models/shared/types';
-import { BLPermissions, permissionScheme } from '@/models/businessLogicPermissions';
+import { IUserPermission } from '@/models/userPermission';
 
 export interface ILocation {
   _id?: string;
@@ -17,7 +17,7 @@ export interface ILocation {
   coordinates: Coordinate;
   address: Address;
   visibility: Visibility;
-  permissions: BLPermissions;
+  permissions?: [IUserPermission];
   mapsUrl?: string;
   links?: string[];
   businessStatus?: string;
@@ -37,7 +37,7 @@ export interface ILocationDto {
   address: Address;
   visibility: Visibility;
   user_id: Types.ObjectId;
-  permissions: BLPermissions;
+  permissions?: [IUserPermission];
   mapsUrl?: string; // URL to the Google Maps page
   links?: string[]; // New: Array of additional links, e.g., the website
   businessStatus?: string; // New: Optional business status
@@ -55,26 +55,27 @@ const LocationSchema: Schema = new Schema({
   placeTypes: [{ type: String }],
   coordinates: {
     latitude: { type: Number, required: true },
-    longitude: { type: Number, required: true }
+    longitude: { type: Number, required: true },
   },
   address: {
     street: { type: String },
     city: { type: String },
     state: { type: String },
     country: { type: String },
-    postalCode: { type: String }
+    postalCode: { type: String },
   },
   visibility: { type: String, enum: Object.values(Visibility), required: true },
   user_id: { type: Types.ObjectId, required: true },
-  permissions: {
-    type: permissionScheme,
-    required: true,
-    ref: 'Permissions'
-  },
+  permissions: [
+    {
+      type: Types.ObjectId,
+      ref: 'UserPermission',
+    },
+  ],
   mapsUrl: { type: String },
   links: [{ type: String }], // Added
   businessStatus: { type: String }, // Added as optional
-  imageUrl: { type: String }
+  imageUrl: { type: String },
 });
 
 const Location = models.Location || model<ILocation>('Location', LocationSchema);

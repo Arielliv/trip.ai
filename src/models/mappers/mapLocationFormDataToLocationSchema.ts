@@ -50,7 +50,6 @@ export const mapLocationFormDataToLocationSchema = (locationFormData: LocationFo
         )?.long_name || '',
     },
     visibility: locationFormData.privacy ? Visibility.Public : Visibility.Private,
-    permissions: [],
     mapsUrl: locationFormData.place?.url,
     links: [locationFormData.place?.website!].filter((link) => link),
     imageUrl: locationFormData.place?.photos?.[0]?.getUrl({ maxWidth: 1000, maxHeight: 1000 }) ?? '',
