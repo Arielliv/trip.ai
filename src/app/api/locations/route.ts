@@ -3,6 +3,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import Location, { ILocation, ITripDto } from '@/models/Location';
 import { auth } from '@/auth';
+import { Types } from 'mongoose';
+import { IUserPermission, UserPermission } from '@/models/userPermissions';
+import { LocationPermissionEnum } from '@/models/enums/permissionsEnums';
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -21,7 +24,12 @@ export const POST = async (req: NextRequest) => {
       return NextResponse.json({ message: 'Location name is missing' }, { status: HttpStatusCode.BadRequest });
     }
 
-    const location: ITripDto = await Location.create<ITripDto>({ ...locationData, user_id });
+    const userPermission = await createUserPermission(user_id, LocationPermissionEnum.edit.toString());
+    const location: ITripDto = await Location.create<ITripDto>({
+      ...locationData,
+      user_id,
+      permissions: [userPermission._id],
+    });
 
     return NextResponse.json(
       {
@@ -69,3 +77,17 @@ export const GET = async (req: NextRequest) => {
     return NextResponse.json({ error: error.message });
   }
 };
+
+async function createUserPermission(userIdStr: string | undefined, permissionType: string) {
+  if (!userIdStr || !permissionType) {
+    throw { message: 'Cannot create user permission' };
+  }
+
+  const userId = new Types.ObjectId(userIdStr);
+  const userPermission: IUserPermission = await UserPermission.create<IUserPermission>({
+    userId,
+    permissionType,
+  });
+
+  return userPermission;
+}

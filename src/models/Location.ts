@@ -2,6 +2,7 @@
 import { Schema, Types, models, model } from 'mongoose';
 import { LocationType, Role, Visibility } from '@/models/constants';
 import { Address, Coordinate, Permission } from '@/models/shared/types';
+import { IUserPermission } from '@/models/userPermissions';
 
 export interface ILocation {
   _id?: string;
@@ -16,7 +17,7 @@ export interface ILocation {
   coordinates: Coordinate;
   address: Address;
   visibility: Visibility;
-  permissions: Permission[];
+  permissions?: IUserPermission[];
   mapsUrl?: string;
   links?: string[];
   businessStatus?: string;
@@ -36,7 +37,7 @@ export interface ITripDto {
   address: Address;
   visibility: Visibility;
   user_id: Types.ObjectId;
-  permissions: Permission[];
+  permissions?: IUserPermission[];
   mapsUrl?: string; // URL to the Google Maps page
   links?: string[]; // New: Array of additional links, e.g., the website
   businessStatus?: string; // New: Optional business status
@@ -67,8 +68,8 @@ const LocationSchema: Schema = new Schema({
   user_id: { type: Types.ObjectId, required: true },
   permissions: [
     {
-      user_id: { type: Types.ObjectId, required: true, ref: 'User' },
-      role: { type: String, enum: Object.values(Role), required: true },
+      type: Types.ObjectId,
+      ref: 'UserPermission',
     },
   ],
   mapsUrl: { type: String },
