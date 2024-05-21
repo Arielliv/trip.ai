@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { deleteTrip, fetchTripById, fetchTrips } from '@/lib/data';
-import { IFullTrip, ITrip } from '@/models/Trip';
+import { ITrip } from '@/models/Trip';
 
 export interface TripsManagerContextObject {
   trips: ITrip[];
@@ -69,7 +69,7 @@ export const useManageTrips = (initialPage = 0, limit = 10) => {
     [trips],
   );
 
-  const getFullTripById = useCallback((id: string | null): Promise<IFullTrip | undefined> => {
+  const getFullTripById = useCallback((id: string | null): Promise<ITrip | undefined> => {
     if (!id) return Promise.resolve(undefined);
     return fetchTripById(id);
   }, []);

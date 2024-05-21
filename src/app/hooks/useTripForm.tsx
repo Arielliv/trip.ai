@@ -4,7 +4,7 @@ import { ILocation } from '@/models/Location';
 
 export interface LocationInTripFormData {
   id: string;
-  connectedLocationData: ILocation;
+  connectedLocationData?: ILocation;
   duration: string;
   date: DateRange<Date>;
   additionalInfo: string;
