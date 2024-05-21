@@ -1,4 +1,3 @@
-import { fetchTrips } from '@/lib/data';
 import { vi } from 'vitest';
 import { act, render } from '@testing-library/react';
 import React from 'react';
@@ -6,6 +5,7 @@ import { TripsPaginationResponse } from '@/lib/types';
 import { ITrip } from '@/models/Trip';
 import { MockTripProvider } from '@/app/components/MockTripProvider';
 import SavedTrips from '@/app/components/SavedTrips/SavedTrips';
+import { fetchTrips } from '@/lib/operations/tripOperations';
 
 export class SavedTripsDriver {
   async created(trips: Partial<ITrip>[]) {

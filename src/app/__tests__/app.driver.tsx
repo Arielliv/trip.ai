@@ -1,10 +1,10 @@
-import { fetchTrips } from '@/lib/data';
-import { ITrip } from '@/models/Trip';
 import { vi } from 'vitest';
+import { fetchTrips } from '@/lib/operations/tripOperations';
+import { TripsPaginationResponse } from '@/lib/types';
 
 export class appDriver {
   // Method to setup mock resolved value for fetchTrips
-  givenFetchTripsMock(data: ITrip[]) {
+  givenFetchTripsMock(data: TripsPaginationResponse) {
     vi.mocked(fetchTrips).mockReturnValue(Promise.resolve(data));
   }
 

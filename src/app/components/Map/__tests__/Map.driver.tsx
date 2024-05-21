@@ -1,10 +1,10 @@
-import { fetchLocations } from '@/lib/data';
 import { vi } from 'vitest';
 import { act, render } from '@testing-library/react';
 import React from 'react';
 import { MockLocationProvider } from '../../MockLocationProvider';
 import Map from '@/app/components/Map/Map';
 import { LocationsPaginationResponse } from '@/lib/types';
+import { fetchLocations } from '@/lib/operations/locationOperations';
 
 export class MapDriver {
   async created(locations: any[]) {
