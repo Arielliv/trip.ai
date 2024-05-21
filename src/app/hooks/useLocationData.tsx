@@ -1,6 +1,9 @@
 // useLocationData.js
 import { useState } from 'react';
 import { MapMarker } from '@/app/components/Map/Map';
+import { usePlaceController } from '@/app/hooks/formControllers/usePlaceController';
+import { LocationFormData } from '@/app/hooks/useLocationForm';
+import { Control } from 'react-hook-form';
 
 export interface LocationContextObject {
   mapCenter: { lat: number; lng: number };
@@ -9,15 +12,16 @@ export interface LocationContextObject {
   autocomplete: google.maps.places.Autocomplete | undefined;
   currentMarker: MapMarker | undefined;
   onLoadAutocomplete: (autocomplete: google.maps.places.Autocomplete) => void;
-  onAutoCompletePlaceChange: (onChange: (...event: any[]) => void) => void;
-  onAutoCompletePlaceEmpty: (onChange: (...event: any[]) => void) => void;
+  onAutoCompletePlaceChange: () => void;
+  onAutoCompletePlaceEmpty: () => void;
   handleFocusLocation: (coordinate: Omit<MapMarker, 'id'>) => void;
   handleFocusEditLocation: (mapMarker: MapMarker, zoomValue: number) => void;
   setMap: (map: google.maps.Map | null) => void;
   map: google.maps.Map | null;
 }
 
-export const useLocationData = (): LocationContextObject => {
+export const useLocationData = (control?: Control<LocationFormData>): LocationContextObject => {
+  const { onChange } = usePlaceController(control);
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [mapCenter, setMapCenter] = useState<Omit<MapMarker, 'id'>>({ lat: -34.397, lng: 150.644 });
   const [zoom, setZoom] = useState(8);
@@ -28,13 +32,13 @@ export const useLocationData = (): LocationContextObject => {
     setAutocomplete(autocomplete);
   };
 
-  const onAutoCompletePlaceEmpty = (onChange: (...event: any[]) => void) => {
+  const onAutoCompletePlaceEmpty = () => {
     setAutocomplete(undefined);
     onChange(undefined);
     setCurrentMarker(undefined);
   };
 
-  const onAutoCompletePlaceChange = (onChange: (...event: any[]) => void) => {
+  const onAutoCompletePlaceChange = () => {
     if (autocomplete) {
       const place = autocomplete.getPlace();
       if (!place) {

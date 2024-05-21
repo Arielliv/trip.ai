@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { DataTestIds } from '@/app/components/constants/constants';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { beforeEach, describe, expect, it } from 'vitest';
 import { tripsDriver } from '@/app/trips/__tests__/app.driver';
 import { TripsPaginationResponse } from '@/lib/types';
 import { Types } from 'mongoose';
@@ -21,7 +21,6 @@ describe('Trips', () => {
           participants_ids: [new Types.ObjectId()],
           permissions: [],
           locations: [],
-          locations_order: [new Types.ObjectId()],
           visibility: Visibility.Public,
           transportations: [],
           reviews: [],
