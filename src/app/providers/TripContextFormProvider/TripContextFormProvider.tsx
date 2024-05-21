@@ -31,7 +31,7 @@ export const TripContextFormProvider = ({ children }: { children: React.ReactNod
     formState: { isSubmitSuccessful },
   } = formMethods;
 
-  const manageLocationTable = useManageLocationTable();
+  const manageLocationTable = useManageLocationTable(formMethods.control);
   const { loadTripLocations, clearTripLocations } = manageLocationTable;
 
   useEffect(() => {

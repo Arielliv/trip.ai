@@ -10,7 +10,9 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import { Columns } from '@/app/components/constants/constants';
 import { mapRowToLocation } from '@/models/mappers/mapRowToLocation';
-import { LocationInTripFormData } from '@/app/hooks/useTripForm';
+import { LocationInTripFormData, TripFormData } from '@/app/hooks/useTripForm';
+import { Control } from 'react-hook-form';
+import { useLocationsInTripController } from '@/app/hooks/formControllers/useLocationsInTripController';
 
 const initRows: GridRowModel[] = [];
 
@@ -23,12 +25,9 @@ export const createEmptyRow = (id: string): GridRowModel => ({
 
 export interface ManageLocationTableHook {
   handleRowModesModelChange: (newRowModesModel: GridRowModesModel) => void;
-  processRowUpdate: (
-    newRow: GridRowModel,
-    updateLocationById: (id: string, updatedLocation: LocationInTripFormData) => void,
-  ) => GridRowModel & { isNew: boolean };
+  processRowUpdate: (newRow: GridRowModel) => GridRowModel & { isNew: boolean };
   handleCancelClick: (id: GridRowId) => () => void;
-  handleDeleteClick: (id: GridRowId, deleteLocationById: (id: string) => void) => () => void;
+  handleDeleteClick: (id: GridRowId) => () => void;
   handleSaveClick: (id: GridRowId) => () => void;
   handleEditClick: (id: GridRowId) => () => void;
   handleRowEditStop: GridEventListener<'rowEditStop'>;
@@ -37,11 +36,8 @@ export interface ManageLocationTableHook {
     newIndex: number,
     rows: Array<GridRowModel>,
   ) => Promise<Array<GridRowModel>>;
-  handleRowOrderChange: (
-    params: GridRowOrderChangeParams,
-    moveLocationInArray: (from: number, to: number) => void,
-  ) => Promise<void>;
-  addNewRow: (append: (location: LocationInTripFormData) => void) => void;
+  handleRowOrderChange: (params: GridRowOrderChangeParams) => Promise<void>;
+  addNewRow: () => void;
   isRowInEditMode: (id: GridRowId) => boolean;
   rows: GridRowModel[];
   rowModesModel: GridRowModesModel;
@@ -49,7 +45,8 @@ export interface ManageLocationTableHook {
   clearTripLocations: () => void;
 }
 
-export const useManageLocationTable = (): ManageLocationTableHook => {
+export const useManageLocationTable = (control?: Control<TripFormData>): ManageLocationTableHook => {
+  const { append, deleteLocationById, updateLocationById, moveLocationInArray } = useLocationsInTripController(control);
   const [rows, setRows] = useState<GridRowModel[]>(initRows);
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const [loading, setLoading] = useState(false);
@@ -68,7 +65,7 @@ export const useManageLocationTable = (): ManageLocationTableHook => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
   };
 
-  const handleDeleteClick = (id: GridRowId, deleteLocationById: (id: string) => void) => () => {
+  const handleDeleteClick = (id: GridRowId) => () => {
     deleteLocationById(id.toString());
     setRows(rows.filter((row: GridRowModel) => row.id !== id));
   };
@@ -85,10 +82,7 @@ export const useManageLocationTable = (): ManageLocationTableHook => {
     }
   };
 
-  const processRowUpdate = (
-    newRow: GridRowModel,
-    updateLocationById: (id: string, updatedLocation: LocationInTripFormData) => void,
-  ) => {
+  const processRowUpdate = (newRow: GridRowModel) => {
     const updatedRow: GridRowModel & { isNew: boolean } = { ...newRow, isNew: false };
     updateLocationById(updatedRow.id, mapRowToLocation(newRow));
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
@@ -108,10 +102,7 @@ export const useManageLocationTable = (): ManageLocationTableHook => {
     });
   };
 
-  const handleRowOrderChange = async (
-    params: GridRowOrderChangeParams,
-    moveLocationInArray: (from: number, to: number) => void,
-  ) => {
+  const handleRowOrderChange = async (params: GridRowOrderChangeParams) => {
     setLoading(true);
     moveLocationInArray(params.oldIndex, params.targetIndex);
     const newRows = await updateRowPosition(params.oldIndex, params.targetIndex, rows);
@@ -119,7 +110,7 @@ export const useManageLocationTable = (): ManageLocationTableHook => {
     setLoading(false);
   };
 
-  const addNewRow = (append: (location: LocationInTripFormData) => void) => {
+  const addNewRow = () => {
     const id = uuidv4().toString();
     const newRow = createEmptyRow(id);
     append(mapRowToLocation(newRow));

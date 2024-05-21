@@ -11,7 +11,7 @@ const defaultManageLocationTableHook: ManageLocationTableHook = {
   handleSaveClick: () => () => {},
   handleEditClick: () => () => {},
   handleRowEditStop: () => {},
-  updateRowPosition: async (initialIndex, newIndex, rows) => rows,
+  updateRowPosition: async (_initialIndex, newIndex, rows) => rows,
   handleRowOrderChange: async () => {},
   addNewRow: () => {},
   isRowInEditMode: () => false,
