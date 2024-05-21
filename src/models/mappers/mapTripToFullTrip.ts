@@ -1,9 +1,9 @@
-import { IFullLocationInTrip, IFullTrip, ITrip } from '@/models/Trip';
+import { ILocationInTrip, ITrip } from '@/models/Trip';
 import { ILocation } from '@/models/Location';
 import { LocationInTripFormData, TripFormData } from '@/app/hooks/useTripForm';
 import { Visibility } from '@/models/constants';
 
-export const mapIFullTripToTripFormData = (trip: IFullTrip | undefined): TripFormData | undefined => {
+export const mapFullTripToTripFormData = (trip: ITrip | undefined): TripFormData | undefined => {
   if (!trip) {
     return;
   }
@@ -16,9 +16,7 @@ export const mapIFullTripToTripFormData = (trip: IFullTrip | undefined): TripFor
   };
 };
 
-export const mapFullLocationInTripToLocationsFormData = (
-  locationInTrip: IFullLocationInTrip,
-): LocationInTripFormData => {
+export const mapFullLocationInTripToLocationsFormData = (locationInTrip: ILocationInTrip): LocationInTripFormData => {
   return {
     id: locationInTrip.id ?? '',
     connectedLocationData: locationInTrip.connectedLocationData,
@@ -30,7 +28,7 @@ export const mapFullLocationInTripToLocationsFormData = (
   };
 };
 
-export function mapTripToFullTrip(trip: ITrip): IFullTrip {
+export function mapTripToFullTrip(trip: ITrip): ITrip {
   return {
     _id: trip._id,
     name: trip.name,
