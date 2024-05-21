@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
-import { deleteTrip, fetchTripById, fetchTrips } from '@/lib/data';
 import { ITrip } from '@/models/Trip';
+import { deleteTrip, fetchTripById, fetchTrips } from '@/lib/operations/tripOperations';
 
 export interface TripsManagerContextObject {
   trips: ITrip[];

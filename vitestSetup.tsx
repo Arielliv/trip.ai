@@ -18,7 +18,8 @@ const mockData = {
 };
 
 beforeAll(() => {
-  vi.mock('@/lib/data');
+  vi.mock('@/lib/operations/tripOperations');
+  vi.mock('@/lib/operations/locationOperations');
   vi.mock('next-auth/react', () => ({
     useSession: vi.fn(() => {
       return mockData;

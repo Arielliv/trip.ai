@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
-import { fetchLocations, deleteLocation } from '@/lib/data';
 import { ILocation } from '@/models/Location';
+import { deleteLocation, fetchLocations } from '@/lib/operations/locationOperations';
 
 export interface LocationsManagerContextObject {
   locations: ILocation[];
