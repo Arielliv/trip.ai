@@ -13,7 +13,6 @@ import { useLocationPrivacyController } from '@/app/hooks/formControllers/useLoc
 import { useLocationNoteController } from '@/app/hooks/formControllers/useLocationNote';
 import { LocationFormData } from '@/app/hooks/useLocationForm';
 import { useLocationContext } from '@/app/providers/LocationContextFormProvider/LocationContextFormProvider';
-import { usePlaceController } from '@/app/hooks/formControllers/usePlaceController';
 import { useOnLocationFormSubmit } from '@/app/hooks/useOnLocationFormSubmit';
 
 const LocationForm = () => {
@@ -22,7 +21,6 @@ const LocationForm = () => {
     onLoadAutocomplete,
     onAutoCompletePlaceEmpty,
     addLocation,
-    editLocation,
     isEditMode,
     clearFormOnEditState,
   } = useLocationContext();
@@ -32,16 +30,15 @@ const LocationForm = () => {
   const { field: privacyField } = useLocationPrivacyController();
   const { field: noteField } = useLocationNoteController();
   const { onSubmit } = useOnLocationFormSubmit(addLocation);
-  const { onChange: onPlaceChange } = usePlaceController();
 
   const privacy = watch('privacy');
 
   const handlePlaceChange = (_event: React.ChangeEvent<HTMLInputElement>) => {
-    onAutoCompletePlaceChange(onPlaceChange);
+    onAutoCompletePlaceChange();
   };
 
   const handlePlaceEmpty = (_event: React.ChangeEvent<HTMLInputElement>) => {
-    onAutoCompletePlaceEmpty(onPlaceChange);
+    onAutoCompletePlaceEmpty();
   };
 
   return (

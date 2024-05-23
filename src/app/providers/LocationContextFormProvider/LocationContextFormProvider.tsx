@@ -20,15 +20,16 @@ export const LocationDataContext = createContext<LocationContextObject & Locatio
 );
 
 export const LocationContextFormProvider = ({ children }: { children: React.ReactNode }) => {
+  const formMethods = useLocationForm();
   const manageLocations = useManageLocations();
   const { loadLocations, getLocationById } = manageLocations;
-  const locationData = useLocationData();
+  const locationData = useLocationData(formMethods.control);
   const { handleFocusEditLocation } = locationData;
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
   const locationId = searchParams.get('id');
-  const formMethods = useLocationForm();
+
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const {

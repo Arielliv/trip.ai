@@ -1,4 +1,4 @@
-import { FieldArrayWithId, useFieldArray } from 'react-hook-form';
+import { Control, FieldArrayWithId, useFieldArray } from 'react-hook-form';
 import { LocationInTripFormData, TripFormData } from '@/app/hooks/useTripForm';
 import { TripFormFieldPath } from '@/app/components/constants/locationFormFieldPath';
 
@@ -10,11 +10,12 @@ export interface LocationsInTripController {
   moveLocationInArray: (from: number, to: number) => void;
 }
 
-export const useLocationsInTripController = (): LocationsInTripController => {
+export const useLocationsInTripController = (control?: Control<TripFormData>): LocationsInTripController => {
   const { fields, append, remove, move, update } = useFieldArray<TripFormData, TripFormFieldPath.Locations>({
     name: TripFormFieldPath.Locations,
     // @ts-expect-error: prevents react-hook-form from changing the id
     keyName: 'customId',
+    control,
   });
 
   const getRowIndexById = (id: string) => {

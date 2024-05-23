@@ -1,8 +1,8 @@
-import { GridColDef, GridRowId, GridSlots } from '@mui/x-data-grid';
+import { GridColDef, GridSlots } from '@mui/x-data-grid';
 import React, { useCallback, useEffect } from 'react';
 import { Box } from '@mui/material';
 import { useManageLocations } from '@/app/hooks/useManageLocations';
-import { DataGridPro, GridRowModel, GridRowOrderChangeParams } from '@mui/x-data-grid-pro';
+import { DataGridPro, GridRowModel } from '@mui/x-data-grid-pro';
 import { DateRangeInput } from '@/app/components/LocationsTable/TableComponents/Date/DateRangeInput/DateRangeInput';
 import { DurationInput } from '@/app/components/LocationsTable/TableComponents/Duration/DurationInput/DurationInput';
 import { TableToolbar } from '@/app/components/LocationsTable/TableComponents/TableToolbar/TableToolbar';
@@ -12,7 +12,6 @@ import { useGetTableActions } from '@/app/components/getTableActions/useGetTable
 import { DurationView } from '@/app/components/LocationsTable/TableComponents/Duration/DurationView/DurationView';
 import { DateView } from '@/app/components/LocationsTable/TableComponents/Date/DateView/DateView';
 import { useTripContext } from '@/app/providers/TripContextFormProvider/TripContextFormProvider';
-import { useLocationsInTripController } from '@/app/hooks/formControllers/useLocationsInTripController';
 import { useFormContext } from 'react-hook-form';
 import { TripFormData } from '@/app/hooks/useTripForm';
 import { useOnTripFormSubmit } from '@/app/hooks/useOnTripFormSubmit';
@@ -20,7 +19,6 @@ import { useOnTripFormSubmit } from '@/app/hooks/useOnTripFormSubmit';
 export const LocationsTable = () => {
   const { onSubmit } = useOnTripFormSubmit();
   const { handleSubmit } = useFormContext<TripFormData>();
-  const { append, deleteLocationById, updateLocationById, moveLocationInArray } = useLocationsInTripController();
   const {
     processRowUpdate,
     handleRowEditStop,
@@ -36,31 +34,20 @@ export const LocationsTable = () => {
     isRowInEditMode,
   } = useTripContext();
 
-  const onDelete = (id: GridRowId) => {
-    handleDeleteClick(id, deleteLocationById);
-  };
-
   const onProcessRowUpdate = useCallback(
     async (newRow: GridRowModel) => {
-      const updatedRow = processRowUpdate(newRow, updateLocationById);
+      const updatedRow = processRowUpdate(newRow);
       await handleSubmit(onSubmit)(); // The extra parentheses are used to call the returned function immediately
 
       return updatedRow;
     },
-    [processRowUpdate, updateLocationById, handleSubmit, onSubmit],
+    [processRowUpdate, handleSubmit, onSubmit],
   );
-  const onRowOrderChange = (params: GridRowOrderChangeParams) => {
-    return handleRowOrderChange(params, moveLocationInArray);
-  };
-
-  const onAddNewRow = () => {
-    addNewRow(append);
-  };
 
   const { getTableActions } = useGetTableActions({
     isRowInEditMode,
     handleEditClick,
-    handleDeleteClick: onDelete,
+    handleDeleteClick,
     handleSaveClick,
     handleCancelClick,
   });
@@ -181,7 +168,7 @@ export const LocationsTable = () => {
         editMode="row"
         rowModesModel={rowModesModel}
         rowReordering
-        onRowOrderChange={onRowOrderChange}
+        onRowOrderChange={handleRowOrderChange}
         onRowModesModelChange={handleRowModesModelChange}
         onRowEditStop={handleRowEditStop}
         processRowUpdate={onProcessRowUpdate}
@@ -189,7 +176,7 @@ export const LocationsTable = () => {
           toolbar: TableToolbar as GridSlots['toolbar'],
         }}
         slotProps={{
-          toolbar: { addNewRow: onAddNewRow },
+          toolbar: { addNewRow },
         }}
       />
     </Box>

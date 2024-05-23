@@ -4,29 +4,6 @@ import { Role, TransportationType, Visibility } from '@/models/constants';
 import { Permission } from '@/models/shared/types';
 import { ILocation } from '@/models/Location';
 
-export interface IFullTrip {
-  _id?: string;
-  name: string;
-  participants_ids: Types.ObjectId[];
-  permissions: Permission[];
-  locations: IFullLocationInTrip[];
-  visibility: Visibility;
-  transportations: Transportation[];
-  reviews: Review[];
-}
-
-export interface IFullLocationInTrip {
-  connectedLocationData: ILocation;
-  id?: string;
-  dateRange: Date[];
-  duration?: {
-    value: number;
-    timeUnit: string;
-  };
-  additionalInfo?: string;
-  cost?: number;
-}
-
 export interface ITrip {
   _id?: string;
   name: string;
@@ -39,6 +16,7 @@ export interface ITrip {
 }
 
 export interface ILocationInTrip {
+  connectedLocationData?: ILocation;
   location_id?: string | ILocation; // Reference to a Location document
   id?: string;
   dateRange: Date[];

@@ -8,7 +8,7 @@ import { TripsManagerContextObject, useManageTrips } from '@/app/hooks/useManage
 import { useTripForm } from '@/app/hooks/useTripForm';
 import { defaultTripContext } from '@/app/providers/TripContextFormProvider/defaultTripContextObject';
 import { ManageLocationTableHook, useManageLocationTable } from '@/app/hooks/useManageLocationTable';
-import { mapIFullTripToTripFormData } from '@/models/mappers/mapTripToFullTrip';
+import { mapFullTripToTripFormData } from '@/models/mappers/mapTripToFullTrip';
 import { defaultLocationFormData } from '@/app/hooks/useLocationForm';
 import { FormHandlers } from '@/app/providers/LocationContextFormProvider/LocationContextFormProvider';
 
@@ -31,7 +31,7 @@ export const TripContextFormProvider = ({ children }: { children: React.ReactNod
     formState: { isSubmitSuccessful },
   } = formMethods;
 
-  const manageLocationTable = useManageLocationTable();
+  const manageLocationTable = useManageLocationTable(formMethods.control);
   const { loadTripLocations, clearTripLocations } = manageLocationTable;
 
   useEffect(() => {
@@ -42,7 +42,7 @@ export const TripContextFormProvider = ({ children }: { children: React.ReactNod
 
       const trip = await getFullTripById(tripId);
 
-      const formData = mapIFullTripToTripFormData(trip);
+      const formData = mapFullTripToTripFormData(trip);
       loadTripLocations(formData?.locations || []);
       formMethods.reset({ ...formData });
     };

@@ -1,9 +1,9 @@
-import { fetchTrips } from '@/lib/data';
 import { vi } from 'vitest';
 import { TripsPaginationResponse } from '@/lib/types';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import Trips from '@/app/trips/page';
 import { DataTestIds } from '@/app/components/constants/constants';
+import { fetchTrips } from '@/lib/operations/tripOperations';
 
 export class tripsDriver {
   async created() {

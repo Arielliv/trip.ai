@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { HttpStatusCode } from 'axios';
 import dbConnect from '@/lib/dbConnect';
-import Trip, { IFullTrip, ITrip } from '@/models/Trip';
+import Trip, { ITrip } from '@/models/Trip';
 import { mapTripToFullTrip } from '@/models/mappers/mapTripToFullTrip';
 import { auth } from '@/auth';
 
@@ -14,7 +14,7 @@ export const GET = async (_: NextRequest, { params }: { params: { id: string } }
       model: 'Location',
     });
     if (trip) {
-      return NextResponse.json(mapTripToFullTrip(trip) as IFullTrip);
+      return NextResponse.json(mapTripToFullTrip(trip) as ITrip);
     }
     return NextResponse.json({ message: `Trip ${params.id} not found` }, { status: HttpStatusCode.NotFound });
   } catch (error) {
