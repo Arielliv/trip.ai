@@ -29,6 +29,7 @@ export interface ILocationInTrip {
 }
 
 export interface ITripDto {
+  _id?: string;
   owner_id: Types.ObjectId;
   name: string;
   participants_ids: Types.ObjectId[];

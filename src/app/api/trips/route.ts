@@ -1,8 +1,9 @@
 import { HttpStatusCode } from 'axios';
 import { NextRequest, NextResponse } from 'next/server';
-import Trip, { ITrip, ITripDto } from '@/models/Trip';
+import Trip, { ITrip, ITripDto, LocationInTrip } from '@/models/Trip';
 import dbConnect from '@/lib/dbConnect';
 import { auth } from '@/auth';
+import Location from '@/models/Location';
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -23,6 +24,22 @@ export const POST = async (req: NextRequest) => {
     console.log(`new trip: ${JSON.stringify(tripData)}, ${JSON.stringify(tripData)}`);
 
     const trip: ITripDto = await Trip.create<ITripDto>({ ...tripData, owner_id });
+
+    const updatePromises = trip.locations.map(async (location: LocationInTrip) => {
+      const locationId = location.location_id;
+      const foundLocation = await Location.findById(locationId);
+
+      if (!foundLocation) {
+        console.error(`Location with ID ${locationId} not found`);
+        return;
+      }
+
+      console.log(trip._id);
+      foundLocation.trips.push(trip._id);
+      await foundLocation.save();
+    });
+
+    await Promise.all(updatePromises);
 
     return NextResponse.json(
       {
