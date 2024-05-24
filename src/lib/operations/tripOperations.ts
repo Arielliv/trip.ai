@@ -20,6 +20,19 @@ export async function fetchTrips(page: number, limit: number = 10): Promise<Trip
   return res.data as TripsPaginationResponse;
 }
 
+export async function searchTrips(search?: string, page = 0, limit = 10): Promise<TripsPaginationResponse> {
+  noStore();
+  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/searchTrips`, {
+    params: {
+      ...(search && { search }),
+      page: page,
+      limit: limit,
+    },
+  });
+
+  return res.data as TripsPaginationResponse;
+}
+
 export async function createTrip(newTrip: ITrip): Promise<ITrip> {
   noStore();
   const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/trips`, newTrip);
