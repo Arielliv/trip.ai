@@ -21,12 +21,17 @@ export async function deleteLocation(locationId: string) {
   return axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/location/${locationId}`);
 }
 
-export async function fetchLocations(page: number, limit: number = 10): Promise<LocationsPaginationResponse> {
+export async function fetchLocations(
+  page: number,
+  limit: number = 10,
+  tripId?: string,
+): Promise<LocationsPaginationResponse> {
   noStore();
   const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/locations`, {
     params: {
-      page: page,
-      limit: limit,
+      page,
+      limit,
+      tripId,
     },
   });
   return res.data as LocationsPaginationResponse;

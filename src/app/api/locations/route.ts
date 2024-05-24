@@ -46,11 +46,12 @@ export const GET = async (req: NextRequest) => {
 
   const page = parseInt(url?.searchParams?.get('page') || '0', 10) || 0;
   const limit = parseInt(url?.searchParams?.get('limit') || '0', 10) || 0;
+  const tripId = url?.searchParams?.get('tripId');
 
   try {
     await dbConnect();
 
-    const locations = await Location.find()
+    const locations = await Location.find(tripId ? { trips: { $elemMatch: { id: tripId } } } : {})
       .skip(page * limit)
       .limit(limit);
 
