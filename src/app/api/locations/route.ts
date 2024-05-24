@@ -51,7 +51,7 @@ export const GET = async (req: NextRequest) => {
   try {
     await dbConnect();
 
-    const locations = await Location.find(tripId ? { trips: { $elemMatch: { id: tripId } } } : {})
+    const locations = await Location.find(tripId ? { trips: tripId } : {})
       .skip(page * limit)
       .limit(limit);
 
