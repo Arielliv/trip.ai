@@ -22,6 +22,11 @@ export enum MyTripsDataTestIds {
   locationsTableContainer = 'locations-table-container',
 }
 
+export enum ExploreDataTestIds {
+  exploreTagsContainer = 'explore-tags-container',
+  tripsGalleryContainer = 'trips-gallery-container',
+}
+
 export enum Columns {
   ConnectedLocationData = 'ConnectedLocationData',
   Duration = 'Duration',
