@@ -74,7 +74,6 @@ export const LocationContextFormProvider = ({ children }: { children: React.Reac
   }, [loadLocations]);
 
   const showAlert = (message: string) => {
-    reset(defaultLocationFormData);
     setSnackbarMessage(message);
     setOpenSnackbar(true);
   };

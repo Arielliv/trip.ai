@@ -14,7 +14,7 @@ import { useLocationNoteController } from '@/app/hooks/formControllers/useLocati
 import { LocationFormData } from '@/app/hooks/useLocationForm';
 import { useLocationContext } from '@/app/providers/LocationContextFormProvider/LocationContextFormProvider';
 import { useOnLocationFormSubmit } from '@/app/hooks/useOnLocationFormSubmit';
-import axios, { AxiosError } from 'axios';
+import { AxiosError } from 'axios';
 
 const LocationForm = () => {
   const {

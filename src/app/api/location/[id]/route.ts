@@ -60,11 +60,11 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
       );
     }
     const { permissions, ...rest } = body;
-    await Location.updateOne({ _id: locationToUpdate._id }, { $set: rest });
-
-    const updatedLocation = await Location.findById({
-      _id: params.id,
-    });
+    const updatedLocation = await Location.findOneAndUpdate(
+      { _id: locationToUpdate._id },
+      { $set: rest },
+      { new: true },
+    );
 
     return NextResponse.json(
       {
