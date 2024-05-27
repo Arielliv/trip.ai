@@ -1,11 +1,12 @@
 'use client';
 import React, { useCallback } from 'react';
-import { CircularProgress, List, ListItem, Box, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { CircularProgress, List, ListItem, Box } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { LocationCard } from '@/app/components/LocationCard/LocationCard';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { MapMarker } from '@/app/components/Map/Map';
 import { useLocationContext } from '@/app/providers/LocationContextFormProvider/LocationContextFormProvider';
+import { SelectTrip } from '@/app/components/SelectTrip/SelectTrip';
 
 export interface SavedLocationsProps {
   setSelectedTab: (tab: string) => void;
@@ -27,25 +28,28 @@ const SavedLocations = ({ setSelectedTab }: SavedLocationsProps) => {
     [searchParams],
   );
 
-  const handleEdit = (id: string) => {
+  const handleEdit = (id?: string) => {
+    if (!id) return;
+
     router.push(pathname + '?' + createQueryString('id', id));
     setSelectedTab('0');
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = (id?: string) => {
+    if (!id) return;
+
     return removeLocation(id);
   };
 
   const handleSelect = (coordinate: Omit<MapMarker, 'id'>) => handleFocusLocation(coordinate);
 
+  const handleSelectChange = (id?: string) => {
+    router.push(id ? '/locations?' + createQueryString('tripId', id) : '/locations');
+  };
+
   return (
     <Box sx={{ minWidth: 120 }}>
-      <FormControl fullWidth>
-        <InputLabel>Trip</InputLabel>
-        <Select label="Trip" defaultValue="None" fullWidth>
-          <MenuItem value="None">None</MenuItem>
-        </Select>
-      </FormControl>
+      <SelectTrip onSelectChange={handleSelectChange} />
       <InfiniteScroll
         height={'90vh'}
         scrollableTarget="locationScrollableContiner"
