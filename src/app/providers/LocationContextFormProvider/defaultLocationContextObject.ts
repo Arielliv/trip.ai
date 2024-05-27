@@ -32,4 +32,5 @@ export const defaultLocationContext = {
   ...defaultLocationContextObject,
   ...defaultSavedLocationsContext,
   clearFormOnEditState: () => {},
+  showAlert: (message: string) => {},
 };

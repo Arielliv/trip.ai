@@ -1,7 +1,8 @@
 /* v8 ignore start */
 import { Schema, Types, models, model } from 'mongoose';
-import { LocationType, Role, Visibility } from '@/models/constants';
-import { Address, Coordinate, Permission } from '@/models/shared/types';
+import { LocationType, Visibility } from '@/models/constants';
+import { Address, Coordinate, IUserPermission } from '@/models/shared/types';
+import { LocationPermissionEnum, TripPermissionEnum } from '@/models/enums/permissionsEnums';
 
 export interface ILocation {
   _id?: string;
@@ -16,7 +17,7 @@ export interface ILocation {
   coordinates: Coordinate;
   address: Address;
   visibility: Visibility;
-  permissions: Permission[];
+  permissions?: IUserPermission[];
   mapsUrl?: string;
   links?: string[];
   businessStatus?: string;
@@ -36,7 +37,7 @@ export interface ITripDto {
   address: Address;
   visibility: Visibility;
   user_id: Types.ObjectId;
-  permissions: Permission[];
+  permissions?: IUserPermission[];
   mapsUrl?: string; // URL to the Google Maps page
   links?: string[]; // New: Array of additional links, e.g., the website
   businessStatus?: string; // New: Optional business status
@@ -67,8 +68,12 @@ const LocationSchema: Schema = new Schema({
   user_id: { type: Types.ObjectId, required: true },
   permissions: [
     {
-      user_id: { type: Types.ObjectId, required: true, ref: 'User' },
-      role: { type: String, enum: Object.values(Role), required: true },
+      userId: { type: Types.ObjectId, required: true },
+      permissionType: {
+        type: String,
+        enum: [...Object.values(LocationPermissionEnum), ...Object.values(TripPermissionEnum)],
+        required: true,
+      },
     },
   ],
   mapsUrl: { type: String },

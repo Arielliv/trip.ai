@@ -1,6 +1,7 @@
 /* v8 ignore start */
 import { Types } from 'mongoose';
 import { Role } from '@/models/constants';
+import { LocationPermissionEnum, TripPermissionEnum } from '@/models/enums/permissionsEnums';
 
 export interface Coordinate {
   latitude: number;
@@ -19,6 +20,11 @@ export interface Address {
   state: string;
   country: string;
   postalCode: string;
+}
+
+export interface IUserPermission {
+  userId: Types.ObjectId;
+  permissionType: TripPermissionEnum | LocationPermissionEnum;
 }
 
 /* v8 ignore stop */

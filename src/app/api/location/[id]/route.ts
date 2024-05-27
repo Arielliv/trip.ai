@@ -5,6 +5,8 @@ import dbConnect from '@/lib/dbConnect';
 import Location, { ILocation } from '@/models/Location';
 import { ObjectId } from 'mongodb';
 import { auth } from '@/auth';
+import { authorize } from '@/app/server/validators';
+import { LocationPermissionEnum } from '@/models/enums/permissionsEnums';
 
 export const GET = async (_: NextRequest, { params }: { params: { id: string } }) => {
   try {
@@ -25,28 +27,44 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
 
     const session = await auth();
 
-    if (!session || !session.user || !session.user.email) {
+    if (!session || !session.user || !session.user.id) {
       return NextResponse.json({ message: 'Authentication required' }, { status: HttpStatusCode.Unauthorized });
     }
+    const userId = session.user.id;
 
     const body: ILocation = await req.json();
+    const locationToUpdate: ILocation | null = await Location.findById({
+      _id: params.id,
+    });
+
+    if (!locationToUpdate?.permissions) {
+      return NextResponse.json(
+        {
+          message: 'Error no user permissions were found',
+        },
+        { status: HttpStatusCode.InternalServerError },
+      );
+    }
 
     if (!body.name) {
       return NextResponse.json({ message: 'Location name is missing' }, { status: HttpStatusCode.BadRequest });
     }
 
-    const updatedLocation = await Location.findOneAndUpdate(
-      { _id: params.id, user_id: session.user.id },
-      { $set: body },
-      { new: true },
-    );
-
-    if (!updatedLocation) {
+    if (!body.permissions || !authorize(userId, locationToUpdate.permissions, LocationPermissionEnum.edit)) {
       return NextResponse.json(
-        { message: `Location ${params.id} not found / user not authorized` },
-        { status: HttpStatusCode.NotFound },
+        {
+          message: 'User does not have permissions to edit this location',
+          status: HttpStatusCode.Unauthorized,
+        },
+        { status: HttpStatusCode.Unauthorized },
       );
     }
+    const { permissions, ...rest } = body;
+    const updatedLocation = await Location.findOneAndUpdate(
+      { _id: locationToUpdate._id },
+      { $set: rest },
+      { new: true },
+    );
 
     return NextResponse.json(
       {

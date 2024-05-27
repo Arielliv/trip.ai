@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import Location, { ILocation, ITripDto } from '@/models/Location';
 import { auth } from '@/auth';
+import { LocationPermissionEnum } from '@/models/enums/permissionsEnums';
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -21,7 +22,11 @@ export const POST = async (req: NextRequest) => {
       return NextResponse.json({ message: 'Location name is missing' }, { status: HttpStatusCode.BadRequest });
     }
 
-    const location: ITripDto = await Location.create<ITripDto>({ ...locationData, user_id });
+    const location: ITripDto = await Location.create<ITripDto>({
+      ...locationData,
+      user_id,
+      permissions: [{ userId: user_id, permissionType: LocationPermissionEnum.edit }],
+    });
 
     return NextResponse.json(
       {
