@@ -1,8 +1,8 @@
 /* v8 ignore start */
 import { Schema, Types, models, model } from 'mongoose';
-import { LocationType, Role, Visibility } from '@/models/constants';
-import { Address, Coordinate, Permission } from '@/models/shared/types';
-import { IUserPermission } from '@/models/userPermissions';
+import { LocationType, Visibility } from '@/models/constants';
+import { Address, Coordinate, IUserPermission } from '@/models/shared/types';
+import { LocationPermissionEnum, TripPermissionEnum } from '@/models/enums/permissionsEnums';
 
 export interface ILocation {
   _id?: string;
@@ -68,8 +68,12 @@ const LocationSchema: Schema = new Schema({
   user_id: { type: Types.ObjectId, required: true },
   permissions: [
     {
-      type: Types.ObjectId,
-      ref: 'UserPermission',
+      userId: { type: Types.ObjectId, required: true },
+      permissionType: {
+        type: String,
+        enum: [...Object.values(LocationPermissionEnum), ...Object.values(TripPermissionEnum)],
+        required: true,
+      },
     },
   ],
   mapsUrl: { type: String },

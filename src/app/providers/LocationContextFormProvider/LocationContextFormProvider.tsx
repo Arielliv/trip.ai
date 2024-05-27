@@ -13,6 +13,7 @@ import { DevTool } from '@hookform/devtools';
 
 export interface FormHandlers {
   clearFormOnEditState(): void;
+  showAlert(message: string): void;
 }
 
 export const LocationDataContext = createContext<LocationContextObject & LocationsManagerContextObject & FormHandlers>(
@@ -72,6 +73,12 @@ export const LocationContextFormProvider = ({ children }: { children: React.Reac
     void loadLocations();
   }, [loadLocations]);
 
+  const showAlert = (message: string) => {
+    reset(defaultLocationFormData);
+    setSnackbarMessage(message);
+    setOpenSnackbar(true);
+  };
+
   useEffect(() => {
     if (isSubmitSuccessful) {
       if (locationId) {
@@ -96,8 +103,9 @@ export const LocationContextFormProvider = ({ children }: { children: React.Reac
       ...manageLocations,
       isEditMode: Boolean(locationId),
       clearFormOnEditState,
+      showAlert,
     }),
-    [locationData, manageLocations, locationId, clearFormOnEditState],
+    [locationData, manageLocations, locationId, clearFormOnEditState, showAlert],
   );
 
   return (

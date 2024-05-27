@@ -14,6 +14,7 @@ import { useLocationNoteController } from '@/app/hooks/formControllers/useLocati
 import { LocationFormData } from '@/app/hooks/useLocationForm';
 import { useLocationContext } from '@/app/providers/LocationContextFormProvider/LocationContextFormProvider';
 import { useOnLocationFormSubmit } from '@/app/hooks/useOnLocationFormSubmit';
+import axios, { AxiosError } from 'axios';
 
 const LocationForm = () => {
   const {
@@ -23,6 +24,7 @@ const LocationForm = () => {
     addLocation,
     isEditMode,
     clearFormOnEditState,
+    showAlert,
   } = useLocationContext();
   const { watch, handleSubmit, formState } = useFormContext<LocationFormData>();
   const { field: locationNameField, error: locationNameError } = useLocationNameController();
@@ -39,6 +41,21 @@ const LocationForm = () => {
 
   const handlePlaceEmpty = (_event: React.ChangeEvent<HTMLInputElement>) => {
     onAutoCompletePlaceEmpty();
+  };
+
+  const handleFormSubmit = async (data: any) => {
+    try {
+      await handleSubmit(onSubmit)(data);
+    } catch (error: unknown) {
+      let message = '';
+      if (error instanceof Error) {
+        message = error.message;
+      }
+      if (error instanceof AxiosError) {
+        message = error?.response?.data?.message || 'Unknown error';
+      }
+      showAlert(message);
+    }
   };
 
   return (
@@ -89,7 +106,7 @@ const LocationForm = () => {
             variant="contained"
             fullWidth
             disabled={formState.isSubmitting}
-            onClick={!formState.isSubmitting ? handleSubmit(onSubmit) : undefined}
+            onClick={!formState.isSubmitting ? () => handleFormSubmit(watch()) : undefined}
           >
             {formState.isSubmitting ? <CircularProgress size={24} /> : 'Save'}
           </Button>

@@ -71,14 +71,17 @@ export const TripContextFormProvider = ({ children }: { children: React.ReactNod
     clearTripLocations();
   }, [router, pathname, reset, clearTripLocations]);
 
+  const showAlert = (message: string) => {};
+
   const contextValue = useMemo<TripsManagerContextObject & ManageLocationTableHook & FormHandlers>(
     () => ({
       ...manageTrips,
       ...manageLocationTable,
       isEditMode: Boolean(tripId),
       clearFormOnEditState,
+      showAlert,
     }),
-    [clearFormOnEditState, manageLocationTable, manageTrips, tripId],
+    [clearFormOnEditState, manageLocationTable, manageTrips, tripId, showAlert],
   );
 
   return (

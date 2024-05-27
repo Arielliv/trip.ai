@@ -11,14 +11,9 @@ export const useOnLocationFormSubmit = (addLocation: (newLocation: ILocation) =>
 
   const onSubmit: SubmitHandler<LocationFormData> = async (data): Promise<void> => {
     if (Object.keys(formState.errors).length === 0) {
-      try {
-        const locationData = mapLocationFormDataToLocationSchema(data);
-        isEditMode ? editLocation(await updateLocation(locationData)) : addLocation(await createLocation(locationData));
-      } catch (error) {
-        console.error('Error saving data:', error);
-      }
+      const locationData = mapLocationFormDataToLocationSchema(data);
+      isEditMode ? editLocation(await updateLocation(locationData)) : addLocation(await createLocation(locationData));
     }
   };
-
   return { onSubmit };
 };
