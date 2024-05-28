@@ -37,5 +37,4 @@ export const defaultTripContext = {
   ...defaultSavedTripsContext,
   ...defaultManageLocationTableHook,
   clearFormOnEditState: () => {},
-  showAlert: (message: string) => {},
 };
