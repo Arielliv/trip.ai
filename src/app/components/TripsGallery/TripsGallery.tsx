@@ -18,6 +18,7 @@ export const TripsGallery = () => {
 
   useEffect(() => {
     void searchTripsHandlerDebounced(searchTerm, 0);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm]);
 
   return (

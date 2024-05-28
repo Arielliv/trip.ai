@@ -5,9 +5,17 @@ import { mapLocationFormDataToLocationSchema } from '@/models/mappers/mapLocatio
 import { useLocationContext } from '@/app/providers/LocationContextFormProvider/LocationContextFormProvider';
 import { createLocation, updateLocation } from '@/lib/operations/locationOperations';
 
-export const useOnLocationFormSubmit = (addLocation: (newLocation: ILocation) => void) => {
+export const useOnLocationFormSubmit = ({
+  editLocation,
+  isEditMode,
+  addLocation,
+}: {
+  editLocation: (updatedLocation: ILocation) => void;
+  isEditMode: boolean;
+  addLocation: (newLocation: ILocation) => void;
+}) => {
   const { formState } = useLocationForm();
-  const { editLocation, isEditMode } = useLocationContext();
+  const {} = useLocationContext();
 
   const onSubmit: SubmitHandler<LocationFormData> = async (data): Promise<void> => {
     if (Object.keys(formState.errors).length === 0) {

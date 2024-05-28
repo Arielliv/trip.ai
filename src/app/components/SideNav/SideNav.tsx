@@ -22,7 +22,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSession } from 'next-auth/react';
-
+import { SnackbarProvider } from 'notistack';
 const drawerWidth = 240;
 
 interface MenuListItem {
@@ -104,61 +104,63 @@ export default function SideNav({ children }: React.PropsWithChildren) {
   const isSelected = (href: string) => pathname === href;
 
   return (
-    <Box sx={{ display: 'flex' }}>
-      <AppBar position="fixed" open={open}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{ mr: 2, ...(open && { display: 'none' }) }}
-          >
-            <MenuIcon />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        sx={{
-          width: drawerWidth,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
+    <SnackbarProvider autoHideDuration={3000}>
+      <Box sx={{ display: 'flex' }}>
+        <AppBar position="fixed" open={open}>
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              sx={{ mr: 2, ...(open && { display: 'none' }) }}
+            >
+              <MenuIcon />
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          sx={{
             width: drawerWidth,
-            boxSizing: 'border-box',
-          },
-        }}
-        variant="persistent"
-        anchor="left"
-        open={open}
-      >
-        <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <List>
-          {MenuList.filter(({ name }) => {
-            if (name === 'Logout' && !session) {
-              return false;
-            }
-            return !(name === 'Sign in' && session);
-          }).map(({ name, icon, href }, _index) => (
-            <Link key={name} href={href}>
-              <ListItem key={name} disablePadding>
-                <ListItemButton selected={isSelected(href)}>
-                  {icon}
-                  <ListItemText primary={name} />
-                </ListItemButton>
-              </ListItem>
-            </Link>
-          ))}
-        </List>
-      </Drawer>
-      <Main open={open}>
-        <DrawerHeader />
-        {children}
-      </Main>
-    </Box>
+            flexShrink: 0,
+            '& .MuiDrawer-paper': {
+              width: drawerWidth,
+              boxSizing: 'border-box',
+            },
+          }}
+          variant="persistent"
+          anchor="left"
+          open={open}
+        >
+          <DrawerHeader>
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+            </IconButton>
+          </DrawerHeader>
+          <Divider />
+          <List>
+            {MenuList.filter(({ name }) => {
+              if (name === 'Logout' && !session) {
+                return false;
+              }
+              return !(name === 'Sign in' && session);
+            }).map(({ name, icon, href }, _index) => (
+              <Link key={name} href={href}>
+                <ListItem key={name} disablePadding>
+                  <ListItemButton selected={isSelected(href)}>
+                    {icon}
+                    <ListItemText primary={name} />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
+            ))}
+          </List>
+        </Drawer>
+        <Main open={open}>
+          <DrawerHeader />
+          {children}
+        </Main>
+      </Box>
+    </SnackbarProvider>
   );
 }
