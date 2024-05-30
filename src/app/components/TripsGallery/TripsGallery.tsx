@@ -1,4 +1,4 @@
-import { Box, CircularProgress } from '@mui/material';
+import { Box, CircularProgress, Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -34,14 +34,18 @@ export const TripsGallery = () => {
           next={searchTripsHandler}
           hasMore={!loading && hasMore}
           loader={
-            <Box display="flex" alignItems="center" justifyContent="center">
-              <CircularProgress />
-            </Box>
+            <Grid xs={12} sx={{ marginTop: 2, padding: 2 }}>
+              <Box display="flex" alignItems="center" justifyContent="center">
+                <CircularProgress />
+              </Box>
+            </Grid>
           }
           endMessage={
-            <p style={{ textAlign: 'center' }}>
-              <b>You have seen it all</b>
-            </p>
+            <Grid xs={12} sx={{ marginTop: 2, padding: 2 }}>
+              <Typography variant={'h6'} style={{ textAlign: 'center' }}>
+                You have seen it all
+              </Typography>
+            </Grid>
           }
         >
           <Grid container spacing={2}>

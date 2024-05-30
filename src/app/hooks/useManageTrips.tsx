@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
 import { ITrip } from '@/models/Trip';
-import { deleteTrip, fetchTripById, fetchTrips } from '@/lib/operations/tripOperations';
+import { deleteTrip, fetchTrips } from '@/lib/operations/tripOperations';
 
 export interface TripsManagerContextObject {
   trips: ITrip[];
@@ -11,10 +11,11 @@ export interface TripsManagerContextObject {
   loading: boolean;
   hasMore: boolean;
   removeTrip: (id: string) => void;
-  getFullTripById: (id: string | null) => Promise<ITrip | undefined>;
+  currentTripId: string | undefined;
 }
 
 export const useManageTrips = (initialPage = 0, limit = 10) => {
+  const [currentTripId, setCurrentTripId] = useState<string>();
   const [trips, setTrips] = useState<ITrip[]>([]);
   const [page, setPage] = useState(initialPage);
   const [hasMore, setHasMore] = useState(true);
@@ -41,6 +42,7 @@ export const useManageTrips = (initialPage = 0, limit = 10) => {
 
   const addTrip = (newTrip: ITrip) => {
     setTrips((prevTrips) => [...prevTrips, newTrip]);
+    setCurrentTripId(newTrip._id);
   };
 
   const editTrip = (updatedTrip: ITrip) => {
@@ -69,9 +71,16 @@ export const useManageTrips = (initialPage = 0, limit = 10) => {
     [trips],
   );
 
-  const getFullTripById = useCallback((id: string | null): Promise<ITrip | undefined> => {
-    if (!id) return Promise.resolve(undefined);
-    return fetchTripById(id);
-  }, []);
-  return { getFullTripById, trips, loadTrips, hasMore, loading, error, addTrip, getTripById, removeTrip, editTrip };
+  return {
+    trips,
+    loadTrips,
+    hasMore,
+    loading,
+    error,
+    addTrip,
+    getTripById,
+    removeTrip,
+    editTrip,
+    currentTripId,
+  };
 };

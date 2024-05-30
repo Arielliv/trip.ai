@@ -11,6 +11,7 @@ import { mapFullTripToTripFormData } from '@/models/mappers/mapTripToFullTrip';
 import { defaultLocationFormData } from '@/app/hooks/useLocationForm';
 import { FormHandlers } from '@/app/providers/LocationContextFormProvider/LocationContextFormProvider';
 import { useSnackbar } from 'notistack';
+import { useGetFullTripById } from '@/app/hooks/useGetFullTripById';
 
 export const TripDataContext = createContext<TripsManagerContextObject & ManageLocationTableHook & FormHandlers>(
   defaultTripContext,
@@ -21,7 +22,8 @@ export const TripContextFormProvider = ({ children }: { children: React.ReactNod
   const router = useRouter();
   const pathname = usePathname();
   const manageTrips = useManageTrips();
-  const { loadTrips, getFullTripById } = manageTrips;
+  const { loadTrips, currentTripId } = manageTrips;
+  const { getFullTripById } = useGetFullTripById();
   const searchParams = useSearchParams();
   const tripId = searchParams.get('id');
   const formMethods = useTripForm();
@@ -29,6 +31,7 @@ export const TripContextFormProvider = ({ children }: { children: React.ReactNod
     reset,
     formState: { isSubmitSuccessful },
   } = formMethods;
+  const isEditMode = Boolean(tripId);
 
   const manageLocationTable = useManageLocationTable(formMethods.control);
   const { loadTripLocations, clearTripLocations } = manageLocationTable;
@@ -57,13 +60,14 @@ export const TripContextFormProvider = ({ children }: { children: React.ReactNod
   useEffect(() => {
     let message;
     if (isSubmitSuccessful) {
-      if (tripId) {
+      if (tripId || currentTripId) {
         message = 'Trip updated successfully!';
       } else {
         message = 'Trip saved successfully!';
       }
       enqueueSnackbar(message, { variant: 'success' });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [enqueueSnackbar, isSubmitSuccessful, tripId]);
 
   const clearFormOnEditState = useCallback(async () => {
@@ -76,10 +80,10 @@ export const TripContextFormProvider = ({ children }: { children: React.ReactNod
     () => ({
       ...manageTrips,
       ...manageLocationTable,
-      isEditMode: Boolean(tripId),
+      isEditMode,
       clearFormOnEditState,
     }),
-    [clearFormOnEditState, manageLocationTable, manageTrips, tripId],
+    [clearFormOnEditState, isEditMode, manageLocationTable, manageTrips],
   );
 
   return (

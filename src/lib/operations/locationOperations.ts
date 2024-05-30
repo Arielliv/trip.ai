@@ -31,3 +31,9 @@ export async function fetchLocations(page: number, limit: number = 10): Promise<
   });
   return res.data as LocationsPaginationResponse;
 }
+
+export async function fetchLocation(id: string): Promise<ILocation> {
+  noStore();
+  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/location/${id}`);
+  return res.data as ILocation;
+}
