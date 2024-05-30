@@ -9,6 +9,7 @@ import theme from '../../theme';
 import { NextAuthProvider } from '@/app/providers/NextAuthProvider/NextAuthProvider';
 import { auth } from '@/auth';
 import NoSsrProvider from '@/app/providers/NoSsrProvider/NoSsrProvider';
+import ReactQueryProvider from '@/app/providers/ReactQueryProvider/ReactQueryProvider';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap' });
 
@@ -32,7 +33,9 @@ export default async function RootLayout({
             <ThemeProvider theme={theme}>
               <CssBaseline />
               <NoSsrProvider>
-                <SideNav>{children}</SideNav>
+                <ReactQueryProvider>
+                  <SideNav>{children}</SideNav>
+                </ReactQueryProvider>
               </NoSsrProvider>
             </ThemeProvider>
           </NextAuthProvider>

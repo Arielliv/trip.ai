@@ -11,13 +11,17 @@ import { useLocationNameController } from '@/app/hooks/formControllers/useLocati
 import { useLocationTypeController } from '@/app/hooks/formControllers/useLocationTypeController';
 import { useLocationPrivacyController } from '@/app/hooks/formControllers/useLocationPrivacy';
 import { useLocationNoteController } from '@/app/hooks/formControllers/useLocationNote';
-import { LocationFormData } from '@/app/hooks/useLocationForm';
+import { LocationFormData, useLocationForm } from '@/app/hooks/useLocationForm';
 import { useLocationContext } from '@/app/providers/LocationContextFormProvider/LocationContextFormProvider';
+import { useOnLocationFormSubmit } from '@/app/hooks/useOnLocationFormSubmit';
 
 const LocationForm = () => {
-  const { onAutoCompletePlaceChange, onLoadAutocomplete, onAutoCompletePlaceEmpty, isEditMode } = useLocationContext();
+  const { onSubmit } = useOnLocationFormSubmit();
+  const { onAutoCompletePlaceChange, onLoadAutocomplete, onAutoCompletePlaceEmpty, isEditMode, clearFormOnEditState } =
+    useLocationContext();
   const {
     watch,
+    handleSubmit,
     formState: { isSubmitting },
   } = useFormContext<LocationFormData>();
   const { field: locationNameField, error: locationNameError } = useLocationNameController();
@@ -78,12 +82,21 @@ const LocationForm = () => {
           <TextField label="Note" variant="outlined" multiline rows={4} fullWidth {...noteField} />
         </Grid>
         <Grid xs={12}>
-          <Button type="submit" variant="contained" fullWidth disabled={isSubmitting} form={'location-form'}>
+          <Button type="submit" variant="contained" fullWidth disabled={isSubmitting} onClick={handleSubmit(onSubmit)}>
             {isSubmitting ? <CircularProgress size={24} /> : 'Save'}
           </Button>
         </Grid>
         <Grid xs={12}>
-          <Button color="secondary" variant="outlined" type={'submit'} fullWidth>
+          <Button
+            color="secondary"
+            variant="outlined"
+            type={'submit'}
+            fullWidth
+            onClick={(event) => {
+              event.preventDefault();
+              clearFormOnEditState();
+            }}
+          >
             {'Clear'}
           </Button>
         </Grid>

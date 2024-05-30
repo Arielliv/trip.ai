@@ -1,5 +1,5 @@
 import { GridColDef, GridSlots } from '@mui/x-data-grid';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { Box } from '@mui/material';
 import { useManageLocations } from '@/app/hooks/useManageLocations';
 import { DataGridPro, GridRowModel } from '@mui/x-data-grid-pro';
@@ -51,11 +51,7 @@ export const LocationsTable = () => {
     handleSaveClick,
     handleCancelClick,
   });
-  const { locations, loadLocations } = useManageLocations();
-
-  useEffect(() => {
-    void loadLocations();
-  }, [loadLocations]);
+  const { locations } = useManageLocations();
 
   const columns: GridColDef[] = [
     {

@@ -1,6 +1,5 @@
 'use client';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   Accordion,
   AccordionDetails,
@@ -14,16 +13,17 @@ import {
   DialogContentText,
   DialogTitle,
   Typography,
+  IconButton,
+  Grid,
 } from '@mui/material';
-import { ITrip } from '@/models/Trip';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import CloseIcon from '@mui/icons-material/Close';
+import { useTheme } from '@mui/material/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { getFormatDateDuration } from '@/app/utils/getFormatDateDuration';
 import { currencyFormatter } from '@/app/utils/currencyFormatter';
-import IconButton from '@mui/material/IconButton';
-import { useGetFullTripById } from '@/app/hooks/useGetFullTripById';
-import Grid from '@mui/material/Unstable_Grid2';
-import { useTheme } from '@mui/material/styles';
+import { useGetFullTripById } from '@/app/hooks/query/useFetchTripById';
+import { ITrip } from '@/models/Trip';
 
 export interface TripMiniViewProps {
   trip: ITrip;
@@ -32,39 +32,26 @@ export interface TripMiniViewProps {
 }
 
 export const TripMiniView = ({ trip, handleClose, isOpen }: TripMiniViewProps) => {
-  const { getFullTripById } = useGetFullTripById();
-  const [fullTrip, setFullTrip] = useState<ITrip>();
-  const [isLoading, setIsLoading] = useState(true);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-  useEffect(() => {
-    const fetchFullTripAndUpdateState = async () => {
-      setIsLoading(true);
-      const fullTripRes = await getFullTripById(trip._id);
-      if (fullTripRes) {
-        setFullTrip(fullTripRes);
-        setIsLoading(false);
-      }
-    };
-
-    void fetchFullTripAndUpdateState();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // Use react-query to fetch the full trip details
+  const { data: fullTrip, isLoading } = useGetFullTripById(trip._id);
 
   const dateDuration =
     fullTrip?.locations && fullTrip.locations.length > 0
-      ? getFormatDateDuration(fullTrip?.locations[0]?.dateRange)
+      ? getFormatDateDuration(fullTrip.locations[0].dateRange)
       : [new Date(), new Date()];
+
   return (
     <Dialog
-      scroll={'paper'}
       open={isOpen}
       onClose={handleClose}
-      aria-labelledby="responsive-dialog-title"
       fullScreen={fullScreen}
       fullWidth
-      maxWidth={'sm'}
+      maxWidth="sm"
+      scroll="paper"
+      aria-labelledby="responsive-dialog-title"
     >
       <DialogTitle id="responsive-dialog-title">{fullTrip?.name}</DialogTitle>
       <IconButton
@@ -81,7 +68,7 @@ export const TripMiniView = ({ trip, handleClose, isOpen }: TripMiniViewProps) =
       </IconButton>
       <DialogContent dividers>
         {isLoading ? (
-          <Box display="flex" alignItems="center" justifyContent="center">
+          <Box display="flex" justifyContent="center" alignItems="center">
             <CircularProgress />
           </Box>
         ) : (
@@ -96,41 +83,24 @@ export const TripMiniView = ({ trip, handleClose, isOpen }: TripMiniViewProps) =
                   aria-controls={`panel${index}a-content`}
                   id={`panel${index}a-header`}
                 >
-                  <Grid container xs={12} justifyContent="space-between" alignItems="center">
-                    <Grid xs={8}>
-                      <Typography variant="h6">
-                        {location.connectedLocationData?.name || 'Empty Location Name'}
-                      </Typography>
-                    </Grid>
-                    <Grid xs={4} style={{ textAlign: 'right' }}>
-                      <Typography variant="subtitle2" color="text.secondary">
-                        {location.connectedLocationData?.type}
-                      </Typography>
-                    </Grid>
+                  <Grid container justifyContent="space-between" alignItems="center">
+                    <Typography variant="h6">
+                      {location.connectedLocationData?.name || 'Empty Location Name'}
+                    </Typography>
+                    <Typography variant="subtitle2" color="text.secondary">
+                      {location.connectedLocationData?.type}
+                    </Typography>
                   </Grid>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <Typography component={'div'}>
-                    <Typography color="text.secondary" component={'span'} variant={'subtitle2'}>
-                      {dateDuration[0] && `From:`}
-                    </Typography>
-                    <Typography component={'span'} variant={'subtitle1'}>
-                      {dateDuration[0] ? dateDuration[0]?.toLocaleDateString() : '-'}{' '}
-                    </Typography>
-                    <Typography color="text.secondary" component={'span'} variant={'subtitle2'}>
-                      {dateDuration[1] && `Until:`}
-                    </Typography>
-                    <Typography component={'span'} variant={'subtitle1'}>
-                      {dateDuration[1] ? dateDuration[1]?.toLocaleDateString() : '-'}
-                    </Typography>
+                  <Typography color="text.secondary">From: {dateDuration[0]?.toLocaleDateString()}</Typography>
+                  <Typography color="text.secondary">Until: {dateDuration[1]?.toLocaleDateString()}</Typography>
+                  <Typography variant="subtitle1">
+                    Time duration: {location.duration?.value} {location.duration?.timeUnit}
                   </Typography>
-                  <Typography
-                    variant={'subtitle1'}
-                  >{`Time duration: ${location.duration?.value} ${location.duration?.timeUnit}`}</Typography>
-                  <Typography>Additional Info: </Typography>
-                  <Typography component={'div'}>{location.additionalInfo || 'None'}</Typography>
-                  <Typography variant={'subtitle2'}>
-                    Cost: {location.cost ? `${currencyFormatter.format(location.cost)}` : 'Not provided'}
+                  <Typography>Additional Info: {location.additionalInfo || 'None'}</Typography>
+                  <Typography variant="subtitle2">
+                    Cost: {location.cost ? currencyFormatter.format(location.cost) : 'Not provided'}
                   </Typography>
                 </AccordionDetails>
               </Accordion>
