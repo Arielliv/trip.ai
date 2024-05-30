@@ -2,7 +2,7 @@ import { ILocationInTrip, ITrip, ITripDto, LocationInTrip } from '@/models/Trip'
 import { ObjectId } from 'mongodb';
 import Location from '@/models/Location';
 
-export const buildTripDto = async (trip: ITrip, owner_id?: string): Promise<ITripDto> => {
+export const buildTripToSave = async (trip: ITrip, owner_id?: string): Promise<ITrip> => {
   let totalCost = 0;
   let startDate: Date | undefined = undefined;
   let endDate: Date | undefined = undefined;
@@ -36,9 +36,9 @@ export const buildTripDto = async (trip: ITrip, owner_id?: string): Promise<ITri
   }
 
   const locations = trip.locations.map(
-    ({ location_id, id, dateRange, duration, additionalInfo, cost }: ILocationInTrip): LocationInTrip => {
+    ({ location_id, id, dateRange, duration, additionalInfo, cost }: ILocationInTrip): ILocationInTrip => {
       return {
-        location_id: new ObjectId(location_id as string),
+        location_id,
         id,
         dateRange,
         duration,
@@ -50,19 +50,11 @@ export const buildTripDto = async (trip: ITrip, owner_id?: string): Promise<ITri
 
   const totals = { ...(startDate && endDate ? { totalDateRange: [startDate, endDate] } : undefined), totalCost };
 
-  console.log({
-    ...trip,
-    locations,
-    mainImageUrl,
-    totals,
-    owner_id: new ObjectId(owner_id),
-  });
-
   return {
     ...trip,
     locations,
     mainImageUrl,
     totals,
-    owner_id: new ObjectId(owner_id),
+    ...(owner_id ? { owner_id: new ObjectId(owner_id) } : undefined),
   };
 };

@@ -56,7 +56,15 @@ const TripForm = () => {
           </Button>
         </Grid>
         <Grid xs={12}>
-          <Button color="secondary" variant="outlined" fullWidth onClick={clearFormOnEditState}>
+          <Button
+            color="secondary"
+            variant="outlined"
+            fullWidth
+            onClick={(event) => {
+              event.preventDefault();
+              clearFormOnEditState();
+            }}
+          >
             {'Clear'}
           </Button>
         </Grid>

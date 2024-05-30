@@ -2,10 +2,9 @@ import { SearchTripsContextObject } from '@/app/hooks/useSearchTrips';
 
 export const defaultSearchTripsContext: SearchTripsContextObject = {
   trips: [],
-  loading: false,
+  isLoading: false,
   error: null,
   loadTrips: () => {},
-  hasMore: false,
-  searchTripsHandler: (_searchValue, _pageOverride) => Promise.resolve(),
+  hasNextPage: false,
   setPage: () => {},
 };

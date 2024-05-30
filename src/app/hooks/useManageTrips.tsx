@@ -1,86 +1,95 @@
-import { useState, useCallback } from 'react';
+import { deleteTrip, createTrip, updateTrip } from '@/lib/operations/tripOperations';
+import {
+  FetchNextPageOptions,
+  InfiniteData,
+  InfiniteQueryObserverResult,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { ITrip } from '@/models/Trip';
-import { deleteTrip, fetchTrips } from '@/lib/operations/tripOperations';
+import { useState } from 'react';
+import { useInfiniteTrips } from '@/app/hooks/query/useInfiniteTrips';
+import { TripsPaginationResponse } from '@/lib/types';
+import { useSnackbar } from 'notistack';
 
 export interface TripsManagerContextObject {
   trips: ITrip[];
-  loadTrips: () => void;
+  fetchNextPage?: (
+    options?: FetchNextPageOptions,
+  ) => Promise<InfiniteQueryObserverResult<InfiniteData<TripsPaginationResponse, unknown>, Error>>;
   addTrip: (newTrip: ITrip) => void;
   editTrip: (updatedTrip: ITrip) => void;
   isEditMode: boolean;
-  loading: boolean;
-  hasMore: boolean;
+  isLoading: boolean;
+  hasNextPage: boolean;
   removeTrip: (id: string) => void;
   currentTripId: string | undefined;
 }
 
-export const useManageTrips = (initialPage = 0, limit = 10) => {
+export const useManageTrips = (limit = 10): TripsManagerContextObject => {
   const [currentTripId, setCurrentTripId] = useState<string>();
-  const [trips, setTrips] = useState<ITrip[]>([]);
-  const [page, setPage] = useState(initialPage);
-  const [hasMore, setHasMore] = useState(true);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const { enqueueSnackbar } = useSnackbar();
+  const queryClient = useQueryClient();
 
-  const loadTrips = useCallback(async () => {
-    if (!hasMore || loading) return;
+  const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } = useInfiniteTrips(limit);
 
-    setLoading(true);
-    try {
-      const data = await fetchTrips(page, limit);
-      setHasMore(data.trips.length === data.limit);
-      setPage((prev) => prev + 1);
-      setTrips((prev) => [...prev, ...data.trips]);
-    } catch (err) {
-      // @ts-ignore
-      setError(err.message);
-      setHasMore(false);
-    } finally {
-      setLoading(false);
-    }
-  }, [hasMore, limit, loading, page]);
+  const trips = data?.pages.flatMap((page) => page.trips) || [];
+
+  const addTripMutation = useMutation({
+    mutationFn: createTrip,
+    onSuccess: (newTrip) => {
+      const message = 'Trip updated successfully!';
+      enqueueSnackbar(message, { variant: 'success' });
+      setCurrentTripId(newTrip._id); // Assuming newTrip contains the _id after creation
+      return queryClient.invalidateQueries({ queryKey: ['trips', limit] });
+    },
+    onError: (error) => {
+      const message = error.message;
+      enqueueSnackbar(message, { variant: 'error' });
+    },
+  });
+
+  const editTripMutation = useMutation({
+    mutationFn: updateTrip,
+    onSuccess: () => {
+      const message = 'Trip updated successfully!';
+      enqueueSnackbar(message, { variant: 'success' });
+      return queryClient.invalidateQueries({ queryKey: ['trips', limit] });
+    },
+    onError: (error) => {
+      const message = error.message;
+      enqueueSnackbar(message, { variant: 'error' });
+    },
+  });
+
+  const removeTripMutation = useMutation({
+    mutationFn: deleteTrip,
+    onSuccess: () => {
+      return queryClient.invalidateQueries({ queryKey: ['trips', limit] });
+    },
+  });
 
   const addTrip = (newTrip: ITrip) => {
-    setTrips((prevTrips) => [...prevTrips, newTrip]);
-    setCurrentTripId(newTrip._id);
+    addTripMutation.mutate(newTrip);
   };
 
   const editTrip = (updatedTrip: ITrip) => {
-    setTrips((prevTrips) => {
-      return prevTrips.map((trip) => {
-        if (trip._id === updatedTrip._id) {
-          return updatedTrip;
-        } else {
-          return trip;
-        }
-      });
-    });
+    editTripMutation.mutate(updatedTrip);
   };
 
-  const removeTrip = async (id: string) => {
-    await deleteTrip(id);
-    const filterTrips = trips.filter((trip) => trip._id !== id);
-    setTrips(filterTrips);
+  const removeTrip = (id: string) => {
+    removeTripMutation.mutate(id);
   };
-
-  const getTripById = useCallback(
-    (id: string | null): ITrip | undefined => {
-      if (!id) return;
-      return trips.find((trip) => trip._id === id);
-    },
-    [trips],
-  );
 
   return {
     trips,
-    loadTrips,
-    hasMore,
-    loading,
-    error,
+    fetchNextPage,
     addTrip,
-    getTripById,
-    removeTrip,
     editTrip,
+    removeTrip,
     currentTripId,
+    isEditMode: !!currentTripId,
+    isLoading,
+    hasNextPage,
   };
 };

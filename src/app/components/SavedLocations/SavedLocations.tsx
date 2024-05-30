@@ -12,7 +12,8 @@ export interface SavedLocationsProps {
 }
 
 const SavedLocations = ({ setSelectedTab }: SavedLocationsProps) => {
-  const { locations, loadLocations, loading, hasMore, handleFocusLocation, removeLocation } = useLocationContext();
+  const { locations, fetchNextPage, isLoading, hasNextPage, handleFocusLocation, removeLocation } =
+    useLocationContext();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -43,8 +44,8 @@ const SavedLocations = ({ setSelectedTab }: SavedLocationsProps) => {
       height={'90vh'}
       scrollableTarget="locationScrollableContiner"
       dataLength={locations.length}
-      next={loadLocations}
-      hasMore={!loading && hasMore}
+      next={() => fetchNextPage!()}
+      hasMore={!isLoading && hasNextPage}
       loader={
         <Box display="flex" alignItems="center" justifyContent="center">
           <CircularProgress />

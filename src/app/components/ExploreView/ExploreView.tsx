@@ -4,7 +4,7 @@ import React from 'react';
 import Grid from '@mui/material/Unstable_Grid2';
 import { ExploreDataTestIds } from '@/app/components/constants/constants';
 import { TripsGallery } from '@/app/components/TripsGallery/TripsGallery';
-import { TripsSearchContextProvider } from '@/app/providers/TripsSearchContextProvider/TripContextFormProvider';
+import { TripsSearchContextProvider } from '@/app/providers/TripsSearchContextProvider/TripsSearchContextProvider';
 
 const ExploreView = () => {
   return (
