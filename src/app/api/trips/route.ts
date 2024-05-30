@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import Trip, { ITrip, ITripDto } from '@/models/Trip';
 import dbConnect from '@/lib/dbConnect';
 import { auth } from '@/auth';
+import { buildTripDto } from '@/models/builders/buildTripDto';
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -21,8 +22,8 @@ export const POST = async (req: NextRequest) => {
       return NextResponse.json({ message: 'Trip name is missing' }, { status: HttpStatusCode.BadRequest });
     }
     console.log(`new trip: ${JSON.stringify(tripData)}, ${JSON.stringify(tripData)}`);
-
-    const trip: ITripDto = await Trip.create<ITripDto>({ ...tripData, owner_id });
+    const tripDto = await buildTripDto(tripData, owner_id);
+    const trip: ITripDto = await Trip.create<ITripDto>(tripDto);
 
     return NextResponse.json(
       {

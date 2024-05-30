@@ -7,7 +7,7 @@ import { DateRangeInput } from '@/app/components/LocationsTable/TableComponents/
 import { DurationInput } from '@/app/components/LocationsTable/TableComponents/Duration/DurationInput/DurationInput';
 import { TableToolbar } from '@/app/components/LocationsTable/TableComponents/TableToolbar/TableToolbar';
 import { Columns } from '@/app/components/constants/constants';
-import { currencyFormatter } from '@/app/components/currencyFormatter/currencyFormatter';
+import { currencyFormatter } from '@/app/utils/currencyFormatter';
 import { useGetTableActions } from '@/app/components/getTableActions/useGetTableActions';
 import { DurationView } from '@/app/components/LocationsTable/TableComponents/Duration/DurationView/DurationView';
 import { DateView } from '@/app/components/LocationsTable/TableComponents/Date/DateView/DateView';

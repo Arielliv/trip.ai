@@ -17,13 +17,16 @@ export const mapTripFormDataToTripSchema = (tripFormData: TripFormData): ITrip =
 
 const mapLocationInTripDataToLocationInTripSchema = (locationInTrip: LocationInTripFormData): ILocationInTrip => {
   let parsedDuration;
+  let durationParts;
   if (locationInTrip.duration) {
-    const durationParts = locationInTrip.duration.match(/(\d+)\s*(\w+)/);
-    if (!durationParts) throw new Error('Duration format is incorrect or missing');
+    if (locationInTrip.duration !== 'undefined undefined') {
+      durationParts = locationInTrip.duration.match(/(\d+)\s*(\w+)/);
+      if (!durationParts) throw new Error('Duration format is incorrect or missing');
+    }
 
     parsedDuration = {
-      value: parseInt(durationParts[1]),
-      timeUnit: durationParts[2],
+      value: parseInt(durationParts![1]),
+      timeUnit: durationParts![2],
     };
   }
 

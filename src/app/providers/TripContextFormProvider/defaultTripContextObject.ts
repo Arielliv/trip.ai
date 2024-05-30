@@ -30,7 +30,7 @@ const defaultSavedTripsContext: TripsManagerContextObject = {
   isEditMode: false,
   loading: false,
   hasMore: false,
-  getFullTripById: (_id: string | null) => Promise.resolve(undefined),
+  currentTripId: '',
 };
 
 export const defaultTripContext = {
