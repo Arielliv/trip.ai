@@ -1,23 +1,29 @@
-import { Box, CircularProgress } from '@mui/material';
+import { Box, CircularProgress, Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import React, { useEffect, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import debounce from 'lodash/debounce';
-import { useTripsSearchContext } from '@/app/providers/TripsSearchContextProvider/TripContextFormProvider';
 import { TripCard } from '@/app/components/TripCard/TripCard';
 import { SearchTripInput } from '@/app/components/SearchTripInput/SearchTripInput';
+import { useTripsSearchContext } from '@/app/providers/TripsSearchContextProvider/TripsSearchContextProvider';
 
 export const TripsGallery = () => {
-  const { searchTripsHandler, trips, loading, hasMore } = useTripsSearchContext();
+  const { fetchNextPage, loadTrips, trips, isLoading, hasNextPage } = useTripsSearchContext();
   const [searchTerm, setSearchTerm] = useState('');
-  const searchTripsHandlerDebounced = debounce(searchTripsHandler, 1000);
+  const [hasSearchTermBeenSet, setHasSearchTermBeenSet] = useState(false);
 
   const handleInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
+    if (!hasSearchTermBeenSet) {
+      setHasSearchTermBeenSet(true);
+    }
   };
 
   useEffect(() => {
-    void searchTripsHandlerDebounced(searchTerm, 0);
+    if (hasSearchTermBeenSet) {
+      void loadTrips(searchTerm);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm]);
 
   return (
@@ -30,17 +36,21 @@ export const TripsGallery = () => {
       <Grid xs={12} sx={{ marginTop: 2, padding: 2 }}>
         <InfiniteScroll
           dataLength={trips.length}
-          next={searchTripsHandler}
-          hasMore={!loading && hasMore}
+          next={() => fetchNextPage!()}
+          hasMore={!isLoading && hasNextPage}
           loader={
-            <Box display="flex" alignItems="center" justifyContent="center">
-              <CircularProgress />
-            </Box>
+            <Grid xs={12} sx={{ marginTop: 2, padding: 2 }}>
+              <Box display="flex" alignItems="center" justifyContent="center">
+                <CircularProgress />
+              </Box>
+            </Grid>
           }
           endMessage={
-            <p style={{ textAlign: 'center' }}>
-              <b>You have seen it all</b>
-            </p>
+            <Grid xs={12} sx={{ marginTop: 2, padding: 2 }}>
+              <Typography variant={'h6'} style={{ textAlign: 'center' }}>
+                You have seen it all
+              </Typography>
+            </Grid>
           }
         >
           <Grid container spacing={2}>

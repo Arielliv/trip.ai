@@ -3,7 +3,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import Trip, { ITrip, ITripDto, LocationInTrip } from '@/models/Trip';
 import dbConnect from '@/lib/dbConnect';
 import { auth } from '@/auth';
-import Location from '@/models/Location';
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -22,8 +21,8 @@ export const POST = async (req: NextRequest) => {
       return NextResponse.json({ message: 'Trip name is missing' }, { status: HttpStatusCode.BadRequest });
     }
     console.log(`new trip: ${JSON.stringify(tripData)}, ${JSON.stringify(tripData)}`);
-
-    const trip: ITripDto = await Trip.create<ITripDto>({ ...tripData, owner_id });
+    const tripDto = await buildTripToSave(tripData, owner_id);
+    const trip: ITripDto = await Trip.create<ITripDto>(tripDto);
 
     const updatePromises = trip.locations.map(async (location: LocationInTrip) => {
       const locationId = location.location_id;

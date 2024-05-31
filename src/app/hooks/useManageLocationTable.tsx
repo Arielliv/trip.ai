@@ -41,8 +41,8 @@ export interface ManageLocationTableHook {
   isRowInEditMode: (id: GridRowId) => boolean;
   rows: GridRowModel[];
   rowModesModel: GridRowModesModel;
-  loadTripLocations: (locations: LocationInTripFormData[]) => void;
-  clearTripLocations: () => void;
+  loadTripLocationsIntoTable: (locations: LocationInTripFormData[]) => void;
+  clearTripLocationsFromTable: () => void;
 }
 
 export const useManageLocationTable = (control?: Control<TripFormData>): ManageLocationTableHook => {
@@ -158,7 +158,7 @@ export const useManageLocationTable = (control?: Control<TripFormData>): ManageL
     rowModesModel,
     addNewRow,
     isRowInEditMode: isEditMode,
-    loadTripLocations,
-    clearTripLocations,
+    loadTripLocationsIntoTable: loadTripLocations,
+    clearTripLocationsFromTable: clearTripLocations,
   };
 };

@@ -11,7 +11,7 @@ export interface SavedTripsProps {
 }
 
 const SavedTrips = ({ setSelectedTab }: SavedTripsProps) => {
-  const { trips, loadTrips, loading, hasMore, removeTrip } = useTripContext();
+  const { trips, fetchNextPage, isLoading, hasNextPage, removeTrip } = useTripContext();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -49,8 +49,8 @@ const SavedTrips = ({ setSelectedTab }: SavedTripsProps) => {
       height={'90vh'}
       scrollableTarget="tripsScrollableContiner"
       dataLength={trips.length}
-      next={loadTrips}
-      hasMore={!loading && hasMore}
+      next={() => fetchNextPage!()}
+      hasMore={!isLoading && hasNextPage}
       loader={
         <Box display="flex" alignItems="center" justifyContent="center">
           <CircularProgress />

@@ -1,15 +1,17 @@
 /* v8 ignore start */
 import { Schema, Types, models, model } from 'mongoose';
 import { Role, TransportationType, Visibility } from '@/models/constants';
-import { Permission } from '@/models/shared/types';
+import { IUserPermission } from '@/models/shared/types';
 import { ILocation } from '@/models/Location';
 
 export interface ITrip {
   _id?: string;
   name: string;
   participants_ids: Types.ObjectId[];
-  permissions: Permission[];
+  permissions: IUserPermission[];
   locations: ILocationInTrip[];
+  mainImageUrl?: string;
+  totals?: ITotalsDto;
   visibility: Visibility;
   transportations: Transportation[];
   reviews: Review[];
@@ -33,11 +35,18 @@ export interface ITripDto {
   owner_id: Types.ObjectId;
   name: string;
   participants_ids: Types.ObjectId[];
-  permissions: Permission[];
+  permissions?: IUserPermission[];
   locations: LocationInTrip[];
+  mainImageUrl?: string;
+  totals?: ITotalsDto;
   visibility: Visibility;
   transportations: Transportation[];
   reviews: Review[];
+}
+
+export interface ITotalsDto {
+  totalCost?: number;
+  totalDateRange?: Date[];
 }
 
 export interface Transportation {
@@ -48,14 +57,14 @@ export interface Transportation {
 
 export interface LocationInTrip {
   location_id: Types.ObjectId; // Reference to a Location document
-  id: string;
+  id?: string;
   dateRange: Date[];
-  duration: {
+  duration?: {
     value: number;
     timeUnit: string;
   };
-  additionalInfo: string;
-  cost: number;
+  additionalInfo?: string;
+  cost?: number;
 }
 
 export interface Review {
@@ -64,6 +73,11 @@ export interface Review {
   description: string;
   images: string[]; // Array of image URLs
 }
+
+const Totals: Schema = new Schema({
+  totalCost: { type: Number, required: false },
+  totalDateRange: [{ type: Date }, { type: Date }],
+});
 
 const LocationInTripSchema: Schema = new Schema({
   location_id: { type: Types.ObjectId, ref: 'Location', required: true },
@@ -104,6 +118,8 @@ const TripSchema: Schema = new Schema({
       images: [{ type: String }],
     },
   ],
+  totals: Totals,
+  mainImageUrl: { type: String, required: false },
 });
 
 const Trip = models.Trip || model<ITrip>('Trip', TripSchema);

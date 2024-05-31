@@ -1,71 +1,98 @@
-import { useState, useCallback } from 'react';
+import {
+  FetchNextPageOptions,
+  InfiniteData,
+  InfiniteQueryObserverResult,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { ILocation } from '@/models/Location';
-import { deleteLocation, fetchLocations } from '@/lib/operations/locationOperations';
+import { createLocation, deleteLocation, updateLocation } from '@/lib/operations/locationOperations';
+import { useInfiniteLocations } from '@/app/hooks/query/useInfiniteLocations';
+import { useSnackbar } from 'notistack';
+import { useCallback, useMemo, useState } from 'react';
+import { LocationsPaginationResponse } from '@/lib/types';
 
 export interface LocationsManagerContextObject {
   locations: ILocation[];
-  loadLocations: () => void;
+  fetchNextPage?: (
+    options?: FetchNextPageOptions,
+  ) => Promise<InfiniteQueryObserverResult<InfiniteData<LocationsPaginationResponse, unknown>, Error>>;
   addLocation: (newLocation: ILocation) => void;
   editLocation: (updatedLocation: ILocation) => void;
-  isEditMode: boolean;
-  loading: boolean;
-  hasMore: boolean;
-  removeLocation: (id: string) => Promise<void>;
+  isLoading: boolean;
+  hasNextPage: boolean;
+  removeLocation: (id: string) => void;
 }
 
-export const useManageLocations = (initialPage = 0, limit = 10) => {
-  const [locations, setLocations] = useState<ILocation[]>([]);
-  const [page, setPage] = useState(initialPage);
-  const [hasMore, setHasMore] = useState(true);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+export const useManageLocations = (limit = 10) => {
+  const queryClient = useQueryClient();
+  const [tripId, setTripId] = useState<string>();
+  const { enqueueSnackbar } = useSnackbar();
 
-  const loadLocations = useCallback(
-    async (tripId?: string, isAnotherLoad?: boolean) => {
-      if (!isAnotherLoad && (!hasMore || loading)) return;
+  const { data, error, fetchNextPage, hasNextPage, isLoading, refetch } = useInfiniteLocations(limit);
 
-      setLoading(true);
-      try {
-        if (isAnotherLoad) {
-          setPage(0);
-          setLocations([]);
-        }
-        const data = tripId ? await fetchLocations(0, limit, tripId) : await fetchLocations(0, limit);
-        setHasMore(data.locations.length === data.limit);
-        setPage((prev) => prev + 1);
-        setLocations((prev) => [...prev, ...data.locations]);
-      } catch (err) {
-        // @ts-ignore
-        setError(err.message);
-        setHasMore(false);
-      } finally {
-        setLoading(false);
-      }
+  const locations = useMemo(() => {
+    return data?.pages.flatMap((page) => page.locations) || [];
+  }, [data]);
+
+  const addLocationMutation = useMutation({
+    mutationFn: createLocation,
+    onSuccess: () => {
+      const message = 'Location created successfully!';
+      enqueueSnackbar(message, { variant: 'success' });
+      return queryClient.invalidateQueries({ queryKey: ['locations', limit] });
     },
-    [hasMore, limit, loading, page],
-  );
+    onError: (error) => {
+      const message = error.message;
+      enqueueSnackbar(message, { variant: 'error' });
+    },
+  });
+
+  const editLocationMutation = useMutation({
+    mutationFn: updateLocation,
+    onSuccess: () => {
+      const message = 'Location updated successfully!';
+      enqueueSnackbar(message, { variant: 'success' });
+      return queryClient.invalidateQueries({ queryKey: ['locations', limit] });
+    },
+    onError: (error) => {
+      const message = error.message;
+      enqueueSnackbar(message, { variant: 'error' });
+    },
+  });
+
+  const removeLocationMutation = useMutation({
+    mutationFn: deleteLocation,
+    onSuccess: () => {
+      const message = 'Location removed successfully!';
+      enqueueSnackbar(message, { variant: 'success' });
+      return queryClient.invalidateQueries({ queryKey: ['locations', limit] });
+    },
+    onError: (error) => {
+      const message = error.message;
+      enqueueSnackbar(message, { variant: 'error' });
+    },
+  });
 
   const addLocation = (newLocation: ILocation) => {
-    setLocations((prevLocations) => [...prevLocations, newLocation]);
+    addLocationMutation.mutate(newLocation);
   };
 
   const editLocation = (updatedLocation: ILocation) => {
-    setLocations((prevLocations) => {
-      return prevLocations.map((location) => {
-        if (location._id === updatedLocation._id) {
-          return updatedLocation;
-        } else {
-          return location;
-        }
-      });
-    });
+    editLocationMutation.mutate(updatedLocation);
   };
 
-  const removeLocation = async (id: string) => {
-    await deleteLocation(id);
-    const filterLocations = locations.filter((location) => location._id !== id);
-    setLocations(filterLocations);
+  const removeLocation = (id: string) => {
+    removeLocationMutation.mutate(id);
   };
+
+  const loadLocationsByTripId = useCallback(
+    (value?: string) => {
+      setTripId(value);
+      return refetch(); // This triggers a refetch when search value changes
+    },
+    [refetch],
+  );
 
   const getLocationById = useCallback(
     (id: string | null): ILocation | undefined => {
@@ -77,16 +104,13 @@ export const useManageLocations = (initialPage = 0, limit = 10) => {
 
   return {
     locations,
-    loadLocations,
-    hasMore,
-    loading,
-    error,
-    addLocation,
+    fetchNextPage,
+    hasNextPage,
+    isLoading,
+    error: error ? error.message : null,
     getLocationById,
+    addLocation,
     removeLocation,
     editLocation,
-    setPage,
-    setLocations,
-    page,
   };
 };

@@ -5,6 +5,7 @@ import dbConnect from '@/lib/dbConnect';
 import Trip, { ITrip } from '@/models/Trip';
 import { mapTripToFullTrip } from '@/models/mappers/mapTripToFullTrip';
 import { auth } from '@/auth';
+import { buildTripToSave } from '@/models/builders/buildTripToSave';
 
 export const GET = async (_: NextRequest, { params }: { params: { id: string } }) => {
   try {
@@ -32,15 +33,17 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
       return NextResponse.json({ message: 'Authentication required' }, { status: HttpStatusCode.Unauthorized });
     }
 
-    const body: ITrip = await req.json();
+    const trip: ITrip = await req.json();
 
-    if (!body.name) {
+    if (!trip.name) {
       return NextResponse.json({ message: 'Trip name is missing' }, { status: HttpStatusCode.BadRequest });
     }
 
+    const tripToSave = await buildTripToSave(trip);
+
     const updatedTrip = await Trip.findOneAndUpdate(
       { _id: params.id, owner_id: session.user.id },
-      { $set: body },
+      { $set: tripToSave },
       { new: true },
     );
 

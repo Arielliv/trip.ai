@@ -1,5 +1,5 @@
 import { GridColDef, GridSlots } from '@mui/x-data-grid';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { Box } from '@mui/material';
 import { useManageLocations } from '@/app/hooks/useManageLocations';
 import { DataGridPro, GridRowModel } from '@mui/x-data-grid-pro';
@@ -7,7 +7,7 @@ import { DateRangeInput } from '@/app/components/LocationsTable/TableComponents/
 import { DurationInput } from '@/app/components/LocationsTable/TableComponents/Duration/DurationInput/DurationInput';
 import { TableToolbar } from '@/app/components/LocationsTable/TableComponents/TableToolbar/TableToolbar';
 import { Columns } from '@/app/components/constants/constants';
-import { currencyFormatter } from '@/app/components/currencyFormatter/currencyFormatter';
+import { currencyFormatter } from '@/app/utils/currencyFormatter';
 import { useGetTableActions } from '@/app/components/getTableActions/useGetTableActions';
 import { DurationView } from '@/app/components/LocationsTable/TableComponents/Duration/DurationView/DurationView';
 import { DateView } from '@/app/components/LocationsTable/TableComponents/Date/DateView/DateView';
@@ -51,11 +51,7 @@ export const LocationsTable = () => {
     handleSaveClick,
     handleCancelClick,
   });
-  const { locations, loadLocations } = useManageLocations();
-
-  useEffect(() => {
-    void loadLocations();
-  }, [loadLocations]);
+  const { locations } = useManageLocations();
 
   const columns: GridColDef[] = [
     {

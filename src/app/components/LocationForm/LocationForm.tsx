@@ -11,25 +11,23 @@ import { useLocationNameController } from '@/app/hooks/formControllers/useLocati
 import { useLocationTypeController } from '@/app/hooks/formControllers/useLocationTypeController';
 import { useLocationPrivacyController } from '@/app/hooks/formControllers/useLocationPrivacy';
 import { useLocationNoteController } from '@/app/hooks/formControllers/useLocationNote';
-import { LocationFormData } from '@/app/hooks/useLocationForm';
+import { LocationFormData, useLocationForm } from '@/app/hooks/useLocationForm';
 import { useLocationContext } from '@/app/providers/LocationContextFormProvider/LocationContextFormProvider';
 import { useOnLocationFormSubmit } from '@/app/hooks/useOnLocationFormSubmit';
 
 const LocationForm = () => {
+  const { onSubmit } = useOnLocationFormSubmit();
+  const { onAutoCompletePlaceChange, onLoadAutocomplete, onAutoCompletePlaceEmpty, isEditMode, clearFormOnEditState } =
+    useLocationContext();
   const {
-    onAutoCompletePlaceChange,
-    onLoadAutocomplete,
-    onAutoCompletePlaceEmpty,
-    addLocation,
-    isEditMode,
-    clearFormOnEditState,
-  } = useLocationContext();
-  const { watch, handleSubmit, formState } = useFormContext<LocationFormData>();
+    watch,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useFormContext<LocationFormData>();
   const { field: locationNameField, error: locationNameError } = useLocationNameController();
   const { field: locationTypeField } = useLocationTypeController();
   const { field: privacyField } = useLocationPrivacyController();
   const { field: noteField } = useLocationNoteController();
-  const { onSubmit } = useOnLocationFormSubmit(addLocation);
 
   const privacy = watch('privacy');
 
@@ -84,18 +82,21 @@ const LocationForm = () => {
           <TextField label="Note" variant="outlined" multiline rows={4} fullWidth {...noteField} />
         </Grid>
         <Grid xs={12}>
-          <Button
-            type="submit"
-            variant="contained"
-            fullWidth
-            disabled={formState.isSubmitting}
-            onClick={!formState.isSubmitting ? handleSubmit(onSubmit) : undefined}
-          >
-            {formState.isSubmitting ? <CircularProgress size={24} /> : 'Save'}
+          <Button type="submit" variant="contained" fullWidth disabled={isSubmitting} onClick={handleSubmit(onSubmit)}>
+            {isSubmitting ? <CircularProgress size={24} /> : 'Save'}
           </Button>
         </Grid>
         <Grid xs={12}>
-          <Button color="secondary" variant="outlined" fullWidth onClick={clearFormOnEditState}>
+          <Button
+            color="secondary"
+            variant="outlined"
+            type={'submit'}
+            fullWidth
+            onClick={(event) => {
+              event.preventDefault();
+              clearFormOnEditState();
+            }}
+          >
             {'Clear'}
           </Button>
         </Grid>

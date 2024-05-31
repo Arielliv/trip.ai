@@ -1,65 +1,69 @@
 import { useCallback, useState } from 'react';
-import { searchTrips } from '@/lib/operations/tripOperations';
+import { useInfiniteSearchedTrips } from '@/app/hooks/query/useInfiniteSearchedTrips';
 import { ITrip } from '@/models/Trip';
+import { FetchNextPageOptions, InfiniteData, InfiniteQueryObserverResult } from '@tanstack/react-query';
+import { TripsPaginationResponse } from '@/lib/types';
+import debounce from 'lodash/debounce';
 
 export interface SearchTripsContextObject {
   trips: ITrip[];
-  loading: boolean;
+  isLoading: boolean;
   error: any;
   loadTrips: (searchValue?: string) => void;
-  hasMore: boolean;
-  searchTripsHandler: (searchValue?: string, pageOverride?: number) => Promise<void>;
-  setPage: React.Dispatch<React.SetStateAction<number>>;
+  hasNextPage: boolean;
+  setPage: (page: number) => void;
+  fetchNextPage?: (
+    options?: FetchNextPageOptions,
+  ) => Promise<InfiniteQueryObserverResult<InfiniteData<TripsPaginationResponse, unknown>, Error>>;
 }
-export const useSearchTrips = (initialPage = 0, limit = 10): SearchTripsContextObject => {
-  const [trips, setTrips] = useState<ITrip[]>([]);
-  const [page, setPage] = useState(initialPage);
-  const [hasMore, setHasMore] = useState(true);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
-  const searchTripsHandler = useCallback(
-    async (searchValue?: string, pageOverride?: number) => {
-      try {
-        const response = await searchTrips(searchValue, pageOverride === 0 ? pageOverride : page, limit);
-        if (response.trips) {
-          setHasMore(response.trips.length === response.limit);
-          setPage((prev) => prev + 1);
-          setTrips(response.trips);
-        }
-      } catch (err) {
-        // @ts-ignore
-        setError(err.response?.data?.message || 'An error occurred while fetching data');
-        setHasMore(false);
-      } finally {
-        setLoading(false);
-      }
-    },
-    [limit, page],
+export const useSearchTrips = (limit = 10): SearchTripsContextObject => {
+  const [searchValue, setSearchValue] = useState<string>();
+  const { data, error, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage, refetch } = useInfiniteSearchedTrips(
+    searchValue,
+    limit,
+    true,
+  );
+
+  const trips = data?.pages.flatMap((page) => page.trips) || [];
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedLoadTrips = useCallback(
+    debounce((value?: string) => {
+      setSearchValue(value);
+      return refetch(); // This will trigger the query again with the new search value
+    }, 300),
+    [],
   );
 
   const loadTrips = useCallback(
-    async (searchValue?: string) => {
-      if (!hasMore || loading) return;
-
-      setLoading(true);
-      try {
-        const response = await searchTrips(searchValue, page, limit);
-        if (response.trips) {
-          setHasMore(response.trips.length === response.limit);
-          setPage((prev) => prev + 1);
-          setTrips((prev) => [...prev, ...response.trips]);
-        }
-      } catch (err) {
-        // @ts-ignore
-        setError(err.response?.data?.message || 'An error occurred while fetching data');
-        setHasMore(false);
-      } finally {
-        setLoading(false);
-      }
+    (value?: string) => {
+      debouncedLoadTrips(value);
+      return refetch(); // This triggers a refetch when search value changes
     },
-    [hasMore, limit, loading, page],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [refetch],
   );
 
-  return { trips, loading, error, loadTrips, hasMore, searchTripsHandler, setPage };
+  const setPage = useCallback(
+    (page: number) => {
+      // Mock implementation as `react-query` handles the actual pagination
+      // Just trigger fetchNextPage if not loading the next page yet
+      if (!isFetchingNextPage) {
+        // @ts-ignore
+        fetchNextPage({ pageParam: page });
+      }
+    },
+    [fetchNextPage, isFetchingNextPage],
+  );
+
+  return {
+    trips,
+    isLoading,
+    error: error ? error.message : null,
+    loadTrips,
+    hasNextPage,
+    setPage,
+    fetchNextPage,
+  };
 };

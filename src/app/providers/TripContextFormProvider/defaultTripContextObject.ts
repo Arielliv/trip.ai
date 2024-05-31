@@ -2,6 +2,8 @@ import { TripsManagerContextObject } from '@/app/hooks/useManageTrips';
 import { ITrip } from '@/models/Trip';
 import { ManageLocationTableHook } from '@/app/hooks/useManageLocationTable';
 import { LocationInTripFormData } from '@/app/hooks/useTripForm';
+import { FetchNextPageOptions, InfiniteData, InfiniteQueryObserverResult } from '@tanstack/react-query';
+import { TripsPaginationResponse } from '@/lib/types';
 
 const defaultManageLocationTableHook: ManageLocationTableHook = {
   handleRowModesModelChange: () => {},
@@ -17,20 +19,19 @@ const defaultManageLocationTableHook: ManageLocationTableHook = {
   isRowInEditMode: () => false,
   rows: [],
   rowModesModel: {},
-  loadTripLocations: (_locations: LocationInTripFormData[]) => {},
-  clearTripLocations: () => {},
+  loadTripLocationsIntoTable: (_locations: LocationInTripFormData[]) => {},
+  clearTripLocationsFromTable: () => {},
 };
 
 const defaultSavedTripsContext: TripsManagerContextObject = {
   trips: [],
-  loadTrips: () => {},
-  editTrip: (_updatedTrip: ITrip) => {},
+  currentTripId: '',
   addTrip: (_newTrip: ITrip) => {},
-  removeTrip: (_id: string) => {},
+  editTrip: (_updatedTrip: ITrip) => {},
   isEditMode: false,
-  loading: false,
-  hasMore: false,
-  getFullTripById: (_id: string | null) => Promise.resolve(undefined),
+  isLoading: false,
+  hasNextPage: false,
+  removeTrip: (_id: string) => {},
 };
 
 export const defaultTripContext = {

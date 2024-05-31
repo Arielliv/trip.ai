@@ -1,15 +1,14 @@
 'use client';
-import React, { createContext, useContext, useEffect, useState, useCallback, useMemo } from 'react';
+import React, { createContext, useCallback, useContext, useMemo } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { FormProvider } from 'react-hook-form';
-import { Alert, Snackbar } from '@mui/material';
 import { DevTool } from '@hookform/devtools';
 import { TripsManagerContextObject, useManageTrips } from '@/app/hooks/useManageTrips';
-import { useTripForm } from '@/app/hooks/useTripForm';
+import { defaultTripFormData, useTripForm } from '@/app/hooks/useTripForm';
 import { defaultTripContext } from '@/app/providers/TripContextFormProvider/defaultTripContextObject';
 import { ManageLocationTableHook, useManageLocationTable } from '@/app/hooks/useManageLocationTable';
 import { mapFullTripToTripFormData } from '@/models/mappers/mapTripToFullTrip';
-import { defaultLocationFormData } from '@/app/hooks/useLocationForm';
+import { useGetFullTripById } from '@/app/hooks/query/useFetchTripById';
 import { FormHandlers } from '@/app/providers/LocationContextFormProvider/LocationContextFormProvider';
 
 export const TripDataContext = createContext<TripsManagerContextObject & ManageLocationTableHook & FormHandlers>(
@@ -20,65 +19,42 @@ export const TripContextFormProvider = ({ children }: { children: React.ReactNod
   const router = useRouter();
   const pathname = usePathname();
   const manageTrips = useManageTrips();
-  const { loadTrips, getFullTripById } = manageTrips;
   const searchParams = useSearchParams();
-  const tripId = searchParams.get('id');
+  const tripId = searchParams.get('id') || undefined;
   const formMethods = useTripForm();
-  const [openSnackbar, setOpenSnackbar] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState('');
   const {
     reset,
     formState: { isSubmitSuccessful },
   } = formMethods;
-
+  const isEditMode = Boolean(tripId);
   const manageLocationTable = useManageLocationTable(formMethods.control);
-  const { loadTripLocations, clearTripLocations } = manageLocationTable;
+  const { loadTripLocationsIntoTable, clearTripLocationsFromTable } = manageLocationTable;
 
-  useEffect(() => {
-    if (!tripId) return;
+  const { data: fullTrip } = useGetFullTripById(tripId, isEditMode);
 
-    const fetchDetails = async () => {
-      if (!tripId) return;
-
-      const trip = await getFullTripById(tripId);
-
-      const formData = mapFullTripToTripFormData(trip);
-      loadTripLocations(formData?.locations || []);
-      formMethods.reset({ ...formData });
-    };
-
-    fetchDetails();
-  }, [tripId]);
-
-  useEffect(() => {
-    void loadTrips();
-  }, [loadTrips]);
-
-  useEffect(() => {
-    if (isSubmitSuccessful) {
-      if (tripId) {
-        setSnackbarMessage('Trip updated successfully!');
-      } else {
-        setSnackbarMessage('Trip saved successfully!');
-      }
-      setOpenSnackbar(true);
+  useMemo(() => {
+    if (fullTrip && isEditMode) {
+      const formData = mapFullTripToTripFormData(fullTrip);
+      loadTripLocationsIntoTable(formData!.locations || []);
+      reset(formData);
     }
-  }, [isSubmitSuccessful, tripId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEditMode, fullTrip]);
 
   const clearFormOnEditState = useCallback(async () => {
     router.push(pathname);
-    reset(defaultLocationFormData);
-    clearTripLocations();
-  }, [router, pathname, reset, clearTripLocations]);
+    reset(defaultTripFormData);
+    clearTripLocationsFromTable();
+  }, [router, pathname, reset, clearTripLocationsFromTable]);
 
   const contextValue = useMemo<TripsManagerContextObject & ManageLocationTableHook & FormHandlers>(
     () => ({
       ...manageTrips,
       ...manageLocationTable,
-      isEditMode: Boolean(tripId),
+      isEditMode,
       clearFormOnEditState,
     }),
-    [clearFormOnEditState, manageLocationTable, manageTrips, tripId],
+    [clearFormOnEditState, isEditMode, manageLocationTable, manageTrips],
   );
 
   return (
@@ -86,11 +62,6 @@ export const TripContextFormProvider = ({ children }: { children: React.ReactNod
       <FormProvider {...formMethods}>
         <DevTool id="new-trip" placement="bottom-right" control={formMethods.control} />
         <form>{children}</form>
-        <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={() => setOpenSnackbar(false)}>
-          <Alert onClose={() => setOpenSnackbar(false)} severity="success" sx={{ width: '100%' }}>
-            {snackbarMessage}
-          </Alert>
-        </Snackbar>
       </FormProvider>
     </TripDataContext.Provider>
   );
