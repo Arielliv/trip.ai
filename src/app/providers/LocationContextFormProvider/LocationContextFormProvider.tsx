@@ -22,13 +22,14 @@ export const LocationDataContext = createContext<LocationContextObject & Locatio
 export const LocationContextFormProvider = ({ children }: { children: React.ReactNode }) => {
   const formMethods = useLocationForm();
   const manageLocations = useManageLocations();
-  const { loadLocations, getLocationById } = manageLocations;
+  const { loadLocations, getLocationById, setPage, setLocations, page } = manageLocations;
   const locationData = useLocationData(formMethods.control);
   const { handleFocusEditLocation } = locationData;
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
   const locationId = searchParams.get('id');
+  const tripId = searchParams.get('tripId');
 
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -68,9 +69,26 @@ export const LocationContextFormProvider = ({ children }: { children: React.Reac
     void handleFetchDetails();
   }, [handleFetchDetails]);
 
+  /*  // Effect to reset the page and locations when tripId changes
+          useEffect(() => {
+            setPage(0);
+            setLocations([]); // Clear locations immediately
+          }, [tripId, setPage]);
+        
+          // Effect to load locations when tripId or page changes
+          useEffect(() => {
+            if (page === 0) {
+              void loadLocations(tripId ? tripId : undefined, true);
+            }
+          }, [tripId, page, loadLocations]);*/
+
   useEffect(() => {
-    void loadLocations();
-  }, [loadLocations]);
+    // setPage(0);
+    // setLocations([]);
+    // if (page === 0) {
+    void loadLocations(tripId ? tripId : undefined, true);
+    // }
+  }, [tripId]);
 
   useEffect(() => {
     if (isSubmitSuccessful) {

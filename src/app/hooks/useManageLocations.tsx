@@ -1,7 +1,6 @@
 import { useState, useCallback } from 'react';
 import { ILocation } from '@/models/Location';
 import { deleteLocation, fetchLocations } from '@/lib/operations/locationOperations';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 
 export interface LocationsManagerContextObject {
   locations: ILocation[];
@@ -20,26 +19,31 @@ export const useManageLocations = (initialPage = 0, limit = 10) => {
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const searchParams = useSearchParams();
-  const tripId = searchParams.get('tripId');
 
-  const loadLocations = useCallback(async () => {
-    if (!hasMore || loading) return;
+  const loadLocations = useCallback(
+    async (tripId?: string, isAnotherLoad?: boolean) => {
+      if (!isAnotherLoad && (!hasMore || loading)) return;
 
-    setLoading(true);
-    try {
-      const data = tripId ? await fetchLocations(page, limit, tripId) : await fetchLocations(page, limit);
-      setHasMore(data.locations.length === data.limit);
-      setPage((prev) => prev + 1);
-      setLocations((prev) => [...prev, ...data.locations]);
-    } catch (err) {
-      // @ts-ignore
-      setError(err.message);
-      setHasMore(false);
-    } finally {
-      setLoading(false);
-    }
-  }, [hasMore, limit, loading, page]);
+      setLoading(true);
+      try {
+        if (isAnotherLoad) {
+          setPage(0);
+          setLocations([]);
+        }
+        const data = tripId ? await fetchLocations(0, limit, tripId) : await fetchLocations(0, limit);
+        setHasMore(data.locations.length === data.limit);
+        setPage((prev) => prev + 1);
+        setLocations((prev) => [...prev, ...data.locations]);
+      } catch (err) {
+        // @ts-ignore
+        setError(err.message);
+        setHasMore(false);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [hasMore, limit, loading, page],
+  );
 
   const addLocation = (newLocation: ILocation) => {
     setLocations((prevLocations) => [...prevLocations, newLocation]);
@@ -81,5 +85,8 @@ export const useManageLocations = (initialPage = 0, limit = 10) => {
     getLocationById,
     removeLocation,
     editLocation,
+    setPage,
+    setLocations,
+    page,
   };
 };
