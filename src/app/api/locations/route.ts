@@ -53,12 +53,18 @@ export const GET = async (req: NextRequest) => {
   const limit = parseInt(url?.searchParams?.get('limit') || '0', 10) || 0;
   const tripId = url?.searchParams?.get('tripId');
 
+  console.log('tripId: ' + tripId);
+  console.log('page: ' + page);
+  console.log('limit: ' + limit);
+
   try {
     await dbConnect();
 
     const locations = await Location.find(tripId ? { trips: tripId } : {})
       .skip(page * limit)
       .limit(limit);
+
+    console.log('locations: ' + locations);
 
     // Optionally, get the total count of documents
     const totalCount = await Location.countDocuments();

@@ -7,11 +7,7 @@ export interface SelectTripProps {
 }
 
 export const SelectTrip = ({ onSelectChange }: SelectTripProps) => {
-  const { trips, loadTrips } = useManageTrips();
-
-  useEffect(() => {
-    void loadTrips();
-  }, [loadTrips]);
+  const { trips } = useManageTrips();
 
   const handleSelectChange = (event: SelectChangeEvent) => {
     const selectedTripName = event.target.value;
