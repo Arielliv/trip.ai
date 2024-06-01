@@ -36,16 +36,16 @@ Detailed Design Document (Trip.AI project document): [View Here](https://docs.go
 
 ### Running the Project
 
-`npm run dev`: Start the development server on http://localhost:3000.  
- `npm run build`: Build the application for production usage.  
- `npm run start`: Start the production server.  
- `npm run lint`: Lint the codebase for stylistic errors.  
- `npm run lint:fix`: Automatically fix linting errors.  
- `npm run test`: Run unit tests with Vitest.  
- `npm run test:watch`: Run unit tests in watch mode.  
- `npm run format`: Check files for formatting issues.  
- `npm run format`:fix: Automatically fix formatting issues.  
- `npm run coverage`: Generate test coverage report.
+`npm run dev` - Start the development server on http://localhost:3000.  
+ `npm run build` - Build the application for production usage.  
+ `npm run start` - Start the production server.  
+ `npm run lint` - Lint the codebase for stylistic errors.  
+ `npm run lint:fix` - Automatically fix linting errors.  
+ `npm run test` - Run unit tests with Vitest.  
+ `npm run test:watch` - Run unit tests in watch mode.  
+ `npm run format` - Check files for formatting issues.  
+ `npm run format:fix` - Automatically fix formatting issues.  
+ `npm run coverage` - Generate test coverage report.
 
 ### License
 
