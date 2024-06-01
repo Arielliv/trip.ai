@@ -73,6 +73,7 @@ export const GET = async (req: NextRequest) => {
       locations,
       page,
       limit,
+      tripId,
       totalCount,
       totalPages: Math.ceil(totalCount / limit),
     });

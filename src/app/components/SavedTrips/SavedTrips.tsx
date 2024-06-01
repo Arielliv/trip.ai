@@ -5,6 +5,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useTripContext } from '@/app/providers/TripContextFormProvider/TripContextFormProvider';
 import { TripListItem } from '@/app/components/TripListItem/TripListItem';
+import { useSelectTrip } from '@/app/hooks/useSelectTrip';
 
 export interface SavedTripsProps {
   setSelectedTab: (tab: string) => void;
@@ -15,6 +16,7 @@ const SavedTrips = ({ setSelectedTab }: SavedTripsProps) => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { loadLocationsByTripId, setTripId } = useSelectTrip();
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -42,6 +44,7 @@ const SavedTrips = ({ setSelectedTab }: SavedTripsProps) => {
   const handleSelect = (id?: string) => {
     if (!id) return;
     router.push('/locations?' + createQueryString('tripId', id));
+    void loadLocationsByTripId(id);
   };
 
   return (

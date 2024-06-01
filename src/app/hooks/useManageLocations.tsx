@@ -29,7 +29,7 @@ export const useManageLocations = (limit = 10) => {
   const [tripId, setTripId] = useState<string>();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { data, error, fetchNextPage, hasNextPage, isLoading, refetch } = useInfiniteLocations(limit);
+  const { data, error, fetchNextPage, hasNextPage, isLoading, refetch } = useInfiniteLocations(tripId, limit);
 
   const locations = useMemo(() => {
     return data?.pages.flatMap((page) => page.locations) || [];
@@ -86,14 +86,6 @@ export const useManageLocations = (limit = 10) => {
     removeLocationMutation.mutate(id);
   };
 
-  const loadLocationsByTripId = useCallback(
-    (value?: string) => {
-      setTripId(value);
-      return refetch(); // This triggers a refetch when search value changes
-    },
-    [refetch],
-  );
-
   const getLocationById = useCallback(
     (id: string | null): ILocation | undefined => {
       if (!id) return;
@@ -108,9 +100,11 @@ export const useManageLocations = (limit = 10) => {
     hasNextPage,
     isLoading,
     error: error ? error.message : null,
+    // loadLocationsByTripId,
     getLocationById,
     addLocation,
     removeLocation,
     editLocation,
+    tripId,
   };
 };
