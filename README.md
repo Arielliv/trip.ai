@@ -23,7 +23,7 @@ Detailed Design Document (Trip.AI project document): [View Here](https://docs.go
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/trip.ai.git
+   git clone https://github.com/Arielliv/trip.ai.git
    cd trip.ai
    ```
 2. Install dependencies:
