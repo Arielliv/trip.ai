@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Trip.AI
+
+Trip.AI is an innovative travel planning application designed to simplify the trip organization process. It integrates various features for managing trips, exploring community-shared routes, and collaborating with others, all within a single app.
+
+## Additional Resources
+
+Detailed Design Document (Trip.AI project document): [View Here](https://docs.google.com/document/d/155oA9apKNnwKPbUnlHWyBHoATP2gVL4NYspxJ8QSU2A/edit?usp=sharing)
+
+## Features
+
+- **Personalized Trips**: Customize your travel plans based on your preferences and destinations.
+- **Community Insights**: Explore routes and locations shared by a global community of travelers.
+- **Collaborative Planning**: Share and plan trips with friends and fellow travelers for a unified experience.
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Node.js (LTS)
+- MongoDB (for the database)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Installation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Arielliv/trip.ai.git
+   cd trip.ai
+   ```
+2. Install dependencies:
+   ```bash
+    Copy code
+    npm install
+   ```
+3. Set up environment variables:  
+   - Copy `.env.example` to `.env` and fill in the necessary API keys and database credentials.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### Running the Project
 
-## Learn More
+`npm run dev` - Start the development server on http://localhost:3000.  
+ `npm run build` - Build the application for production usage.  
+ `npm run start` - Start the production server.  
+ `npm run lint` - Lint the codebase for stylistic errors.  
+ `npm run lint:fix` - Automatically fix linting errors.  
+ `npm run test` - Run unit tests with Vitest.  
+ `npm run test:watch` - Run unit tests in watch mode.  
+ `npm run format` - Check files for formatting issues.  
+ `npm run format:fix` - Automatically fix formatting issues.  
+ `npm run coverage` - Generate test coverage report.
 
-To learn more about Next.js, take a look at the following resources:
+### License
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Distributed under the MIT License. See LICENSE for more information.
