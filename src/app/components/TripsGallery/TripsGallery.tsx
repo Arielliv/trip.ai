@@ -1,36 +1,23 @@
 import { Box, CircularProgress, Typography } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { TripCard } from '@/app/components/TripCard/TripCard';
 import { SearchTripInput } from '@/app/components/SearchTripInput/SearchTripInput';
 import { useTripsSearchContext } from '@/app/providers/TripsSearchContextProvider/TripsSearchContextProvider';
 
 export const TripsGallery = () => {
-  const { fetchNextPage, loadTrips, trips, isLoading, hasNextPage } = useTripsSearchContext();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [hasSearchTermBeenSet, setHasSearchTermBeenSet] = useState(false);
+  const { fetchNextPage, trips, isLoading, hasNextPage, freeTextFilter, setFreeTextFilter } = useTripsSearchContext();
 
   const handleInputChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
-    if (!hasSearchTermBeenSet) {
-      setHasSearchTermBeenSet(true);
-    }
+    setFreeTextFilter(event.target.value);
   };
-
-  useEffect(() => {
-    if (hasSearchTermBeenSet) {
-      void loadTrips(searchTerm);
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm]);
 
   return (
     <Grid container direction="column" alignItems="center" spacing={2} sx={{ marginTop: 2, padding: 2 }}>
       <Grid xs={12} container justifyContent="start">
         <Grid xs={12} md={5}>
-          <SearchTripInput onInputChange={handleInputChange} />
+          <SearchTripInput onInputChange={handleInputChange} value={freeTextFilter} />
         </Grid>
       </Grid>
       <Grid xs={12} sx={{ marginTop: 2, padding: 2 }}>

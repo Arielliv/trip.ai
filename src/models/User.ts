@@ -13,6 +13,8 @@ const UserSchema: Schema = new Schema({
   last_name: { type: String, required: true },
   image: { type: String, required: true },
   default_trip: { type: Types.ObjectId, ref: 'Trip' }, // Reference to the Trip model
+  trips: [{ type: Types.ObjectId, ref: 'Trip' }],
+  locations: [{ type: Types.ObjectId, ref: 'Location' }],
 });
 
 const User = models.User || model<User>('User', UserSchema);

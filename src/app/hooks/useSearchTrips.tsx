@@ -1,15 +1,15 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useState, useTransition } from 'react';
 import { useInfiniteSearchedTrips } from '@/app/hooks/query/useInfiniteSearchedTrips';
 import { ITrip } from '@/models/Trip';
 import { FetchNextPageOptions, InfiniteData, InfiniteQueryObserverResult } from '@tanstack/react-query';
 import { TripsPaginationResponse } from '@/lib/types';
-import debounce from 'lodash/debounce';
+import { Filters } from '@/app/hooks/useManageSearchQueryParams';
 
 export interface SearchTripsContextObject {
   trips: ITrip[];
   isLoading: boolean;
   error: any;
-  loadTrips: (searchValue?: string) => void;
+  loadSearchedTrips: (filters?: Filters) => void;
   hasNextPage: boolean;
   setPage: (page: number) => void;
   fetchNextPage?: (
@@ -18,32 +18,23 @@ export interface SearchTripsContextObject {
 }
 
 export const useSearchTrips = (limit = 10): SearchTripsContextObject => {
-  const [searchValue, setSearchValue] = useState<string>();
-  const { data, error, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage, refetch } = useInfiniteSearchedTrips(
-    searchValue,
+  const [isPending, startTransition] = useTransition();
+  const [filtersValue, setFiltersValue] = useState<Filters>();
+
+  const { data, error, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } = useInfiniteSearchedTrips(
+    filtersValue,
     limit,
     true,
   );
 
   const trips = data?.pages.flatMap((page) => page.trips) || [];
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const debouncedLoadTrips = useCallback(
-    debounce((value?: string) => {
-      setSearchValue(value);
-      return refetch(); // This will trigger the query again with the new search value
-    }, 300),
-    [],
-  );
-
-  const loadTrips = useCallback(
-    (value?: string) => {
-      debouncedLoadTrips(value);
-      return refetch(); // This triggers a refetch when search value changes
-    },
+  const loadSearchedTrips = useCallback((filters?: Filters) => {
+    startTransition(() => {
+      setFiltersValue(filters);
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [refetch],
-  );
+  }, []);
 
   const setPage = useCallback(
     (page: number) => {
@@ -51,7 +42,7 @@ export const useSearchTrips = (limit = 10): SearchTripsContextObject => {
       // Just trigger fetchNextPage if not loading the next page yet
       if (!isFetchingNextPage) {
         // @ts-ignore
-        fetchNextPage({ pageParam: page });
+        void fetchNextPage({ pageParam: page });
       }
     },
     [fetchNextPage, isFetchingNextPage],
@@ -61,7 +52,7 @@ export const useSearchTrips = (limit = 10): SearchTripsContextObject => {
     trips,
     isLoading,
     error: error ? error.message : null,
-    loadTrips,
+    loadSearchedTrips,
     hasNextPage,
     setPage,
     fetchNextPage,

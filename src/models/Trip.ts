@@ -46,6 +46,7 @@ export interface ITripDto {
 export interface ITotalsDto {
   totalCost?: number;
   totalDateRange?: Date[];
+  totalAmountOfDays?: number;
 }
 
 export interface Transportation {
@@ -76,6 +77,7 @@ export interface Review {
 const Totals: Schema = new Schema({
   totalCost: { type: Number, required: false },
   totalDateRange: [{ type: Date }, { type: Date }],
+  totalAmountOfDays: { type: Number, required: false },
 });
 
 const LocationInTripSchema: Schema = new Schema({
@@ -93,7 +95,6 @@ const LocationInTripSchema: Schema = new Schema({
 const TripSchema: Schema = new Schema({
   name: { type: String, required: true },
   owner_id: { type: Types.ObjectId, required: true },
-  participants_ids: [{ type: Types.ObjectId }],
   permissions: [
     {
       user_id: { type: Types.ObjectId, required: true, ref: 'User' },
