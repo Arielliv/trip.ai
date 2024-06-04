@@ -55,3 +55,7 @@ export async function updateTrip(updatedTrip: ITrip): Promise<ITrip> {
 export async function deleteTrip(tripId: string) {
   return axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/trip/${tripId}`);
 }
+
+export async function duplicateTrip(tripId: string) {
+  return axios.post(`${process.env.NEXT_PUBLIC_API_URL}/duplicateTrip/${tripId}`);
+}

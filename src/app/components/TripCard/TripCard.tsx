@@ -24,10 +24,14 @@ export const TripCard = ({ trip: { mainImageUrl, name, totals, locations }, trip
     setIsOpen(false);
   };
 
+  const handleImgError = (e: any) => {
+    e.target.src = '/EmptyTripImage.webp';
+  };
+
   return (
     <>
       <Card>
-        <CardMedia component="img" height="140" image={mainImageUrl} alt="Trip image" />
+        <CardMedia component="img" height="140" image={mainImageUrl} alt="Trip image" onError={handleImgError} />
         <CardContent>
           <Grid container justifyContent="space-between" alignItems="center">
             <Grid xs={9}>

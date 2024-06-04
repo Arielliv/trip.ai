@@ -8,6 +8,7 @@ const searchTripsContextObject: SearchTripsContextObject = {
   loadSearchedTrips: () => {},
   hasNextPage: false,
   setPage: () => {},
+  refetch: (_options) => Promise.resolve(),
 };
 
 const manageSearchQueryParamsObject: ManageSearchQueryParamsObject = {

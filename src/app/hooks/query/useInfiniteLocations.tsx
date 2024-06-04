@@ -1,6 +1,5 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { LocationsPaginationResponse, TripsPaginationResponse } from '@/lib/types';
-import { fetchTrips } from '@/lib/operations/tripOperations';
+import { LocationsPaginationResponse } from '@/lib/types';
 import { fetchLocations } from '@/lib/operations/locationOperations';
 
 export const useInfiniteLocations = (limit: number = 10, enableQuery = true) => {

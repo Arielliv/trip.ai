@@ -1,7 +1,7 @@
 import { useCallback, useState, useTransition } from 'react';
 import { useInfiniteSearchedTrips } from '@/app/hooks/query/useInfiniteSearchedTrips';
 import { ITrip } from '@/models/Trip';
-import { FetchNextPageOptions, InfiniteData, InfiniteQueryObserverResult } from '@tanstack/react-query';
+import { FetchNextPageOptions, InfiniteData, InfiniteQueryObserverResult, RefetchOptions } from '@tanstack/react-query';
 import { TripsPaginationResponse } from '@/lib/types';
 import { Filters } from '@/app/hooks/useManageSearchQueryParams';
 
@@ -15,13 +15,14 @@ export interface SearchTripsContextObject {
   fetchNextPage?: (
     options?: FetchNextPageOptions,
   ) => Promise<InfiniteQueryObserverResult<InfiniteData<TripsPaginationResponse, unknown>, Error>>;
+  refetch: (options?: RefetchOptions) => Promise<any>;
 }
 
 export const useSearchTrips = (limit = 10): SearchTripsContextObject => {
   const [isPending, startTransition] = useTransition();
   const [filtersValue, setFiltersValue] = useState<Filters>();
 
-  const { data, error, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } = useInfiniteSearchedTrips(
+  const { data, error, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage, refetch } = useInfiniteSearchedTrips(
     filtersValue,
     limit,
     true,
@@ -56,5 +57,6 @@ export const useSearchTrips = (limit = 10): SearchTripsContextObject => {
     hasNextPage,
     setPage,
     fetchNextPage,
+    refetch,
   };
 };
