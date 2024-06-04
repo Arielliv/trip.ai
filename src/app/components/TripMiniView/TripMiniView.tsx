@@ -24,6 +24,8 @@ import { getFormatDateDuration } from '@/app/utils/getFormatDateDuration';
 import { currencyFormatter } from '@/app/utils/currencyFormatter';
 import { useGetFullTripById } from '@/app/hooks/query/useFetchTripById';
 import { ITrip } from '@/models/Trip';
+import { useDuplicateTrip } from '@/app/hooks/useDuplicateTrip';
+import { useTripsSearchContext } from '@/app/providers/TripsSearchContextProvider/TripsSearchContextProvider';
 
 export interface TripMiniViewProps {
   trip: ITrip;
@@ -37,7 +39,16 @@ export const TripMiniView = ({ trip, handleClose, isOpen }: TripMiniViewProps) =
 
   // Use react-query to fetch the full trip details
   const { data: fullTrip, isLoading } = useGetFullTripById(trip._id);
+  const { refetch } = useTripsSearchContext();
+  const { duplicateTrip } = useDuplicateTrip(refetch);
 
+  const handleDuplicate = () => {
+    if (!trip._id) {
+      return;
+    }
+
+    duplicateTrip(trip._id);
+  };
   const dateDuration =
     fullTrip?.locations && fullTrip.locations.length > 0
       ? getFormatDateDuration(fullTrip.locations[0].dateRange)
@@ -73,8 +84,17 @@ export const TripMiniView = ({ trip, handleClose, isOpen }: TripMiniViewProps) =
           </Box>
         ) : (
           <>
-            <DialogContentText>
-              <Typography variant="subtitle1">Here you can find all the included locations:</Typography>
+            <DialogContentText sx={{ my: 1 }}>
+              <Grid container justifyContent="space-between" alignItems="center">
+                <Grid xs={10}>
+                  <Typography variant="subtitle1">Here you can find all the included locations:</Typography>
+                </Grid>
+                <Grid xs={2}>
+                  <Button autoFocus color={'secondary'} onClick={handleDuplicate}>
+                    Duplicate
+                  </Button>
+                </Grid>
+              </Grid>
             </DialogContentText>
             {fullTrip?.locations.map((location, index) => (
               <Accordion key={index}>
