@@ -57,5 +57,5 @@ export async function deleteTrip(tripId: string) {
 }
 
 export async function duplicateTrip(tripId: string) {
-  return axios.post(`${process.env.NEXT_PUBLIC_API_URL}/cloneTrip/${tripId}`);
+  return axios.post(`${process.env.NEXT_PUBLIC_API_URL}/duplicateTrip/${tripId}`);
 }
