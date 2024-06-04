@@ -31,7 +31,7 @@ Detailed Design Document (Trip.AI project document): [View Here](https://docs.go
     Copy code
     npm install
    ```
-3. Set up environment variables:  
+3. Set up environment variables:
    - Copy `.env.example` to `.env` and fill in the necessary API keys and database credentials.
 
 ### Running the Project

@@ -5,6 +5,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { ExploreDataTestIds } from '@/app/components/constants/constants';
 import { TripsGallery } from '@/app/components/TripsGallery/TripsGallery';
 import { TripsSearchContextProvider } from '@/app/providers/TripsSearchContextProvider/TripsSearchContextProvider';
+import { SearchTripsFilters } from '@/app/components/SearchTripsFilters/SearchTripsFilters';
 
 const ExploreView = () => {
   return (
@@ -14,7 +15,9 @@ const ExploreView = () => {
           xs={3}
           sx={{ borderRight: 1, borderColor: 'divider' }}
           data-testid={ExploreDataTestIds.exploreTagsContainer}
-        ></Grid>
+        >
+          <SearchTripsFilters />
+        </Grid>
         <Grid xs={9} sx={{ overflow: 'hidden' }} data-testid={ExploreDataTestIds.tripsGalleryContainer}>
           <TripsGallery />
         </Grid>

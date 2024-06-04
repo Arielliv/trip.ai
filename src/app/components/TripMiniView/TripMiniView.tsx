@@ -74,7 +74,7 @@ export const TripMiniView = ({ trip, handleClose, isOpen }: TripMiniViewProps) =
         ) : (
           <>
             <DialogContentText>
-              Participants: {fullTrip?.participants_ids.length} - Visibility: {fullTrip?.visibility}
+              <Typography variant="subtitle1">Here you can find all the included locations:</Typography>
             </DialogContentText>
             {fullTrip?.locations.map((location, index) => (
               <Accordion key={index}>

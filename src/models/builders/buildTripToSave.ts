@@ -1,11 +1,13 @@
-import { ILocationInTrip, ITrip, ITripDto, LocationInTrip } from '@/models/Trip';
+import { ILocationInTrip, ITrip } from '@/models/Trip';
 import { ObjectId } from 'mongodb';
 import Location from '@/models/Location';
+import { getDaysBetweenDates } from '@/app/utils/getDaysBetweenDates';
 
 export const buildTripToSave = async (trip: ITrip, owner_id?: string): Promise<ITrip> => {
   let totalCost = 0;
   let startDate: Date | undefined = undefined;
   let endDate: Date | undefined = undefined;
+  let totalAmountOfDays: number | undefined = undefined;
   let mainImageUrl: string | undefined = undefined;
 
   trip.locations.forEach((location, _index) => {
@@ -25,6 +27,13 @@ export const buildTripToSave = async (trip: ITrip, owner_id?: string): Promise<I
       if (!endDate || end > endDate) {
         endDate = end;
       }
+
+      totalAmountOfDays = getDaysBetweenDates(
+        new Date(startDate as unknown as string),
+        new Date(endDate as unknown as string),
+      );
+
+      console.log(totalAmountOfDays);
     }
   });
 
@@ -48,7 +57,11 @@ export const buildTripToSave = async (trip: ITrip, owner_id?: string): Promise<I
     },
   );
 
-  const totals = { ...(startDate && endDate ? { totalDateRange: [startDate, endDate] } : undefined), totalCost };
+  const totals = {
+    ...(startDate && endDate ? { totalDateRange: [startDate, endDate] } : undefined),
+    totalAmountOfDays,
+    totalCost,
+  };
 
   return {
     ...trip,
