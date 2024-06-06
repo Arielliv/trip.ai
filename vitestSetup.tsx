@@ -13,7 +13,7 @@ export class baseDriver {
 const driver = new baseDriver();
 const mockData = {
   update: {},
-  data: { user: { name: 'John Doe', email: 'john@example.com' } },
+  data: { user: { name: 'John Doe', email: 'john@example.com', id: '6621274fe078e5a7538250cd' } },
   status: 'authenticated',
 };
 
