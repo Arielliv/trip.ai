@@ -18,6 +18,8 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { MapMarker } from '@/app/components/Map/Map';
 import { LongTextNote } from '@/app/components/LongTextNote/LongTextNote';
+import { LocationPermissionFilter } from '@/app/components/permissions/LocationPermissionFilter';
+import { LocationPermissionEnum } from '@/models/enums/permissionsEnums';
 
 export interface LocationCardProps {
   location: ILocation;
@@ -101,12 +103,14 @@ export function LocationCard({ location, onEdit, onDelete, onSelect }: LocationC
         <Divider light sx={{ mt: 1, mb: 1 }} />
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignContent: 'flex-end', alignSelf: 'flex-end' }}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
-            <IconButton sx={{ color: 'text.secondary' }} onClick={handleOnEditLocation}>
-              <Edit />
-            </IconButton>
-            <IconButton sx={{ color: 'text.secondary', marginLeft: 1 }} onClick={handleDelete}>
-              <Delete />
-            </IconButton>
+            <LocationPermissionFilter permissions={location.permissions} permissionLevel={LocationPermissionEnum.edit}>
+              <IconButton sx={{ color: 'text.secondary' }} onClick={handleOnEditLocation}>
+                <Edit />
+              </IconButton>
+              <IconButton sx={{ color: 'text.secondary', marginLeft: 1 }} onClick={handleDelete}>
+                <Delete />
+              </IconButton>
+            </LocationPermissionFilter>
             <IconButton sx={{ color: 'text.secondary', marginLeft: 1 }} onClick={handleSelect}>
               <VisibilityIcon />
             </IconButton>
