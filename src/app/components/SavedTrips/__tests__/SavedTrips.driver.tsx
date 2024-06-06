@@ -6,6 +6,7 @@ import { ITrip } from '@/models/Trip';
 import { MockTripProvider } from '@/app/components/MockTripProvider';
 import SavedTrips from '@/app/components/SavedTrips/SavedTrips';
 import { fetchTrips } from '@/lib/operations/tripOperations';
+import ReactQueryProvider from '@/app/providers/ReactQueryProvider/ReactQueryProvider';
 
 export class SavedTripsDriver {
   async created(trips: Partial<ITrip>[]) {
@@ -17,9 +18,11 @@ export class SavedTripsDriver {
       trips,
     };
     render(
-      <MockTripProvider value={value}>
-        <SavedTrips setSelectedTab={() => {}} />
-      </MockTripProvider>,
+      <ReactQueryProvider>
+        <MockTripProvider value={value}>
+          <SavedTrips setSelectedTab={() => {}} />
+        </MockTripProvider>
+      </ReactQueryProvider>,
     );
     await act(vi.runAllTimers);
   }

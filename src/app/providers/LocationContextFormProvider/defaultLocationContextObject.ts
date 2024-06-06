@@ -5,6 +5,8 @@ import { FetchNextPageOptions, InfiniteData, InfiniteQueryObserverResult } from 
 import { LocationsPaginationResponse } from '@/lib/types';
 import { SubmitHandler } from 'react-hook-form';
 import { LocationFormData } from '@/app/hooks/useLocationForm';
+import { ManageTripIdQueryParamObject } from '@/app/hooks/useManageTripIdQueryParam';
+import { LocationInTripFormData } from '@/app/hooks/useTripForm';
 
 const defaultLocationContextObject: LocationContextObject = {
   mapCenter: { lat: -34.397, lng: 150.644 },
@@ -27,12 +29,18 @@ const defaultSavedLocationsContext: LocationsManagerContextObject = {
   editLocation: (_updatedLocation: ILocation) => {},
   isLoading: false,
   hasNextPage: false,
+  loadLocationsByTripId: (_id?: string) => {},
   removeLocation: (_id: string) => {},
+};
+
+const defaultManageTripIdQueryParamObject: ManageTripIdQueryParamObject = {
+  setTripId: (_newTripId: string) => {},
 };
 
 export const defaultLocationContext = {
   ...defaultLocationContextObject,
   ...defaultSavedLocationsContext,
+  ...defaultManageTripIdQueryParamObject,
   clearFormOnEditState: () => {},
   isEditMode: false,
 };
