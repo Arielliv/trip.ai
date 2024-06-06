@@ -51,7 +51,7 @@ export const LocationsTable = () => {
     handleSaveClick,
     handleCancelClick,
   });
-  const { locations } = useManageLocations();
+  const { locations } = useManageLocations(1000);
 
   const columns: GridColDef[] = [
     {
