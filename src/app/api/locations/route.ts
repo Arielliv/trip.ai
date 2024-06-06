@@ -6,14 +6,14 @@ import { auth } from '@/auth';
 import { LocationPermissionEnum } from '@/models/enums/permissionsEnums';
 import User from '@/models/User';
 
-async function saveLocationInUser(user: User, locationDto: ILocationDto) {
+const saveLocationInUser = async (user: User, locationDto: ILocationDto) => {
   if (user.locations) {
     user.locations.push(locationDto._id);
   } else {
     user.locations = [locationDto._id];
   }
   await user.save();
-}
+};
 
 export const POST = async (req: NextRequest) => {
   try {

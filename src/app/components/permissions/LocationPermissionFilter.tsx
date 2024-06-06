@@ -3,12 +3,12 @@ import { IUserPermission } from '@/models/shared/types';
 import { LocationPermissionEnum } from '@/models/enums/permissionsEnums';
 import { useSession } from 'next-auth/react';
 
-interface permissionFilterProps extends React.PropsWithChildren {
+interface PermissionFilter extends React.PropsWithChildren {
   permissions: IUserPermission[];
   permissionLevel: LocationPermissionEnum;
 }
 
-export function LocationPermissionFilter({ permissions, permissionLevel, children }: permissionFilterProps) {
+export const LocationPermissionFilter = ({ permissions, permissionLevel, children }: PermissionFilter) => {
   const { data: session } = useSession();
 
   const userId = session?.user?.id;
@@ -21,4 +21,4 @@ export function LocationPermissionFilter({ permissions, permissionLevel, childre
   if (userPermission?.permissionType >= permissionLevel) {
     return children;
   }
-}
+};
