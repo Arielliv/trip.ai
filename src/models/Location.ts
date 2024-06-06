@@ -25,6 +25,7 @@ export interface ILocation {
 }
 
 export interface ILocationDto {
+  _id: Types.ObjectId;
   trips: Types.ObjectId[];
   name: string;
   googleName: string; // New: Name from Google Places
