@@ -6,6 +6,7 @@ import { MockLocationProvider } from '../../MockLocationProvider';
 import { ILocation } from '@/models/Location';
 import { LocationsPaginationResponse } from '@/lib/types';
 import { fetchLocations } from '@/lib/operations/locationOperations';
+import ReactQueryProvider from '@/app/providers/ReactQueryProvider/ReactQueryProvider';
 
 export class SavedLocationsDriver {
   async created(locations: Partial<ILocation>[]) {
@@ -17,12 +18,15 @@ export class SavedLocationsDriver {
       locations,
     };
     render(
-      <MockLocationProvider value={value}>
-        <SavedLocations setSelectedTab={() => {}} />
-      </MockLocationProvider>,
+      <ReactQueryProvider>
+        <MockLocationProvider value={value}>
+          <SavedLocations setSelectedTab={() => {}} />
+        </MockLocationProvider>
+      </ReactQueryProvider>,
     );
     await act(vi.runAllTimers);
   }
+
   // Method to setup mock resolved value for fetchTrips
   givenFetchLocationMock(data: LocationsPaginationResponse) {
     vi.mocked(fetchLocations).mockResolvedValue(data);

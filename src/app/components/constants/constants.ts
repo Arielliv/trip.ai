@@ -35,3 +35,5 @@ export enum Columns {
   Cost = 'Cost',
   Type = 'Type',
 }
+
+export const defaultTripId = 'AllTrips';

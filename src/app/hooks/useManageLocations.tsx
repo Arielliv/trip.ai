@@ -22,6 +22,7 @@ export interface LocationsManagerContextObject {
   isLoading: boolean;
   hasNextPage: boolean;
   removeLocation: (id: string) => void;
+  loadLocationsByTripId: (id?: string) => void;
 }
 
 export const useManageLocations = (limit = 10) => {
@@ -29,7 +30,7 @@ export const useManageLocations = (limit = 10) => {
   const [tripId, setTripId] = useState<string>();
   const { enqueueSnackbar } = useSnackbar();
 
-  const { data, error, fetchNextPage, hasNextPage, isLoading, refetch } = useInfiniteLocations(limit);
+  const { data, error, fetchNextPage, hasNextPage, isLoading } = useInfiniteLocations(tripId, limit);
 
   const locations = useMemo(() => {
     return data?.pages.flatMap((page) => page.locations) || [];
@@ -86,13 +87,9 @@ export const useManageLocations = (limit = 10) => {
     removeLocationMutation.mutate(id);
   };
 
-  const loadLocationsByTripId = useCallback(
-    (value?: string) => {
-      setTripId(value);
-      return refetch(); // This triggers a refetch when search value changes
-    },
-    [refetch],
-  );
+  const loadLocations = useCallback((value?: string) => {
+    setTripId(value);
+  }, []);
 
   const getLocationById = useCallback(
     (id: string | null): ILocation | undefined => {
@@ -111,6 +108,7 @@ export const useManageLocations = (limit = 10) => {
     getLocationById,
     addLocation,
     removeLocation,
+    loadLocationsByTripId: loadLocations,
     editLocation,
   };
 };

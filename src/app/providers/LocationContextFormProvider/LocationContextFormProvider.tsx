@@ -9,15 +9,16 @@ import { defaultLocationContext } from '@/app/providers/LocationContextFormProvi
 import { mapILocationToLocationFormData } from '@/models/mappers/mapILocationToLocationFormData';
 import { fetchPlaceDetailsFromGoogleAPIById } from '@/app/providers/LocationContextFormProvider/utils/fetchPlaceDetailsFromGoogleAPIById';
 import { DevTool } from '@hookform/devtools';
+import { ManageTripIdQueryParamObject, useManageTripIdQueryParam } from '@/app/hooks/useManageTripIdQueryParam';
 
 export interface FormHandlers {
   clearFormOnEditState(): void;
   isEditMode: boolean;
 }
 
-export const LocationDataContext = createContext<LocationContextObject & LocationsManagerContextObject & FormHandlers>(
-  defaultLocationContext,
-);
+export const LocationDataContext = createContext<
+  LocationContextObject & LocationsManagerContextObject & FormHandlers & ManageTripIdQueryParamObject
+>(defaultLocationContext);
 
 export const LocationContextFormProvider = ({ children }: { children: React.ReactNode }) => {
   const formMethods = useLocationForm();
@@ -26,6 +27,7 @@ export const LocationContextFormProvider = ({ children }: { children: React.Reac
   const locationData = useLocationData(formMethods.control);
   const { handleFocusEditLocation } = locationData;
   const searchParams = useSearchParams();
+  const manageTripIdQueryParam = useManageTripIdQueryParam(manageLocations.loadLocationsByTripId);
   const router = useRouter();
   const pathname = usePathname();
   const locationId = searchParams.get('id');
@@ -72,14 +74,17 @@ export const LocationContextFormProvider = ({ children }: { children: React.Reac
     reset(defaultLocationFormData);
   }, [router, pathname, reset]);
 
-  const contextValue = useMemo<LocationContextObject & LocationsManagerContextObject & FormHandlers>(
+  const contextValue = useMemo<
+    LocationContextObject & LocationsManagerContextObject & FormHandlers & ManageTripIdQueryParamObject
+  >(
     () => ({
       ...locationData,
       ...manageLocations,
+      ...manageTripIdQueryParam,
       isEditMode,
       clearFormOnEditState,
     }),
-    [locationData, manageLocations, isEditMode, clearFormOnEditState],
+    [locationData, manageLocations, manageTripIdQueryParam, isEditMode, clearFormOnEditState],
   );
 
   return (
