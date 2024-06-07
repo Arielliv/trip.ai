@@ -4,6 +4,16 @@ import dbConnect from '@/lib/dbConnect';
 import Location, { ILocation, ILocationDto } from '@/models/Location';
 import { auth } from '@/auth';
 import { LocationPermissionEnum } from '@/models/enums/permissionsEnums';
+import User from '@/models/User';
+
+const saveLocationInUser = async (user: User, locationDto: ILocationDto) => {
+  if (user.locations) {
+    user.locations.push(locationDto._id);
+  } else {
+    user.locations = [locationDto._id];
+  }
+  await user.save();
+};
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -22,15 +32,22 @@ export const POST = async (req: NextRequest) => {
       return NextResponse.json({ message: 'Location name is missing' }, { status: HttpStatusCode.BadRequest });
     }
 
-    const location: ILocationDto = await Location.create<ILocationDto>({
+    const user: User | null = await User.findById(user_id);
+    if (!user) {
+      return NextResponse.json({ message: 'User not found' }, { status: HttpStatusCode.NotFound });
+    }
+
+    const newLocationDto: ILocationDto = await Location.create<ILocationDto>({
       ...locationData,
       user_id,
       permissions: [{ userId: user_id, permissionType: LocationPermissionEnum.edit }],
     });
 
+    await saveLocationInUser(user, newLocationDto);
+
     return NextResponse.json(
       {
-        location,
+        location: newLocationDto,
         message: 'Your Location has been created',
       },
       { status: HttpStatusCode.Created },

@@ -17,7 +17,7 @@ export interface ILocation {
   coordinates: Coordinate;
   address: Address;
   visibility: Visibility;
-  permissions?: IUserPermission[];
+  permissions: IUserPermission[];
   mapsUrl?: string;
   links?: string[];
   businessStatus?: string;
@@ -25,6 +25,7 @@ export interface ILocation {
 }
 
 export interface ILocationDto {
+  _id: Types.ObjectId;
   trips: Types.ObjectId[];
   name: string;
   googleName: string; // New: Name from Google Places
@@ -37,7 +38,7 @@ export interface ILocationDto {
   address: Address;
   visibility: Visibility;
   user_id: Types.ObjectId;
-  permissions?: IUserPermission[];
+  permissions: IUserPermission[];
   mapsUrl?: string; // URL to the Google Maps page
   links?: string[]; // New: Array of additional links, e.g., the website
   businessStatus?: string; // New: Optional business status
