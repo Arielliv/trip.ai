@@ -41,6 +41,8 @@ const SavedTrips = ({ setSelectedTab }: SavedTripsProps) => {
 
   const handleSelect = (id?: string) => {
     if (!id) return;
+
+    router.push('/locations?' + createQueryString('tripId', id));
   };
 
   return (

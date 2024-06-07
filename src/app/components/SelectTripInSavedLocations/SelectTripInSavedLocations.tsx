@@ -6,7 +6,7 @@ import { defaultTripId } from '@/app/components/constants/constants';
 
 export const SelectTripInSavedLocations = () => {
   const { trips } = useManageTrips();
-  const { setTripId } = useLocationContext();
+  const { tripId, setTripId } = useLocationContext();
 
   const handleSelectChange = async (event: SelectChangeEvent) => {
     setTripId(event.target.value);
@@ -16,7 +16,7 @@ export const SelectTripInSavedLocations = () => {
     <Box sx={{ m: 1 }}>
       <FormControl fullWidth>
         <InputLabel>Select Trip</InputLabel>
-        <Select label="Select Trip" defaultValue={defaultTripId} onChange={handleSelectChange} fullWidth>
+        <Select label="Select Trip" defaultValue={defaultTripId} onChange={handleSelectChange} value={tripId} fullWidth>
           <MenuItem value={defaultTripId}>All Trips</MenuItem>
           {trips.map((trip) => (
             <MenuItem key={trip._id} value={trip._id}>
