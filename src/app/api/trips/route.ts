@@ -4,6 +4,7 @@ import Trip, { ITrip, ITripDto } from '@/models/Trip';
 import dbConnect from '@/lib/dbConnect';
 import { auth } from '@/auth';
 import { buildTripToSave } from '@/models/builders/buildTripToSave';
+import User from '@/models/User';
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -52,7 +53,20 @@ export const GET = async (req: NextRequest) => {
   try {
     await dbConnect();
 
-    const trips = await Trip.find()
+    const session = await auth();
+
+    if (!session || !session.user || !session.user.email) {
+      return NextResponse.json({ message: 'Authentication required' }, { status: HttpStatusCode.Unauthorized });
+    }
+
+    const user_id = session.user.id;
+    const user: User | null = await User.findById(user_id);
+
+    if (!user) {
+      return NextResponse.json({ message: 'User not found' }, { status: HttpStatusCode.NotFound });
+    }
+
+    const trips = await Trip.find({ _id: { $in: user.trips } })
       .skip(page * limit)
       .limit(limit);
 

@@ -16,7 +16,13 @@ export const SelectTripInSavedLocations = () => {
     <Box sx={{ m: 1 }}>
       <FormControl fullWidth>
         <InputLabel>Select Trip</InputLabel>
-        <Select label="Select Trip" defaultValue={defaultTripId} onChange={handleSelectChange} value={tripId} fullWidth>
+        <Select
+          label="Select Trip"
+          defaultValue={defaultTripId}
+          onChange={handleSelectChange}
+          value={tripId ? tripId : defaultTripId}
+          fullWidth
+        >
           <MenuItem value={defaultTripId}>All Trips</MenuItem>
           {trips.map((trip) => (
             <MenuItem key={trip._id} value={trip._id}>

@@ -73,7 +73,23 @@ export const GET = async (req: NextRequest) => {
   try {
     await dbConnect();
 
-    const locations = await Location.find(tripId ? { trips: tripId } : {})
+    const session = await auth();
+
+    if (!session || !session.user || !session.user.email) {
+      return NextResponse.json({ message: 'Authentication required' }, { status: HttpStatusCode.Unauthorized });
+    }
+
+    const user_id = session.user.id;
+    const user: User | null = await User.findById(user_id);
+
+    if (!user) {
+      return NextResponse.json({ message: 'User not found' }, { status: HttpStatusCode.NotFound });
+    }
+
+    const locations = await Location.find({
+      _id: { $in: user.locations },
+      ...(tripId && { trips: tripId }),
+    })
       .skip(page * limit)
       .limit(limit);
 
