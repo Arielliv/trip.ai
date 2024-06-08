@@ -1,9 +1,8 @@
 'use client';
-import React, { useCallback } from 'react';
+import React from 'react';
 import { CircularProgress, List, ListItem, Box } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { LocationCard } from '@/app/components/LocationCard/LocationCard';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { MapMarker } from '@/app/components/Map/Map';
 import { useLocationContext } from '@/app/providers/LocationContextFormProvider/LocationContextFormProvider';
 import { SelectTripInSavedLocations } from '@/app/components/SelectTripInSavedLocations/SelectTripInSavedLocations';
@@ -13,24 +12,11 @@ export interface SavedLocationsProps {
 }
 
 const SavedLocations = ({ setSelectedTab }: SavedLocationsProps) => {
-  const { locations, fetchNextPage, isLoading, hasNextPage, handleFocusLocation, removeLocation } =
+  const { locations, fetchNextPage, isLoading, hasNextPage, handleFocusLocation, removeLocation, setLocationId } =
     useLocationContext();
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set(name, value);
-
-      return params.toString();
-    },
-    [searchParams],
-  );
 
   const handleEdit = (id: string, coordinate: Omit<MapMarker, 'id'>) => {
-    router.push(pathname + '?' + createQueryString('id', id));
+    setLocationId(id);
     setSelectedTab('0');
     handleFocusLocation(coordinate);
   };
