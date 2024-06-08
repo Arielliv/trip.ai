@@ -3,6 +3,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { defaultTripId } from '@/app/components/constants/constants';
 
 export interface ManageTripIdQueryParamObject {
+  tripId?: string;
   setTripId: (tripId: string) => void;
 }
 
@@ -44,6 +45,7 @@ export const useManageTripIdQueryParam = (loadLocations: (id?: string) => void):
   };
 
   return {
+    tripId,
     setTripId: setTripIdWithUpdate,
   };
 };

@@ -34,6 +34,7 @@ const defaultSavedLocationsContext: LocationsManagerContextObject = {
 };
 
 const defaultManageTripIdQueryParamObject: ManageTripIdQueryParamObject = {
+  tripId: undefined,
   setTripId: (_newTripId: string) => {},
 };
 
