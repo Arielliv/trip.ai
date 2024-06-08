@@ -5,6 +5,7 @@ import dbConnect from '@/lib/dbConnect';
 import { auth } from '@/auth';
 import { buildTripToSave } from '@/models/builders/buildTripToSave';
 import User from '@/models/User';
+import Location from '@/models/Location';
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -22,9 +23,23 @@ export const POST = async (req: NextRequest) => {
     if (!tripData.name) {
       return NextResponse.json({ message: 'Trip name is missing' }, { status: HttpStatusCode.BadRequest });
     }
+
     console.log(`new trip: ${JSON.stringify(tripData)}, ${JSON.stringify(tripData)}`);
+
     const tripDto = await buildTripToSave(tripData, owner_id);
     const trip: ITripDto = await Trip.create<ITripDto>(tripDto);
+    const locationIds = trip.locations.map((location) => location.location_id);
+    const updatedLocations = await Location.updateMany(
+      { _id: { $in: locationIds } },
+      { $addToSet: { trips: trip._id } },
+    );
+
+    if (!updatedLocations) {
+      return NextResponse.json(
+        { message: `Some locations of ${locationIds} not found / user not authorized` },
+        { status: HttpStatusCode.NotFound },
+      );
+    }
 
     return NextResponse.json(
       {
