@@ -13,7 +13,7 @@ export interface LocationInTripFormData {
 export interface TripFormData {
   _id: string;
   tripName: string;
-  privacy: boolean;
+  visibility: boolean;
   locations: LocationInTripFormData[];
   //todo add more fields
 }

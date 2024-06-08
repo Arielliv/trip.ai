@@ -6,7 +6,7 @@ export const mapTripFormDataToTripSchema = (tripFormData: TripFormData): ITrip =
   return {
     _id: tripFormData._id,
     name: tripFormData.tripName,
-    visibility: tripFormData.privacy ? Visibility.Public : Visibility.Private,
+    visibility: tripFormData.visibility ? Visibility.Public : Visibility.Private,
     locations: tripFormData.locations.map(mapLocationInTripDataToLocationInTripSchema),
     participants_ids: [],
     permissions: [],

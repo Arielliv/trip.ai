@@ -1,5 +1,5 @@
 import { ILocation } from '@/models/Location';
-import { LocationType, Visibility } from '@/models/constants';
+import { LocationType } from '@/models/constants';
 import { LocationFormData } from '@/app/hooks/useLocationForm';
 
 export const mapStringTypeToEnumType = (type: string) => {
@@ -49,7 +49,6 @@ export const mapLocationFormDataToLocationSchema = (locationFormData: LocationFo
           ac.types.includes('postal_code'),
         )?.long_name || '',
     },
-    visibility: locationFormData.privacy ? Visibility.Public : Visibility.Private,
     permissions: [],
     mapsUrl: locationFormData.place?.url,
     links: [locationFormData.place?.website!].filter((link) => link),

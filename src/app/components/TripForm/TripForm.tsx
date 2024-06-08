@@ -3,45 +3,43 @@
 import React from 'react';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
-import { Box, FormControl, FormControlLabel, InputLabel, Switch, TextField } from '@mui/material';
+import { Box, FormControlLabel, Switch, TextField } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useFormContext } from 'react-hook-form';
-import { useLocationPrivacyController } from '@/app/hooks/formControllers/useLocationPrivacy';
-import { TripFormData, useTripForm } from '@/app/hooks/useTripForm';
+import { TripFormData } from '@/app/hooks/useTripForm';
 import { useTripNameController } from '@/app/hooks/formControllers/useTripNameController';
 import { useOnTripFormSubmit } from '@/app/hooks/useOnTripFormSubmit';
 import { useTripContext } from '@/app/providers/TripContextFormProvider/TripContextFormProvider';
+import { useTripVisibilityController } from '@/app/hooks/formControllers/useTripVisibilityController';
 
 const TripForm = () => {
   const { clearFormOnEditState } = useTripContext();
-  const { watch, handleSubmit, formState } = useFormContext<TripFormData>();
+  const { handleSubmit, formState } = useFormContext<TripFormData>();
   const { field: tripNameField, error: tripNameError } = useTripNameController();
-  const { field: privacyField } = useLocationPrivacyController();
+  const { field: visibilityField } = useTripVisibilityController();
   const { onSubmit } = useOnTripFormSubmit();
-
-  const privacy = watch('privacy');
-
+  console.log(visibilityField.value);
   return (
     <Box sx={{ p: 2 }}>
       <Grid container spacing={2} flexDirection="column">
-        <Grid xs={12}>
-          <TextField
-            error={!!tripNameError}
-            label="Trip Name"
-            helperText={tripNameError?.message && 'Trip name is required'}
-            variant="outlined"
-            fullWidth
-            {...tripNameField}
-          />
-        </Grid>
-        <Grid xs={12} container spacing={2} alignItems="center">
-          <Grid xs={8}>
-            <FormControl fullWidth>
-              <InputLabel>Location Type</InputLabel>
-            </FormControl>
+        <Grid container alignItems={'center'}>
+          <Grid xs={9}>
+            <TextField
+              error={!!tripNameError}
+              label="Trip Name"
+              helperText={tripNameError?.message && 'Trip name is required'}
+              variant="outlined"
+              fullWidth
+              {...tripNameField}
+            />
           </Grid>
-          <Grid xs={4}>
-            <FormControlLabel control={<Switch {...privacyField} />} label={privacy ? 'Public' : 'Private'} />
+          <Grid xs={3} alignItems="center">
+            <FormControlLabel
+              control={<Switch {...visibilityField} />}
+              label={visibilityField.value ? 'Public' : 'Private'}
+              checked={visibilityField.value}
+              defaultValue="Private"
+            />
           </Grid>
         </Grid>
         <Grid xs={12}>

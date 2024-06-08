@@ -29,9 +29,10 @@ const SavedLocations = ({ setSelectedTab }: SavedLocationsProps) => {
     [searchParams],
   );
 
-  const handleEdit = (id: string) => {
+  const handleEdit = (id: string, coordinate: Omit<MapMarker, 'id'>) => {
     router.push(pathname + '?' + createQueryString('id', id));
     setSelectedTab('0');
+    handleFocusLocation(coordinate);
   };
 
   const handleDelete = (id: string) => {
