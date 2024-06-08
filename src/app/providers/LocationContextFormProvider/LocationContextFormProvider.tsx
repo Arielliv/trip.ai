@@ -1,10 +1,10 @@
 'use client';
 import React, { createContext, useContext, useEffect, useCallback, useMemo } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { FormProvider } from 'react-hook-form';
 import { LocationsManagerContextObject, useManageLocations } from '@/app/hooks/useManageLocations';
 import { LocationContextObject, useLocationData } from '@/app/hooks/useLocationData';
-import { useLocationForm, defaultLocationFormData, LocationFormData } from '@/app/hooks/useLocationForm';
+import { useLocationForm, defaultLocationFormData } from '@/app/hooks/useLocationForm';
 import { defaultLocationContext } from '@/app/providers/LocationContextFormProvider/defaultLocationContextObject';
 import { mapILocationToLocationFormData } from '@/models/mappers/mapILocationToLocationFormData';
 import { fetchPlaceDetailsFromGoogleAPIById } from '@/app/providers/LocationContextFormProvider/utils/fetchPlaceDetailsFromGoogleAPIById';
@@ -26,11 +26,10 @@ export const LocationContextFormProvider = ({ children }: { children: React.Reac
   const { getLocationById } = manageLocations;
   const locationData = useLocationData(formMethods.control);
   const { handleFocusEditLocation } = locationData;
-  const searchParams = useSearchParams();
   const manageTripIdQueryParam = useManageTripIdQueryParam(manageLocations.loadLocationsByTripId);
   const router = useRouter();
   const pathname = usePathname();
-  const locationId = searchParams.get('id');
+  const locationId = manageTripIdQueryParam.locationId;
   const isEditMode = Boolean(locationId);
   const {
     reset,
