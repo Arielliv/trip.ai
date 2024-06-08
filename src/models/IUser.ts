@@ -1,7 +1,7 @@
 /* v8 ignore start */
 import { Schema, Document, Types, models, model } from 'mongoose';
 
-interface User extends Document {
+export interface IUser extends Document {
   name: string;
   image: string; // URL to the user's image
   default_trip: Types.ObjectId; // Reference to the user's default trip
@@ -17,7 +17,7 @@ const UserSchema: Schema = new Schema({
   locations: [{ type: Types.ObjectId, ref: 'Location' }],
 });
 
-const User = models.User || model<User>('User', UserSchema);
+const User = models.User || model<IUser>('User', UserSchema);
 export default User;
 
 /* v8 ignore stop */

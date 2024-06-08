@@ -1,8 +1,13 @@
 import { ILocation } from '@/models/Location';
 import { ITrip } from '@/models/Trip';
+import { IUser } from '@/models/IUser';
 
 export interface LocationsResponse {
   locations: ILocation[];
+}
+
+export interface UsersResponse {
+  users: IUser[];
 }
 
 export interface TripsResponse {
@@ -18,3 +23,4 @@ export interface PaginationResponse {
 
 export type LocationsPaginationResponse = LocationsResponse & PaginationResponse;
 export type TripsPaginationResponse = TripsResponse & PaginationResponse;
+export type UsersPaginationResponse = UsersResponse & PaginationResponse;

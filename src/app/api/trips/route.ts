@@ -4,7 +4,7 @@ import Trip, { ITrip, ITripDto } from '@/models/Trip';
 import dbConnect from '@/lib/dbConnect';
 import { auth } from '@/auth';
 import { buildTripToSave } from '@/models/builders/buildTripToSave';
-import User from '@/models/User';
+import User, { IUser } from '@/models/IUser';
 import Location from '@/models/Location';
 
 export const POST = async (req: NextRequest) => {
@@ -84,7 +84,7 @@ export const GET = async (req: NextRequest) => {
     }
 
     const user_id = session.user.id;
-    const user: User | null = await User.findById(user_id);
+    const user: IUser | null = await User.findById<IUser>(user_id);
 
     if (!user) {
       return NextResponse.json({ message: 'User not found' }, { status: HttpStatusCode.NotFound });

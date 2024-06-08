@@ -9,4 +9,5 @@ export enum TripFormFieldPath {
   TripName = 'tripName',
   Locations = 'locations',
   Visibility = 'visibility',
+  Permissions = 'permissions',
 }

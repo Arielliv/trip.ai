@@ -3,7 +3,7 @@ import dbConnect from '@/lib/dbConnect';
 import { auth } from '@/auth';
 import { HttpStatusCode } from 'axios';
 import Trip from '@/models/Trip';
-import User from '@/models/User';
+import User from '@/models/IUser';
 import Location from '@/models/Location';
 
 export const POST = async (_req: NextRequest, { params }: { params: { id: string } }) => {
