@@ -23,7 +23,7 @@ import { LocationPermissionEnum } from '@/models/enums/permissionsEnums';
 
 export interface LocationCardProps {
   location: ILocation;
-  onEdit: (id: string) => void;
+  onEdit: (id: string, coordinate: Omit<MapMarker, 'id'>) => void;
   onDelete: (id: string) => void;
   onSelect: (coordinate: Omit<MapMarker, 'id'>) => void;
 }
@@ -49,7 +49,7 @@ export function LocationCard({ location, onEdit, onDelete, onSelect }: LocationC
   };
 
   const handleOnEditLocation = () => {
-    onEdit(location._id!);
+    onEdit(location._id!, { lat: location.coordinates.latitude, lng: location.coordinates.longitude });
   };
 
   return (

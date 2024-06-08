@@ -4,32 +4,27 @@ import React from 'react';
 import Button from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import SearchLocation from '@/app/components/SearchLocation/SearchLocation';
-import { Box, FormControl, FormControlLabel, InputLabel, MenuItem, Select, Switch, TextField } from '@mui/material';
+import { Box, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useFormContext } from 'react-hook-form';
 import { useLocationNameController } from '@/app/hooks/formControllers/useLocationNameController';
 import { useLocationTypeController } from '@/app/hooks/formControllers/useLocationTypeController';
-import { useLocationPrivacyController } from '@/app/hooks/formControllers/useLocationPrivacy';
-import { useLocationNoteController } from '@/app/hooks/formControllers/useLocationNote';
-import { LocationFormData, useLocationForm } from '@/app/hooks/useLocationForm';
+import { LocationFormData } from '@/app/hooks/useLocationForm';
 import { useLocationContext } from '@/app/providers/LocationContextFormProvider/LocationContextFormProvider';
 import { useOnLocationFormSubmit } from '@/app/hooks/useOnLocationFormSubmit';
+import { useLocationNoteController } from '@/app/hooks/formControllers/useLocationNoteController';
 
 const LocationForm = () => {
   const { onSubmit } = useOnLocationFormSubmit();
   const { onAutoCompletePlaceChange, onLoadAutocomplete, onAutoCompletePlaceEmpty, isEditMode, clearFormOnEditState } =
     useLocationContext();
   const {
-    watch,
     handleSubmit,
     formState: { isSubmitting },
   } = useFormContext<LocationFormData>();
   const { field: locationNameField, error: locationNameError } = useLocationNameController();
   const { field: locationTypeField } = useLocationTypeController();
-  const { field: privacyField } = useLocationPrivacyController();
   const { field: noteField } = useLocationNoteController();
-
-  const privacy = watch('privacy');
 
   const handlePlaceChange = (_event: React.ChangeEvent<HTMLInputElement>) => {
     onAutoCompletePlaceChange();
@@ -60,23 +55,15 @@ const LocationForm = () => {
             {...locationNameField}
           />
         </Grid>
-        <Grid xs={12} container spacing={2} alignItems="center">
-          <Grid xs={8}>
-            <FormControl fullWidth>
-              <InputLabel>Location Type</InputLabel>
-              <Select {...locationTypeField} label="Location Type" defaultValue="general" fullWidth>
-                <MenuItem value="general">General</MenuItem>
-                <MenuItem value="hotel">Hotel</MenuItem>
-                <MenuItem value="restaurant">Restaurant</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid xs={4}>
-            <FormControlLabel
-              control={<Switch checked={privacy} {...privacyField} />}
-              label={privacy ? 'Public' : 'Private'}
-            />
-          </Grid>
+        <Grid xs={12} alignItems="center">
+          <FormControl fullWidth>
+            <InputLabel>Location Type</InputLabel>
+            <Select {...locationTypeField} label="Location Type" defaultValue="general" fullWidth>
+              <MenuItem value="general">General</MenuItem>
+              <MenuItem value="hotel">Hotel</MenuItem>
+              <MenuItem value="restaurant">Restaurant</MenuItem>
+            </Select>
+          </FormControl>
         </Grid>
         <Grid xs={12}>
           <TextField label="Note" variant="outlined" multiline rows={4} fullWidth {...noteField} />

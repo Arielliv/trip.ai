@@ -33,12 +33,21 @@ export const POST = async (req: NextRequest) => {
       { _id: { $in: locationIds } },
       { $addToSet: { trips: trip._id } },
     );
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: owner_id },
+      { $addToSet: { trips: trip._id } },
+      { new: true },
+    );
 
     if (!updatedLocations) {
       return NextResponse.json(
         { message: `Some locations of ${locationIds} not found / user not authorized` },
         { status: HttpStatusCode.NotFound },
       );
+    }
+
+    if (!updatedUser) {
+      return NextResponse.json({ message: `User ${owner_id} not found` }, { status: HttpStatusCode.NotFound });
     }
 
     return NextResponse.json(
@@ -81,12 +90,14 @@ export const GET = async (req: NextRequest) => {
       return NextResponse.json({ message: 'User not found' }, { status: HttpStatusCode.NotFound });
     }
 
-    const trips = await Trip.find({ _id: { $in: user.trips } })
-      .skip(page * limit)
-      .limit(limit);
+    const searchQuery = { _id: { $in: user.trips } };
 
-    // Optionally, get the total count of documents
-    const totalCount = await Trip.countDocuments();
+    const [trips, totalCount] = await Promise.all([
+      Trip.find(searchQuery)
+        .skip(page * limit)
+        .limit(limit),
+      Trip.countDocuments(searchQuery),
+    ]);
 
     return NextResponse.json({
       trips,

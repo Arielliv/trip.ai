@@ -1,6 +1,6 @@
 /* v8 ignore start */
 import { Schema, Types, models, model } from 'mongoose';
-import { LocationType, Visibility } from '@/models/constants';
+import { LocationType } from '@/models/constants';
 import { Address, Coordinate, IUserPermission } from '@/models/shared/types';
 import { LocationPermissionEnum, TripPermissionEnum } from '@/models/enums/permissionsEnums';
 
@@ -16,7 +16,6 @@ export interface ILocation {
   placeTypes?: string[];
   coordinates: Coordinate;
   address: Address;
-  visibility: Visibility;
   permissions: IUserPermission[];
   mapsUrl?: string;
   links?: string[];
@@ -36,7 +35,6 @@ export interface ILocationDto {
   placeTypes?: string[]; // Types from Google Places
   coordinates: Coordinate;
   address: Address;
-  visibility: Visibility;
   user_id: Types.ObjectId;
   permissions: IUserPermission[];
   mapsUrl?: string; // URL to the Google Maps page
@@ -65,7 +63,6 @@ const LocationSchema: Schema = new Schema({
     country: { type: String },
     postalCode: { type: String },
   },
-  visibility: { type: String, enum: Object.values(Visibility), required: true },
   user_id: { type: Types.ObjectId, required: true },
   permissions: [
     {
