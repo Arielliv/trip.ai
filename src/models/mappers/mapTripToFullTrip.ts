@@ -13,6 +13,7 @@ export const mapFullTripToTripFormData = (trip: ITrip | undefined): TripFormData
     tripName: trip.name,
     locations: locations ? locations : [],
     visibility: trip.visibility === Visibility.Public,
+    permissions: trip.permissions,
   };
 };
 

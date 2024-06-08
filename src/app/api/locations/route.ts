@@ -4,9 +4,9 @@ import dbConnect from '@/lib/dbConnect';
 import Location, { ILocation, ILocationDto } from '@/models/Location';
 import { auth } from '@/auth';
 import { LocationPermissionEnum } from '@/models/enums/permissionsEnums';
-import User from '@/models/User';
+import User, { IUser } from '@/models/IUser';
 
-const saveLocationInUser = async (user: User, locationDto: ILocationDto) => {
+const saveLocationInUser = async (user: IUser, locationDto: ILocationDto) => {
   if (user.locations) {
     user.locations.push(locationDto._id);
   } else {
@@ -32,7 +32,7 @@ export const POST = async (req: NextRequest) => {
       return NextResponse.json({ message: 'Location name is missing' }, { status: HttpStatusCode.BadRequest });
     }
 
-    const user: User | null = await User.findById(user_id);
+    const user: IUser | null = await User.findById(user_id);
     if (!user) {
       return NextResponse.json({ message: 'User not found' }, { status: HttpStatusCode.NotFound });
     }
@@ -80,7 +80,7 @@ export const GET = async (req: NextRequest) => {
     }
 
     const user_id = session.user.id;
-    const user: User | null = await User.findById(user_id);
+    const user: IUser | null = await User.findById(user_id);
 
     if (!user) {
       return NextResponse.json({ message: 'User not found' }, { status: HttpStatusCode.NotFound });
