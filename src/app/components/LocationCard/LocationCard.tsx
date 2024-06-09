@@ -107,6 +107,8 @@ export function LocationCard({ location, onEdit, onDelete, onSelect }: LocationC
               <IconButton sx={{ color: 'text.secondary' }} onClick={handleOnEditLocation}>
                 <Edit />
               </IconButton>
+            </LocationPermissionFilter>
+            <LocationPermissionFilter permissions={location.permissions} permissionLevel={LocationPermissionEnum.admin}>
               <IconButton sx={{ color: 'text.secondary', marginLeft: 1 }} onClick={handleDelete}>
                 <Delete />
               </IconButton>

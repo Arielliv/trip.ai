@@ -1,13 +1,20 @@
 export enum TripPermissionEnum {
-  ViewBasic = 1,
-  ViewHotels = 2,
+  Admin = 1,
+  EditBasic = 2,
   ViewFullTrip = 3,
-  EditBasic = 4,
-  Admin = 5,
+  ViewHotels = 4,
+  ViewBasic = 5,
 }
 
 export enum LocationPermissionEnum {
-  edit = 'edit',
-  view = 'view',
-  admin = 'admin',
+  view = 8,
+  edit = 7,
+  admin = 6,
+}
+
+export enum OperationType {
+  GET = 'GET',
+  UPDATE = 'UPDATE',
+  CREATE = 'CREATE',
+  DELETE = 'DELETE',
 }

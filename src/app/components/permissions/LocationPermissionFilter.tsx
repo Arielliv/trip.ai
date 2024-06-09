@@ -18,7 +18,7 @@ export const LocationPermissionFilter = ({ permissions, permissionLevel, childre
     return;
   }
 
-  if (userPermission?.permissionType >= permissionLevel) {
+  if (userPermission?.permissionType <= permissionLevel) {
     return children;
   }
 };
