@@ -6,9 +6,9 @@ import Location, { ILocation, ILocationDto } from '@/models/Location';
 import { ObjectId } from 'mongodb';
 import { authAndGetUserId } from '@/src/server/utils';
 import { createNextErrorResponse } from '@/src/server/error';
-import { validateLocationName, validatePermissions } from '@/src/server/location/validators';
 import User from '@/models/IUser';
 import { LocationPermissionEnum, OperationType } from '@/models/enums/permissionsEnums';
+import { validateName, validatePermissions } from '@/src/server/validators';
 
 export const GET = async (_: NextRequest, { params }: { params: { id: string } }) => {
   try {
@@ -33,7 +33,7 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
       _id: params.id,
     });
 
-    validateLocationName(body.name);
+    validateName(body.name);
     validatePermissions(userId, locationToUpdate?.permissions, LocationPermissionEnum.edit, OperationType.UPDATE);
 
     const { permissions, ...rest } = body;
@@ -64,7 +64,7 @@ export async function DELETE(_: NextRequest, { params }: { params: { id: string 
     const location: ILocationDto | null = await Location.findById(objectIdToDelete);
     validatePermissions(userId, location?.permissions, LocationPermissionEnum.admin, OperationType.DELETE);
     await Location.findByIdAndDelete(location?._id);
-    await User.findByIdAndUpdate(userId, { $pull: { locations: location?._id } });
+    await User.updateMany({ locations: location?._id }, { $pull: { locations: location?._id } });
 
     return NextResponse.json({ message: `Location ${params.id} has been deleted` });
   } catch (error) {

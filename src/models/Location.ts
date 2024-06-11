@@ -69,7 +69,7 @@ const LocationSchema: Schema = new Schema({
       userId: { type: Types.ObjectId, required: true },
       permissionType: {
         type: String,
-        enum: [...Object.values(LocationPermissionEnum), ...Object.values(TripPermissionEnum)],
+        enum: [...Object.values(LocationPermissionEnum)],
         required: true,
       },
     },

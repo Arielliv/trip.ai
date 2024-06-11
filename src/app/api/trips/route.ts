@@ -6,27 +6,20 @@ import { auth } from '@/auth';
 import { buildTripToSave } from '@/models/builders/buildTripToSave';
 import User, { IUser } from '@/models/IUser';
 import Location from '@/models/Location';
+import { authAndGetUserId } from '@/src/server/utils';
+import { validateName } from '@/src/server/validators';
+import { createNextErrorResponse } from '@/src/server/error';
 
 export const POST = async (req: NextRequest) => {
   try {
     await dbConnect();
-
-    const session = await auth();
-
-    if (!session || !session.user || !session.user.email) {
-      return NextResponse.json({ message: 'Authentication required' }, { status: HttpStatusCode.Unauthorized });
-    }
-
-    const owner_id = session.user.id;
+    const owner_id = await authAndGetUserId();
     const tripData: ITrip = await req.json();
-
-    if (!tripData.name) {
-      return NextResponse.json({ message: 'Trip name is missing' }, { status: HttpStatusCode.BadRequest });
-    }
+    validateName(tripData.name);
 
     console.log(`new trip: ${JSON.stringify(tripData)}, ${JSON.stringify(tripData)}`);
 
-    const tripDto = await buildTripToSave(tripData, owner_id);
+    const tripDto = await buildTripToSave(tripData, owner_id, false);
     const trip: ITripDto = await Trip.create<ITripDto>(tripDto);
     const locationIds = trip.locations.map((location) => location.location_id);
     const updatedLocations = await Location.updateMany(
@@ -59,12 +52,7 @@ export const POST = async (req: NextRequest) => {
     );
   } catch (error) {
     console.error('Failed to create Trip:', error);
-
-    return NextResponse.json(
-      // @ts-ignore
-      { message: 'Failed to create location', error: error.toString() },
-      { status: HttpStatusCode.InternalServerError },
-    );
+    return createNextErrorResponse(error);
   }
 };
 

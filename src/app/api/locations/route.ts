@@ -4,10 +4,9 @@ import dbConnect from '@/lib/dbConnect';
 import Location, { ILocation, ILocationDto } from '@/models/Location';
 import { LocationPermissionEnum } from '@/models/enums/permissionsEnums';
 import { IUser } from '@/models/IUser';
-import { saveLocationInUser } from '@/src/server/location/locationUtils';
 import { authAndGetUserId } from '@/src/server/utils';
 import { createNextErrorResponse } from '@/src/server/error';
-import { getUserOrThrow, validateLocationName } from '@/src/server/location/validators';
+import { getUserOrThrow, validateName } from '@/src/server/validators';
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -16,7 +15,7 @@ export const POST = async (req: NextRequest) => {
     const userId = await authAndGetUserId();
     const locationData: ILocation = await req.json();
     const user = await getUserOrThrow(userId);
-    validateLocationName(locationData.name);
+    validateName(locationData.name);
 
     const newLocationDto: ILocationDto = await Location.create<ILocationDto>({
       ...locationData,
@@ -71,4 +70,13 @@ export const GET = async (req: NextRequest) => {
   } catch (error) {
     return createNextErrorResponse(error);
   }
+};
+
+const saveLocationInUser = async (user: IUser, locationDto: ILocationDto) => {
+  if (user.locations) {
+    user.locations.push(locationDto._id);
+  } else {
+    user.locations = [locationDto._id];
+  }
+  await user.save();
 };

@@ -3,6 +3,7 @@ import { Schema, Types, models, model } from 'mongoose';
 import { Role, TransportationType, Visibility } from '@/models/constants';
 import { IUserPermission } from '@/models/shared/types';
 import { ILocation } from '@/models/Location';
+import { LocationPermissionEnum, TripPermissionEnum } from '@/models/enums/permissionsEnums';
 
 export interface ITrip {
   _id?: string;
@@ -98,8 +99,11 @@ const TripSchema: Schema = new Schema({
   owner_id: { type: Types.ObjectId, required: true },
   permissions: [
     {
-      user_id: { type: Types.ObjectId, required: true, ref: 'User' },
-      role: { type: String, enum: Object.values(Role), required: true },
+      userId: { type: Types.ObjectId, required: true },
+      permissionType: {
+        type: String,
+        enum: [...Object.values(TripPermissionEnum)],
+      },
     },
   ],
   locations: [LocationInTripSchema],

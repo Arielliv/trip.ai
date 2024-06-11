@@ -2,15 +2,21 @@ import { ILocationInTrip, ITrip } from '@/models/Trip';
 import { ObjectId } from 'mongodb';
 import Location from '@/models/Location';
 import { getDaysBetweenDates } from '@/app/utils/getDaysBetweenDates';
+import { IUserPermission } from '@/models/shared/types';
+import { TripPermissionEnum } from '@/models/enums/permissionsEnums';
 
-export const buildTripToSave = async (trip: ITrip, owner_id?: string): Promise<ITrip> => {
+export const buildTripToSave = async (trip: ITrip, owner_id: string, isUpdateMode: boolean): Promise<ITrip> => {
   let totalCost = 0;
   let startDate: Date | undefined = undefined;
   let endDate: Date | undefined = undefined;
   let totalAmountOfDays: number | undefined = undefined;
   let mainImageUrl: string | undefined = undefined;
 
+  trip.permissions = buildTripPermission(new ObjectId(owner_id), trip.permissions, isUpdateMode);
+
   trip.locations.forEach((location, _index) => {
+    //Todo- check if location has admin permission and decide what to do with that throw or ignore
+
     if (!mainImageUrl && location.connectedLocationData?.imageUrl) {
       mainImageUrl = location.connectedLocationData.imageUrl;
     }
@@ -70,4 +76,16 @@ export const buildTripToSave = async (trip: ITrip, owner_id?: string): Promise<I
     totals,
     ...(owner_id ? { owner_id: new ObjectId(owner_id) } : undefined),
   };
+};
+
+const buildTripPermission = (
+  userId: ObjectId,
+  tripPermission: IUserPermission[],
+  isUpdateMode: boolean,
+): IUserPermission[] => {
+  if (isUpdateMode) {
+    return tripPermission;
+  } else {
+    return [{ userId: userId, permissionType: TripPermissionEnum.Admin }];
+  }
 };
