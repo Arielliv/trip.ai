@@ -26,6 +26,11 @@ import { useGetFullTripById } from '@/app/hooks/query/useFetchTripById';
 import { ITrip } from '@/models/Trip';
 import { useDuplicateTrip } from '@/app/hooks/useDuplicateTrip';
 import { useTripsSearchContext } from '@/app/providers/TripsSearchContextProvider/TripsSearchContextProvider';
+import LoadingButton from '@mui/lab/LoadingButton';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { useNavigateToLocationPageByTripId } from '@/app/hooks/useNavigateToLocationPageByTripId';
+import ShareIcon from '@mui/icons-material/Share';
 
 export interface TripMiniViewProps {
   trip: ITrip;
@@ -40,7 +45,8 @@ export const TripMiniView = ({ trip, handleClose, isOpen }: TripMiniViewProps) =
   // Use react-query to fetch the full trip details
   const { data: fullTrip, isLoading } = useGetFullTripById(trip._id);
   const { refetch } = useTripsSearchContext();
-  const { duplicateTrip } = useDuplicateTrip(refetch);
+  const { duplicateTrip, isDuplicating } = useDuplicateTrip(refetch);
+  const { navigateToLocationPageByTripId } = useNavigateToLocationPageByTripId();
 
   const handleDuplicate = () => {
     if (!trip._id) {
@@ -49,6 +55,15 @@ export const TripMiniView = ({ trip, handleClose, isOpen }: TripMiniViewProps) =
 
     duplicateTrip(trip._id);
   };
+
+  const handleView = () => {
+    if (!trip._id) {
+      return;
+    }
+
+    navigateToLocationPageByTripId(trip._id);
+  };
+
   const dateDuration =
     fullTrip?.locations && fullTrip.locations.length > 0
       ? getFormatDateDuration(fullTrip.locations[0].dateRange)
@@ -85,14 +100,33 @@ export const TripMiniView = ({ trip, handleClose, isOpen }: TripMiniViewProps) =
         ) : (
           <>
             <DialogContentText sx={{ my: 1 }}>
-              <Grid container justifyContent="space-between" alignItems="center">
-                <Grid xs={10}>
-                  <Typography variant="subtitle1">Here you can find all the included locations:</Typography>
-                </Grid>
-                <Grid xs={2}>
-                  <Button autoFocus color={'secondary'} onClick={handleDuplicate}>
-                    Duplicate
+              <Grid container justifyContent="start" alignItems="center">
+                <Grid xs={4}>
+                  <Button endIcon={<LocationOnIcon />} autoFocus color={'secondary'} onClick={handleView}>
+                    View locations
                   </Button>
+                </Grid>
+                <Grid xs={4}>
+                  <LoadingButton
+                    endIcon={<ContentCopyIcon />}
+                    loading={isDuplicating}
+                    disabled={isDuplicating}
+                    autoFocus
+                    color={'secondary'}
+                    onClick={handleDuplicate}
+                  >
+                    Duplicate trip
+                  </LoadingButton>
+                </Grid>
+                <Grid xs={4}>
+                  <Button endIcon={<ShareIcon />} autoFocus color={'secondary'}>
+                    Share trip
+                  </Button>
+                </Grid>
+              </Grid>
+              <Grid container justifyContent="space-between" alignItems="center">
+                <Grid xs={12}>
+                  <Typography variant="subtitle1">Here you can find all the included locations:</Typography>
                 </Grid>
               </Grid>
             </DialogContentText>
@@ -113,9 +147,12 @@ export const TripMiniView = ({ trip, handleClose, isOpen }: TripMiniViewProps) =
                   </Grid>
                 </AccordionSummary>
                 <AccordionDetails>
-                  <Typography color="text.secondary">From: {dateDuration[0]?.toLocaleDateString()}</Typography>
-                  <Typography color="text.secondary">Until: {dateDuration[1]?.toLocaleDateString()}</Typography>
-                  <Typography variant="subtitle1">
+                  <Grid item xs={12}>
+                    <Typography color="text.secondary">
+                      Dates: {dateDuration[0]?.toLocaleDateString()} - {dateDuration[1]?.toLocaleDateString()}
+                    </Typography>
+                  </Grid>
+                  <Typography color="text.secondary">
                     Time duration: {location.duration?.value} {location.duration?.timeUnit}
                   </Typography>
                   <Typography>Additional Info: {location.additionalInfo || 'None'}</Typography>

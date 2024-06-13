@@ -5,6 +5,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useTripContext } from '@/app/providers/TripContextFormProvider/TripContextFormProvider';
 import { TripListItem } from '@/app/components/TripListItem/TripListItem';
+import { useNavigateToLocationPageByTripId } from '@/app/hooks/useNavigateToLocationPageByTripId';
 
 export interface SavedTripsProps {
   setSelectedTab: (tab: string) => void;
@@ -12,6 +13,7 @@ export interface SavedTripsProps {
 
 const SavedTrips = ({ setSelectedTab }: SavedTripsProps) => {
   const { trips, fetchNextPage, isLoading, hasNextPage, removeTrip } = useTripContext();
+  const { navigateToLocationPageByTripId } = useNavigateToLocationPageByTripId();
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -39,12 +41,6 @@ const SavedTrips = ({ setSelectedTab }: SavedTripsProps) => {
     removeTrip(id);
   };
 
-  const handleSelect = (id?: string) => {
-    if (!id) return;
-
-    router.push('/locations?' + createQueryString('tripId', id));
-  };
-
   return (
     <InfiniteScroll
       height={'90vh'}
@@ -67,7 +63,7 @@ const SavedTrips = ({ setSelectedTab }: SavedTripsProps) => {
             index={index}
             handleEdit={handleEdit}
             handleDelete={handleDelete}
-            handleSelect={handleSelect}
+            handleSelect={navigateToLocationPageByTripId}
           />
         ))}
       </List>
