@@ -1,9 +1,11 @@
 import { RefetchOptions, useMutation } from '@tanstack/react-query';
 import { useSnackbar } from 'notistack';
 import { duplicateTrip } from '@/lib/operations/tripOperations';
+import { useState } from 'react';
 
 export const useDuplicateTrip = (refetch: (options?: RefetchOptions) => Promise<any>) => {
   const { enqueueSnackbar } = useSnackbar();
+  const [isDuplicating, setIsDuplicating] = useState(false);
 
   const duplicateTripMutation = useMutation({
     mutationFn: duplicateTrip,
@@ -16,11 +18,15 @@ export const useDuplicateTrip = (refetch: (options?: RefetchOptions) => Promise<
       const message = error.message;
       enqueueSnackbar(message, { variant: 'error' });
     },
+    onSettled: () => {
+      setIsDuplicating(false);
+    },
   });
 
   const cloneTrip = (tripId: string) => {
+    setIsDuplicating(true);
     duplicateTripMutation.mutate(tripId);
   };
 
-  return { duplicateTrip: cloneTrip };
+  return { duplicateTrip: cloneTrip, isDuplicating };
 };

@@ -17,6 +17,8 @@ import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Grid from '@mui/material/Unstable_Grid2';
 import { PermissionInput } from '@/app/components/PermissionInput/PermissionInput';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 
 export interface ManagePermissionsDialogProps {
   handleClose: () => void;
@@ -27,7 +29,7 @@ const ManagePermissionsDialog = ({ isOpen, handleClose }: ManagePermissionsDialo
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
-  const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } = useInfiniteUsers(10);
+  const { data, fetchNextPage, hasNextPage, isLoading } = useInfiniteUsers(10);
   const users = data?.pages.flatMap((page) => page.users) || [];
 
   const { fields, append, update, remove } = usePermissionsController();
@@ -62,6 +64,18 @@ const ManagePermissionsDialog = ({ isOpen, handleClose }: ManagePermissionsDialo
       aria-labelledby="responsive-dialog-title"
     >
       <DialogTitle id="responsive-dialog-title">Manage Permissions</DialogTitle>
+      <IconButton
+        aria-label="close"
+        onClick={handleClose}
+        sx={{
+          position: 'absolute',
+          right: 8,
+          top: 8,
+          color: (theme) => theme.palette.grey[500],
+        }}
+      >
+        <CloseIcon />
+      </IconButton>
       <DialogContent>
         {isLoading ? (
           <Box display="flex" justifyContent="center" alignItems="center">
@@ -69,26 +83,29 @@ const ManagePermissionsDialog = ({ isOpen, handleClose }: ManagePermissionsDialo
           </Box>
         ) : (
           <>
-            {fields.length === 0 ? (
-              <Typography variant={'body1'} sx={{ color: 'text.secondary', mt: 1, my: 1 }}>
-                Here you can control who has access to what, and how much access he has
-              </Typography>
-            ) : (
-              fields.map((field, index) => (
-                <PermissionInput
-                  field={field}
-                  index={index}
-                  users={users}
-                  key={field.id}
-                  fetchNextPage={fetchNextPage}
-                  hasNextPage={hasNextPage}
-                  isLoading={isLoading}
-                  handleRemovePermission={handleRemovePermission}
-                  handleUserChange={handleUserChange}
-                  handlePermissionChange={handlePermissionChange}
-                />
-              ))
-            )}
+            <Grid xs={12}>
+              {fields.length === 0 ? (
+                <Typography variant={'body1'} sx={{ color: 'text.secondary', mt: 1, my: 1 }}>
+                  Here you can control who has access to what, and how much access he has
+                </Typography>
+              ) : (
+                fields.map((field, index) => (
+                  <PermissionInput
+                    field={field}
+                    index={index}
+                    users={users}
+                    key={field.id}
+                    fetchNextPage={fetchNextPage}
+                    hasNextPage={hasNextPage}
+                    isLoading={isLoading}
+                    handleRemovePermission={handleRemovePermission}
+                    handleUserChange={handleUserChange}
+                    handlePermissionChange={handlePermissionChange}
+                  />
+                ))
+              )}
+            </Grid>
+
             <Grid xs={12}>
               <Button fullWidth variant="outlined" onClick={handleAddNewPermission}>
                 Add New User
