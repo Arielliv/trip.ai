@@ -1,10 +1,7 @@
 import { defaultLocationFormData, LocationFormData, useLocationForm } from '@/app/hooks/useLocationForm';
 import { SubmitHandler } from 'react-hook-form';
-import { ILocation } from '@/models/Location';
 import { mapLocationFormDataToLocationSchema } from '@/models/mappers/mapLocationFormDataToLocationSchema';
 import { useLocationContext } from '@/app/providers/LocationContextFormProvider/LocationContextFormProvider';
-import { createLocation, updateLocation } from '@/lib/operations/locationOperations';
-import { useTripContext } from '@/app/providers/TripContextFormProvider/TripContextFormProvider';
 
 export const useOnLocationFormSubmit = () => {
   const { formState, reset } = useLocationForm();

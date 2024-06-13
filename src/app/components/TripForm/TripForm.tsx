@@ -12,6 +12,9 @@ import { useOnTripFormSubmit } from '@/app/hooks/useOnTripFormSubmit';
 import { useTripContext } from '@/app/providers/TripContextFormProvider/TripContextFormProvider';
 import { useTripVisibilityController } from '@/app/hooks/formControllers/useTripVisibilityController';
 import ManagePermissionsDialog from '@/app/components/ManagePermissionsDialog/ManagePermissionsDialog';
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
+import IconButton from '@mui/material/IconButton';
+import GenerateTripDialog from '@/app/components/GenerateTripDialog/GenerateTripDialog';
 
 const TripForm = () => {
   const { clearFormOnEditState } = useTripContext();
@@ -19,31 +22,48 @@ const TripForm = () => {
   const { field: tripNameField, error: tripNameError } = useTripNameController();
   const { field: visibilityField } = useTripVisibilityController();
   const { onSubmit } = useOnTripFormSubmit();
-  const [isOpen, setIsOpen] = useState(false);
-  const handleOpen = () => {
-    setIsOpen(true);
+  const [isPermissionModalOpen, setIsPermissionModalOpen] = useState(false);
+  const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false);
+
+  const handleOpenPermissionModal = () => {
+    setIsPermissionModalOpen(true);
   };
 
-  const handleClose = () => {
-    setIsOpen(false);
+  const handleClosePermissionModal = () => {
+    setIsPermissionModalOpen(false);
+  };
+
+  const handleOpenGenerateModal = () => {
+    setIsGenerateModalOpen(true);
+  };
+
+  const handleCloseGenerateModal = () => {
+    setIsGenerateModalOpen(false);
   };
 
   return (
     <Box sx={{ p: 2 }}>
       <Grid container spacing={2} flexDirection="column">
-        <Grid xs={12}>
-          <TextField
-            error={!!tripNameError}
-            label="Trip Name"
-            helperText={tripNameError?.message && 'Trip name is required'}
-            variant="outlined"
-            fullWidth
-            {...tripNameField}
-          />
+        <Grid container alignItems={'center'} alignContent={'start'}>
+          <Grid xs={10}>
+            <TextField
+              error={!!tripNameError}
+              label="Trip Name"
+              helperText={tripNameError?.message && 'Trip name is required'}
+              variant="outlined"
+              fullWidth
+              {...tripNameField}
+            />
+          </Grid>
+          <Grid xs={2}>
+            <IconButton aria-label="Generate trip" color="secondary" size="large" onClick={handleOpenGenerateModal}>
+              <AutoFixHighIcon />
+            </IconButton>
+          </Grid>
         </Grid>
         <Grid container alignItems={'center'}>
           <Grid xs={8}>
-            <Button variant="outlined" color="success" fullWidth onClick={handleOpen}>
+            <Button variant="outlined" color="success" fullWidth onClick={handleOpenPermissionModal}>
               {'Manage permissions'}
             </Button>
           </Grid>
@@ -81,7 +101,12 @@ const TripForm = () => {
           </Button>
         </Grid>
       </Grid>
-      {isOpen && <ManagePermissionsDialog isOpen={isOpen} handleClose={handleClose} />}
+      {isPermissionModalOpen && (
+        <ManagePermissionsDialog isOpen={isPermissionModalOpen} handleClose={handleClosePermissionModal} />
+      )}
+      {isGenerateModalOpen && (
+        <GenerateTripDialog isOpen={isGenerateModalOpen} handleClose={handleCloseGenerateModal} />
+      )}
     </Box>
   );
 };

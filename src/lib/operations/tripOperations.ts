@@ -3,6 +3,7 @@ import { unstable_noStore as noStore } from 'next/dist/server/web/spec-extension
 import axios from 'axios';
 import { TripsPaginationResponse } from '@/lib/types';
 import { Filters } from '@/app/hooks/useManageSearchQueryParams';
+import { GenerateTripFormData } from '@/app/hooks/useGenerateTripForm';
 
 export async function fetchTripById(id: string): Promise<ITrip> {
   noStore();
@@ -43,6 +44,13 @@ export async function createTrip(newTrip: ITrip): Promise<ITrip> {
   const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/trips`, newTrip);
   console.log(`${res.data.message} with id ${res.data.id}`);
   return res.data.trip as ITrip;
+}
+
+export async function generateTrip(generateTripData: GenerateTripFormData): Promise<ITrip> {
+  noStore();
+  const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/generateTrip`, generateTripData);
+  console.log(res.data.message);
+  return res.data.message;
 }
 
 export async function updateTrip(updatedTrip: ITrip): Promise<ITrip> {

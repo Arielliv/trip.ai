@@ -32,7 +32,7 @@ export const POST = async (_req: NextRequest, { params }: { params: { id: string
       Location.updateMany({ _id: { $in: cloned.locations } }, { $push: { arrayField: cloned._id } }, { new: true }),
       User.updateOne().findOneAndUpdate(
         { _id: owner_id },
-        { $push: { trips: cloned._id, locations: cloned.locations } },
+        { $push: { trips: cloned._id, locations: { $each: cloned.locations } } },
         { new: true },
       ),
     ]);
