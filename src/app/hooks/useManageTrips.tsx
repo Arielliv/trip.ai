@@ -28,7 +28,10 @@ export interface TripsManagerContextObject {
   currentTripId: string | undefined;
 }
 
-export const useManageTrips = (reset: (tripFormData?: TripFormData) => void, limit = 10): TripsManagerContextObject => {
+export const useManageTrips = (
+  reset?: (tripFormData?: TripFormData) => void,
+  limit = 10,
+): TripsManagerContextObject => {
   const [currentTripId, setCurrentTripId] = useState<string>();
   const { enqueueSnackbar } = useSnackbar();
   const queryClient = useQueryClient();
@@ -54,7 +57,10 @@ export const useManageTrips = (reset: (tripFormData?: TripFormData) => void, lim
           })),
         };
       });
-      reset(mapITripToTripFormData(newTrip));
+      if (reset) {
+        reset(mapITripToTripFormData(newTrip));
+      }
+
       return queryClient.invalidateQueries({ queryKey: ['trips', limit] });
     },
     onError: (error) => {
