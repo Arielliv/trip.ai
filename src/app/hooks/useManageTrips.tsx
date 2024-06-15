@@ -11,6 +11,8 @@ import { useState } from 'react';
 import { useInfiniteTrips } from '@/app/hooks/query/useInfiniteTrips';
 import { TripsPaginationResponse } from '@/lib/types';
 import { useSnackbar } from 'notistack';
+import { TripFormData } from '@/app/hooks/useTripForm';
+import { mapITripToTripFormData } from '@/models/mappers/mapITripToTripFormData';
 
 export interface TripsManagerContextObject {
   trips: ITrip[];
@@ -26,12 +28,12 @@ export interface TripsManagerContextObject {
   currentTripId: string | undefined;
 }
 
-export const useManageTrips = (limit = 10): TripsManagerContextObject => {
+export const useManageTrips = (reset: (tripFormData?: TripFormData) => void, limit = 10): TripsManagerContextObject => {
   const [currentTripId, setCurrentTripId] = useState<string>();
   const { enqueueSnackbar } = useSnackbar();
   const queryClient = useQueryClient();
 
-  const { data, fetchNextPage, hasNextPage, isLoading, isFetchingNextPage } = useInfiniteTrips(limit);
+  const { data, fetchNextPage, hasNextPage, isLoading } = useInfiniteTrips(limit);
 
   const trips = data?.pages.flatMap((page) => page.trips) || [];
 
@@ -41,6 +43,18 @@ export const useManageTrips = (limit = 10): TripsManagerContextObject => {
       const message = 'Trip updated successfully!';
       enqueueSnackbar(message, { variant: 'success' });
       setCurrentTripId(newTrip._id); // Assuming newTrip contains the _id after creation
+      queryClient.setQueryData(['trips', limit], (oldData: InfiniteData<TripsPaginationResponse, unknown>) => {
+        return {
+          pageParams: oldData.pageParams,
+          pages: oldData.pages.map((page) => ({
+            ...page,
+            totalCount: page.totalCount + 1,
+            limit: page.limit,
+            trips: [newTrip, ...page.trips],
+          })),
+        };
+      });
+      reset(mapITripToTripFormData(newTrip));
       return queryClient.invalidateQueries({ queryKey: ['trips', limit] });
     },
     onError: (error) => {

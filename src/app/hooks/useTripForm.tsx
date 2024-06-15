@@ -5,6 +5,7 @@ import { IUserPermission } from '@/models/shared/types';
 
 export interface LocationInTripFormData {
   id: string;
+  location_id?: string;
   connectedLocationData?: ILocation;
   duration: string;
   date: DateRange<Date>;

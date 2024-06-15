@@ -13,6 +13,7 @@ export const authorize = (
   if (!permission) {
     return false;
   }
+
   return action >= permission.permissionType;
 };
 

@@ -16,16 +16,14 @@ export const TripDataContext = createContext<TripsManagerContextObject & ManageL
 );
 
 export const TripContextFormProvider = ({ children }: { children: React.ReactNode }) => {
+  const formMethods = useTripForm();
   const router = useRouter();
   const pathname = usePathname();
-  const manageTrips = useManageTrips();
+  const manageTrips = useManageTrips(formMethods.reset);
   const searchParams = useSearchParams();
   const tripId = searchParams.get('id') || undefined;
-  const formMethods = useTripForm();
-  const {
-    reset,
-    formState: { isSubmitSuccessful },
-  } = formMethods;
+
+  const { reset } = formMethods;
   const isEditMode = Boolean(tripId);
   const manageLocationTable = useManageLocationTable(formMethods.control);
   const { loadTripLocationsIntoTable, clearTripLocationsFromTable } = manageLocationTable;
