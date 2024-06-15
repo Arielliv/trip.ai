@@ -1,7 +1,8 @@
 import { ILocationInTrip, ITrip } from '@/models/Trip';
 import { ILocation } from '@/models/Location';
 import { LocationInTripFormData, TripFormData } from '@/app/hooks/useTripForm';
-import { Visibility } from '@/models/constants';
+import { LocationType, Visibility } from '@/models/constants';
+import { TripPermissionEnum } from '@/models/enums/permissionsEnums';
 
 export const mapFullTripToTripFormData = (trip: ITrip | undefined): TripFormData | undefined => {
   if (!trip) {
@@ -29,7 +30,27 @@ export const mapFullLocationInTripToLocationsFormData = (locationInTrip: ILocati
   };
 };
 
-export function mapTripToFullTrip(trip: ITrip): ITrip {
+export function mapTripToFullTrip(trip: ITrip, userId: string): ITrip {
+  const userPermission = trip.permissions?.find((permission) => permission.userId.toString() === userId);
+  const filteredLocation = trip.locations.filter((location) => {
+    const locationData = location.location_id as ILocation;
+    if (userPermission) {
+      if (userPermission?.permissionType <= TripPermissionEnum.ViewFullTrip) {
+        return location;
+      } else if (
+        userPermission?.permissionType <= TripPermissionEnum.ViewHotels &&
+        (locationData.type === LocationType.Hotel || locationData.type === LocationType.General)
+      ) {
+        return location;
+      } else if (
+        userPermission?.permissionType <= TripPermissionEnum.ViewBasic &&
+        locationData.type === LocationType.General
+      ) {
+        return location;
+      }
+    }
+  });
+
   return {
     _id: trip._id,
     name: trip.name,
@@ -38,7 +59,7 @@ export function mapTripToFullTrip(trip: ITrip): ITrip {
     visibility: trip.visibility,
     transportations: trip.transportations,
     reviews: trip.reviews,
-    locations: trip.locations.map((location) => ({
+    locations: filteredLocation.map((location) => ({
       connectedLocationData: location.location_id as ILocation, // Cast location_id as ILocation assuming it's populated
       id: location.id,
       dateRange: location.dateRange,

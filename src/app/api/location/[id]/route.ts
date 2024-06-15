@@ -22,7 +22,6 @@ export const GET = async (_: NextRequest, { params }: { params: { id: string } }
   }
 };
 
-//Todo: in case of update permission need to update logic
 export const PUT = async (req: NextRequest, { params }: { params: { id: string } }) => {
   try {
     await dbConnect();

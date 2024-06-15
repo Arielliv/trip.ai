@@ -4,7 +4,7 @@ import dbConnect from '@/lib/dbConnect';
 import Location, { ILocation, ILocationDto } from '@/models/Location';
 import { LocationPermissionEnum } from '@/models/enums/permissionsEnums';
 import { IUser } from '@/models/IUser';
-import { authAndGetUserId } from '@/src/server/utils';
+import { authAndGetUserId, saveLocationInUser } from '@/src/server/utils';
 import { createNextErrorResponse } from '@/src/server/error';
 import { getUserOrThrow, validateName } from '@/src/server/validators';
 
@@ -70,13 +70,4 @@ export const GET = async (req: NextRequest) => {
   } catch (error) {
     return createNextErrorResponse(error);
   }
-};
-
-const saveLocationInUser = async (user: IUser, locationDto: ILocationDto) => {
-  if (user.locations) {
-    user.locations.push(locationDto._id);
-  } else {
-    user.locations = [locationDto._id];
-  }
-  await user.save();
 };

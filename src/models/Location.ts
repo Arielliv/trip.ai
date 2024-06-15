@@ -1,8 +1,8 @@
 /* v8 ignore start */
-import { Schema, Types, models, model } from 'mongoose';
+import { Schema, Types, models, model, Document } from 'mongoose';
 import { LocationType } from '@/models/constants';
 import { Address, Coordinate, IUserPermission } from '@/models/shared/types';
-import { LocationPermissionEnum, TripPermissionEnum } from '@/models/enums/permissionsEnums';
+import { LocationPermissionEnum } from '@/models/enums/permissionsEnums';
 
 export interface ILocation {
   _id?: string;
@@ -23,7 +23,7 @@ export interface ILocation {
   imageUrl?: string;
 }
 
-export interface ILocationDto {
+export interface ILocationDto extends Document {
   _id: Types.ObjectId;
   trips: Types.ObjectId[];
   name: string;

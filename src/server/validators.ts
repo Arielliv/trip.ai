@@ -1,7 +1,6 @@
 import { IUserPermission } from '@/models/shared/types';
 import { findUserPermissions } from '@/src/server/utils';
 import { LocationPermissionEnum, OperationType, TripPermissionEnum } from '@/models/enums/permissionsEnums';
-import { ILocation } from '@/models/Location';
 import { ErrorType, ServerError } from '@/src/server/error';
 import User, { IUser } from '@/models/IUser';
 
@@ -14,8 +13,7 @@ export const authorize = (
   if (!permission) {
     return false;
   }
-  const sameType = typeof action === typeof permission;
-  return sameType && action >= permission.permissionType;
+  return action >= permission.permissionType;
 };
 
 export const validateName = (name: string | undefined) => {
@@ -44,4 +42,12 @@ export const validatePermissions = (
       ErrorType.AouthorizationError,
     );
   }
+};
+
+export const validateNonNullArguments = (...args: unknown[]) => {
+  args.forEach((arg) => {
+    if (!arg) {
+      throw new Error('One of the arguments is null');
+    }
+  });
 };
