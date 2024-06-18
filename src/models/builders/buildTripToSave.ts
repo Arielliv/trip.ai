@@ -83,9 +83,13 @@ const buildTripPermission = (
   tripPermission: IUserPermission[],
   isUpdateMode: boolean,
 ): IUserPermission[] => {
-  if (isUpdateMode) {
-    return tripPermission;
-  } else {
-    return [{ userId: userId, permissionType: TripPermissionEnum.Admin }];
+  if (!isUpdateMode) {
+    const ownerPermissions = { userId: userId, permissionType: TripPermissionEnum.Admin };
+    if (tripPermission) {
+      tripPermission.push(ownerPermissions);
+    } else {
+      tripPermission = [ownerPermissions];
+    }
   }
+  return tripPermission;
 };

@@ -5,7 +5,13 @@ import dbConnect from '@/lib/dbConnect';
 import Trip, { ILocationInTrip, ITrip } from '@/models/Trip';
 import { mapTripToFullTrip } from '@/models/mappers/mapTripToFullTrip';
 import { buildTripToSave } from '@/models/builders/buildTripToSave';
-import { authAndGetUserId, saveLocationInUser } from '@/src/server/utils';
+import {
+  authAndGetUserId,
+  saveLocationInUser,
+  saveTripIdInManyUsers,
+  updateLocationsPermissions,
+  updateLocationsTripsArray,
+} from '@/src/server/utils';
 import { validateName, validateNonNullArguments, validatePermissions } from '@/src/server/validators';
 import { LocationPermissionEnum, OperationType, TripPermissionEnum } from '@/models/enums/permissionsEnums';
 import { createNextErrorResponse } from '@/src/server/error';
@@ -92,8 +98,10 @@ const updateTripDataInOtherDocuments = async (
   const oldTripLocationIds = oldTripLocations?.map(extractLocationIdFromTripLocations);
   const locationsToAdd = getLocationsDelta(currentLocationIds, oldTripLocationIds);
   const locationsToRemove = getLocationsDelta(oldTripLocationIds, currentLocationIds);
+  const allUserIdWithPermission = tripPermissions?.map((permission) => permission.userId);
   await updateLocationsTripsArray(locationsToAdd, locationsToRemove, tripId);
   await updateLocationsPermissions(locationsToAdd, tripPermissions);
+  await saveTripIdInManyUsers(allUserIdWithPermission, tripId?.toString());
 };
 
 const getLocationsDelta = (
@@ -109,19 +117,6 @@ const getLocationsDelta = (
   return locationsDelta;
 };
 
-const updateLocationsTripsArray = async (
-  locationsToAdd: ObjectId[],
-  locationsToRemove: ObjectId[],
-  tripId: ObjectId | null,
-) => {
-  if (locationsToAdd.length > 0) {
-    await Location.updateMany({ _id: { $in: locationsToAdd } }, { $addToSet: { trips: tripId } });
-  }
-  if (locationsToRemove.length > 0) {
-    await Location.updateMany({ _id: { $in: locationsToRemove } }, { $pull: { trips: tripId } });
-  }
-};
-
 const extractLocationIdFromTripLocations = (locationInTrip: ILocationInTrip) => {
   if (typeof locationInTrip.location_id === 'string') {
     return new ObjectId(locationInTrip.location_id);
@@ -129,80 +124,5 @@ const extractLocationIdFromTripLocations = (locationInTrip: ILocationInTrip) => 
     return new ObjectId(locationInTrip.location_id._id);
   } else {
     throw new Error('Invalid location type');
-  }
-};
-
-const updateLocationsPermissions = async (
-  locationsToAdd: ObjectId[],
-  tripPermissions: IUserPermission[] | undefined,
-) => {
-  if (tripPermissions) {
-    for (const tripPermission of tripPermissions) {
-      await updateLocationAndUserByTripPermission(tripPermission, locationsToAdd);
-    }
-  }
-};
-
-const getLocationPermissionByTripPermission = (
-  userPermissionOnTrip: IUserPermission,
-  locationType: LocationType | undefined,
-): LocationPermissionEnum | undefined => {
-  let permissionType = undefined;
-  if (userPermissionOnTrip.permissionType <= TripPermissionEnum.EditBasic) {
-    permissionType = LocationPermissionEnum.edit;
-  } else if (userPermissionOnTrip.permissionType <= TripPermissionEnum.ViewFullTrip) {
-    permissionType = LocationPermissionEnum.view;
-  } else if (
-    (userPermissionOnTrip.permissionType <= TripPermissionEnum.ViewHotels && locationType === LocationType.Hotel) ||
-    locationType === LocationType.General
-  ) {
-    permissionType = LocationPermissionEnum.view;
-  } else if (
-    userPermissionOnTrip.permissionType <= TripPermissionEnum.ViewBasic &&
-    locationType !== LocationType.Hotel &&
-    locationType !== LocationType.Restaurant
-  ) {
-    permissionType = LocationPermissionEnum.view;
-  }
-  if (!permissionType) return undefined;
-  return permissionType;
-};
-
-const updateLocationAndUserByTripPermission = async (
-  userPermissionOnTrip: IUserPermission,
-  locationToAdd: ObjectId[],
-) => {
-  const user = await User.findById(userPermissionOnTrip.userId);
-  for (const location of locationToAdd) {
-    const locationFromDb: ILocationDto | null = await Location.findById(location._id);
-    if (!locationFromDb) {
-      throw Error('Location was not found in db will trying to update');
-    }
-    const userPermissionOnLocationIndex = locationFromDb.permissions.findIndex(
-      (permission) => permission.userId === userPermissionOnTrip.userId,
-    );
-    let permissionTypeToSave;
-    if (userPermissionOnLocationIndex === -1) {
-      permissionTypeToSave = getLocationPermissionByTripPermission(userPermissionOnTrip, locationFromDb.type);
-      if (permissionTypeToSave) {
-        if (locationFromDb.permissions) {
-          locationFromDb.permissions.push({
-            userId: userPermissionOnTrip.userId,
-            permissionType: permissionTypeToSave,
-          });
-        } else {
-          locationFromDb.permissions = [{ userId: userPermissionOnTrip.userId, permissionType: permissionTypeToSave }];
-        }
-        await locationFromDb.save();
-        await saveLocationInUser(user, locationFromDb);
-      }
-    } else {
-      permissionTypeToSave = getLocationPermissionByTripPermission(userPermissionOnTrip, locationFromDb.type);
-      if (permissionTypeToSave) {
-        locationFromDb.permissions[userPermissionOnLocationIndex].permissionType = permissionTypeToSave;
-        await locationFromDb.save();
-        await saveLocationInUser(user, locationFromDb);
-      }
-    }
   }
 };

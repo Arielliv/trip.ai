@@ -5,10 +5,16 @@ import dbConnect from '@/lib/dbConnect';
 import { auth } from '@/auth';
 import { buildTripToSave } from '@/models/builders/buildTripToSave';
 import User, { IUser } from '@/models/IUser';
-import Location from '@/models/Location';
-import { authAndGetUserId } from '@/src/server/utils';
+import {
+  authAndGetUserId,
+  saveLocationInUser,
+  saveTripIdInManyUsers,
+  updateLocationsPermissions,
+  updateLocationsTripsArray,
+} from '@/src/server/utils';
 import { validateName } from '@/src/server/validators';
 import { createNextErrorResponse } from '@/src/server/error';
+import { ObjectId } from 'mongodb';
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -22,25 +28,14 @@ export const POST = async (req: NextRequest) => {
     const tripDto = await buildTripToSave(tripData, owner_id, false);
     const trip: ITripDto = await Trip.create<ITripDto>(tripDto);
     const locationIds = trip.locations.map((location) => location.location_id);
-    const updatedLocations = await Location.updateMany(
-      { _id: { $in: locationIds } },
-      { $addToSet: { trips: trip._id } },
-    );
-    const updatedUser = await User.findOneAndUpdate(
-      { _id: owner_id },
-      { $addToSet: { trips: trip._id } },
-      { new: true },
-    );
-
-    if (!updatedLocations) {
-      return NextResponse.json(
-        { message: `Some locations of ${locationIds} not found / user not authorized` },
-        { status: HttpStatusCode.NotFound },
-      );
+    if (locationIds.length > 0) {
+      await updateLocationsTripsArray(locationIds, [], trip._id ? new ObjectId(trip._id) : null);
+      await updateLocationsPermissions(locationIds, trip.permissions);
     }
 
-    if (!updatedUser) {
-      return NextResponse.json({ message: `User ${owner_id} not found` }, { status: HttpStatusCode.NotFound });
+    const allUserWithPermissions = trip.permissions?.map((permission) => permission.userId);
+    if (allUserWithPermissions) {
+      await saveTripIdInManyUsers(allUserWithPermissions, trip._id);
     }
 
     return NextResponse.json(

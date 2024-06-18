@@ -7,6 +7,7 @@ export enum ErrorType {
   IllegalArgumentError = 2,
   NullPointerError = 3,
   AouthorizationError = 4,
+  RuntimeError = 5,
 }
 
 export class ServerError extends Error {
@@ -42,6 +43,9 @@ export const createNextErrorResponse = (error: any) => {
         break;
       case ErrorType.AouthorizationError:
         statusCode = HttpStatusCode.Unauthorized;
+        break;
+      case ErrorType.RuntimeError:
+        statusCode = HttpStatusCode.InternalServerError;
         break;
       default:
         statusCode = HttpStatusCode.InternalServerError;
