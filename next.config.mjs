@@ -15,6 +15,10 @@ const nextConfig = {
   },
   webpack: (config) => {
     config.resolve.alias['@'] = path.resolve(__dirname, './');
+    config.resolve.fallback = {
+      'mongodb-client-encryption': false,
+      aws4: false,
+    };
     // Setup other custom Webpack configurations as needed
     return config;
   },

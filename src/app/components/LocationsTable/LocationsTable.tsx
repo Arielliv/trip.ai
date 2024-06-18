@@ -60,7 +60,8 @@ export const LocationsTable = () => {
       type: 'singleSelect',
       editable: true,
       align: 'left',
-      width: 175,
+      flex: 1,
+      minWidth: 150,
       valueGetter: (_value, row) => {
         if (row[Columns.ConnectedLocationData]) {
           return row[Columns.ConnectedLocationData];
@@ -83,7 +84,8 @@ export const LocationsTable = () => {
       field: Columns.Duration,
       type: 'custom',
       headerName: Columns.Duration,
-      width: 220,
+      flex: 1,
+      minWidth: 210,
       editable: true,
       renderEditCell: (params) => <DurationInput {...params} />,
       renderCell: ({ value }) => <DurationView value={value} />,
@@ -94,7 +96,8 @@ export const LocationsTable = () => {
       editable: true,
       align: 'left',
       headerName: Columns.Date,
-      width: 300,
+      flex: 1,
+      minWidth: 300,
       renderEditCell: (params) => <DateRangeInput {...params} />,
       renderCell: ({ value }) => <DateView value={value} />,
     },
@@ -105,7 +108,8 @@ export const LocationsTable = () => {
       editable: true,
       valueFormatter: (value) => (value ? value : 'No additional info was provided'),
       align: 'left',
-      width: 200,
+      flex: 1,
+      minWidth: 170,
     },
     {
       field: Columns.Cost,
@@ -113,7 +117,8 @@ export const LocationsTable = () => {
       type: 'number',
       align: 'left',
       editable: true,
-      width: 100,
+      flex: 1,
+      minWidth: 90,
       valueFormatter: (value) => currencyFormatter.format(value ? value : 0),
       cellClassName: 'font-tabular-nums',
     },
@@ -123,7 +128,8 @@ export const LocationsTable = () => {
       type: 'singleSelect',
       align: 'left',
       editable: false,
-      width: 150,
+      flex: 1,
+      minWidth: 100,
       valueGetter: (_value, row) => {
         if (row[Columns.ConnectedLocationData]) {
           return row[Columns.ConnectedLocationData].type;

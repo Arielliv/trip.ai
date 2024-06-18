@@ -2,57 +2,60 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import { HttpStatusCode } from 'axios';
 import dbConnect from '@/lib/dbConnect';
-import Trip, { ITrip } from '@/models/Trip';
+import Trip, { ILocationInTrip, ITrip } from '@/models/Trip';
 import { mapTripToFullTrip } from '@/models/mappers/mapTripToFullTrip';
-import { auth } from '@/auth';
 import { buildTripToSave } from '@/models/builders/buildTripToSave';
+import {
+  authAndGetUserId,
+  saveTripIdInManyUsers,
+  updateLocationsPermissions,
+  updateLocationsTripsArray,
+} from '@/src/server/utils';
+import { validateName, validateNonNullArguments, validatePermissions } from '@/src/server/validators';
+import { OperationType, TripPermissionEnum } from '@/models/enums/permissionsEnums';
+import { createNextErrorResponse } from '@/src/server/error';
+import User from '@/models/IUser';
+import { IUserPermission } from '@/models/shared/types';
+import { ObjectId } from 'mongodb';
 
 export const GET = async (_: NextRequest, { params }: { params: { id: string } }) => {
   try {
     await dbConnect();
+    const userId = await authAndGetUserId();
     const trip = await Trip.findById(params.id).populate({
       path: 'locations.location_id',
       model: 'Location',
     });
-    if (trip) {
-      return NextResponse.json(mapTripToFullTrip(trip) as ITrip);
-    }
-    return NextResponse.json({ message: `Trip ${params.id} not found` }, { status: HttpStatusCode.NotFound });
+    validatePermissions(userId, trip?.permissions, TripPermissionEnum.ViewBasic, OperationType.GET);
+    return NextResponse.json(mapTripToFullTrip(trip, userId) as ITrip);
   } catch (error) {
-    return NextResponse.json({ message: error }, { status: HttpStatusCode.BadRequest });
+    return createNextErrorResponse(error);
   }
 };
 
 export const PUT = async (req: NextRequest, { params }: { params: { id: string } }) => {
   try {
     await dbConnect();
-
-    const session = await auth();
-
-    if (!session || !session.user || !session.user.email) {
-      return NextResponse.json({ message: 'Authentication required' }, { status: HttpStatusCode.Unauthorized });
-    }
+    const userId = await authAndGetUserId();
 
     const trip: ITrip = await req.json();
+    validateName(trip?.name);
+    validatePermissions(userId, trip?.permissions, TripPermissionEnum.EditBasic, OperationType.UPDATE);
 
-    if (!trip.name) {
-      return NextResponse.json({ message: 'Trip name is missing' }, { status: HttpStatusCode.BadRequest });
-    }
+    const oldLocations = await Trip.findById<ITrip>(params.id);
+    const tripToSave = await buildTripToSave(trip, userId, true);
 
-    const tripToSave = await buildTripToSave(trip);
-
-    const updatedTrip = await Trip.findOneAndUpdate(
-      { _id: params.id, owner_id: session.user.id },
+    const updatedTrip: ITrip | null = await Trip.findOneAndUpdate(
+      { _id: params.id, owner_id: userId },
       { $set: tripToSave },
       { new: true },
     );
-
-    if (!updatedTrip) {
-      return NextResponse.json(
-        { message: `Trip ${params.id} not found / user not authorized` },
-        { status: HttpStatusCode.NotFound },
-      );
-    }
+    await updateTripDataInOtherDocuments(
+      updatedTrip?.locations,
+      oldLocations?.locations,
+      updatedTrip?.permissions,
+      new ObjectId(updatedTrip?._id),
+    );
 
     return NextResponse.json(
       {
@@ -63,24 +66,60 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
     );
   } catch (error) {
     console.error('Failed to update trip:', error);
-
-    return NextResponse.json(
-      { message: 'Failed to update trip', error: error },
-      { status: HttpStatusCode.InternalServerError },
-    );
+    return createNextErrorResponse(error);
   }
 };
 
 export async function DELETE(_: NextRequest, { params }: { params: { id: string } }) {
   try {
     await dbConnect();
+    const userId = await authAndGetUserId();
     const trip = await Trip.findById(params.id);
-    if (trip) {
-      await Trip.findByIdAndDelete(trip._id);
-      return NextResponse.json({ message: `Trip ${params.id} has been deleted` });
-    }
-    return NextResponse.json({ message: `Trip ${params.id} not found` }, { status: HttpStatusCode.NotFound });
+    validatePermissions(userId, trip?.permissions, TripPermissionEnum.Admin, OperationType.DELETE);
+    await Trip.findByIdAndDelete(trip._id);
+    await User.updateMany({ Trips: trip._id }, { $pull: { Trips: trip._id } });
+    return NextResponse.json({ message: `Trip ${params.id} has been deleted` });
   } catch (error) {
-    return NextResponse.json({ message: error }, { status: HttpStatusCode.BadRequest });
+    return createNextErrorResponse(error);
   }
 }
+
+const updateTripDataInOtherDocuments = async (
+  currentTripLocations: ILocationInTrip[] | undefined,
+  oldTripLocations: ILocationInTrip[] | undefined,
+  tripPermissions: IUserPermission[] | undefined,
+  tripId: ObjectId | null,
+) => {
+  validateNonNullArguments([currentTripLocations, oldTripLocations, tripPermissions, tripId]);
+  const currentLocationIds = currentTripLocations?.map(extractLocationIdFromTripLocations);
+  const oldTripLocationIds = oldTripLocations?.map(extractLocationIdFromTripLocations);
+  const locationsToAdd = getLocationsDelta(currentLocationIds, oldTripLocationIds);
+  const locationsToRemove = getLocationsDelta(oldTripLocationIds, currentLocationIds);
+  const allUserIdWithPermission = tripPermissions?.map((permission) => permission.userId);
+  await updateLocationsTripsArray(locationsToAdd, locationsToRemove, tripId);
+  await updateLocationsPermissions(locationsToAdd, tripPermissions);
+  await saveTripIdInManyUsers(allUserIdWithPermission, tripId?.toString());
+};
+
+const getLocationsDelta = (
+  locationArray: ObjectId[] | undefined,
+  deltaVerifier: ObjectId[] | undefined,
+): ObjectId[] => {
+  let locationsDelta: ObjectId[] = [];
+  locationArray?.forEach((currenLocation: ObjectId) => {
+    if (!deltaVerifier?.some((deltaVerifierObjectId) => deltaVerifierObjectId.equals(currenLocation))) {
+      locationsDelta.push(currenLocation);
+    }
+  });
+  return locationsDelta;
+};
+
+const extractLocationIdFromTripLocations = (locationInTrip: ILocationInTrip) => {
+  if (typeof locationInTrip.location_id === 'string') {
+    return new ObjectId(locationInTrip.location_id);
+  } else if (typeof locationInTrip.location_id === 'object' && locationInTrip.location_id._id) {
+    return new ObjectId(locationInTrip.location_id._id);
+  } else {
+    throw new Error('Invalid location type');
+  }
+};

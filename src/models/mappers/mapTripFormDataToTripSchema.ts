@@ -9,7 +9,7 @@ export const mapTripFormDataToTripSchema = (tripFormData: TripFormData): ITrip =
     visibility: tripFormData.visibility ? Visibility.Public : Visibility.Private,
     locations: tripFormData.locations.map(mapLocationInTripDataToLocationInTripSchema),
     participants_ids: [],
-    permissions: [],
+    permissions: tripFormData.permissions,
     transportations: [],
     reviews: [],
   };
@@ -37,5 +37,6 @@ const mapLocationInTripDataToLocationInTripSchema = (locationInTrip: LocationInT
     ...(parsedDuration && { duration: parsedDuration }),
     ...(locationInTrip.additionalInfo && { additionalInfo: locationInTrip.additionalInfo }),
     ...(locationInTrip.cost && { cost: locationInTrip.cost }),
+    ...(locationInTrip.location_id && { location_id: locationInTrip.location_id }),
   };
 };

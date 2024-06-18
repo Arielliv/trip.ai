@@ -5,49 +5,37 @@ import dbConnect from '@/lib/dbConnect';
 import { auth } from '@/auth';
 import { buildTripToSave } from '@/models/builders/buildTripToSave';
 import User, { IUser } from '@/models/IUser';
-import Location from '@/models/Location';
+import {
+  authAndGetUserId,
+  saveLocationInUser,
+  saveTripIdInManyUsers,
+  updateLocationsPermissions,
+  updateLocationsTripsArray,
+} from '@/src/server/utils';
+import { validateName } from '@/src/server/validators';
+import { createNextErrorResponse } from '@/src/server/error';
+import { ObjectId } from 'mongodb';
 
 export const POST = async (req: NextRequest) => {
   try {
     await dbConnect();
-
-    const session = await auth();
-
-    if (!session || !session.user || !session.user.email) {
-      return NextResponse.json({ message: 'Authentication required' }, { status: HttpStatusCode.Unauthorized });
-    }
-
-    const owner_id = session.user.id;
+    const owner_id = await authAndGetUserId();
     const tripData: ITrip = await req.json();
-
-    if (!tripData.name) {
-      return NextResponse.json({ message: 'Trip name is missing' }, { status: HttpStatusCode.BadRequest });
-    }
+    validateName(tripData.name);
 
     console.log(`new trip: ${JSON.stringify(tripData)}, ${JSON.stringify(tripData)}`);
 
-    const tripDto = await buildTripToSave(tripData, owner_id);
+    const tripDto = await buildTripToSave(tripData, owner_id, false);
     const trip: ITripDto = await Trip.create<ITripDto>(tripDto);
     const locationIds = trip.locations.map((location) => location.location_id);
-    const updatedLocations = await Location.updateMany(
-      { _id: { $in: locationIds } },
-      { $addToSet: { trips: trip._id } },
-    );
-    const updatedUser = await User.findOneAndUpdate(
-      { _id: owner_id },
-      { $addToSet: { trips: trip._id } },
-      { new: true },
-    );
-
-    if (!updatedLocations) {
-      return NextResponse.json(
-        { message: `Some locations of ${locationIds} not found / user not authorized` },
-        { status: HttpStatusCode.NotFound },
-      );
+    if (locationIds.length > 0) {
+      await updateLocationsTripsArray(locationIds, [], trip._id ? new ObjectId(trip._id) : null);
+      await updateLocationsPermissions(locationIds, trip.permissions);
     }
 
-    if (!updatedUser) {
-      return NextResponse.json({ message: `User ${owner_id} not found` }, { status: HttpStatusCode.NotFound });
+    const allUserWithPermissions = trip.permissions?.map((permission) => permission.userId);
+    if (allUserWithPermissions) {
+      await saveTripIdInManyUsers(allUserWithPermissions, trip._id);
     }
 
     return NextResponse.json(
@@ -59,12 +47,7 @@ export const POST = async (req: NextRequest) => {
     );
   } catch (error) {
     console.error('Failed to create Trip:', error);
-
-    return NextResponse.json(
-      // @ts-ignore
-      { message: 'Failed to create location', error: error.toString() },
-      { status: HttpStatusCode.InternalServerError },
-    );
+    return createNextErrorResponse(error);
   }
 };
 

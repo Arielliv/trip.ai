@@ -2,47 +2,26 @@ import { HttpStatusCode } from 'axios';
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import Location, { ILocation, ILocationDto } from '@/models/Location';
-import { auth } from '@/auth';
 import { LocationPermissionEnum } from '@/models/enums/permissionsEnums';
-import User, { IUser } from '@/models/IUser';
-
-const saveLocationInUser = async (user: IUser, locationDto: ILocationDto) => {
-  if (user.locations) {
-    user.locations.push(locationDto._id);
-  } else {
-    user.locations = [locationDto._id];
-  }
-  await user.save();
-};
+import { IUser } from '@/models/IUser';
+import { authAndGetUserId, saveLocationInUser } from '@/src/server/utils';
+import { createNextErrorResponse } from '@/src/server/error';
+import { getUserOrThrow, validateName } from '@/src/server/validators';
 
 export const POST = async (req: NextRequest) => {
   try {
     await dbConnect();
 
-    const session = await auth();
-
-    if (!session || !session.user || !session.user.email) {
-      return NextResponse.json({ message: 'Authentication required' }, { status: HttpStatusCode.Unauthorized });
-    }
-
-    const user_id = session.user.id;
+    const userId = await authAndGetUserId();
     const locationData: ILocation = await req.json();
-
-    if (!locationData.name) {
-      return NextResponse.json({ message: 'Location name is missing' }, { status: HttpStatusCode.BadRequest });
-    }
-
-    const user: IUser | null = await User.findById(user_id);
-    if (!user) {
-      return NextResponse.json({ message: 'User not found' }, { status: HttpStatusCode.NotFound });
-    }
+    const user = await getUserOrThrow(userId);
+    validateName(locationData.name);
 
     const newLocationDto: ILocationDto = await Location.create<ILocationDto>({
       ...locationData,
-      user_id,
-      permissions: [{ userId: user_id, permissionType: LocationPermissionEnum.edit }],
+      user_id: userId,
+      permissions: [{ userId: userId, permissionType: LocationPermissionEnum.admin }],
     });
-
     await saveLocationInUser(user, newLocationDto);
 
     return NextResponse.json(
@@ -54,12 +33,7 @@ export const POST = async (req: NextRequest) => {
     );
   } catch (error) {
     console.error('Failed to create location:', error);
-
-    return NextResponse.json(
-      // @ts-ignore
-      { message: 'Failed to create location', error: error.toString() },
-      { status: HttpStatusCode.InternalServerError },
-    );
+    return createNextErrorResponse(error);
   }
 };
 
@@ -72,19 +46,8 @@ export const GET = async (req: NextRequest) => {
 
   try {
     await dbConnect();
-
-    const session = await auth();
-
-    if (!session || !session.user || !session.user.email) {
-      return NextResponse.json({ message: 'Authentication required' }, { status: HttpStatusCode.Unauthorized });
-    }
-
-    const user_id = session.user.id;
-    const user: IUser | null = await User.findById(user_id);
-
-    if (!user) {
-      return NextResponse.json({ message: 'User not found' }, { status: HttpStatusCode.NotFound });
-    }
+    const userId = await authAndGetUserId();
+    const user: IUser | null = await getUserOrThrow(userId);
 
     const locations = await Location.find({
       _id: { $in: user.locations },
@@ -105,7 +68,6 @@ export const GET = async (req: NextRequest) => {
       totalPages: Math.ceil(totalCount / limit),
     });
   } catch (error) {
-    // @ts-ignore
-    return NextResponse.json({ error: error.message });
+    return createNextErrorResponse(error);
   }
 };
