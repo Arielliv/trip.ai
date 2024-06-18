@@ -7,19 +7,16 @@ import { mapTripToFullTrip } from '@/models/mappers/mapTripToFullTrip';
 import { buildTripToSave } from '@/models/builders/buildTripToSave';
 import {
   authAndGetUserId,
-  saveLocationInUser,
   saveTripIdInManyUsers,
   updateLocationsPermissions,
   updateLocationsTripsArray,
 } from '@/src/server/utils';
 import { validateName, validateNonNullArguments, validatePermissions } from '@/src/server/validators';
-import { LocationPermissionEnum, OperationType, TripPermissionEnum } from '@/models/enums/permissionsEnums';
+import { OperationType, TripPermissionEnum } from '@/models/enums/permissionsEnums';
 import { createNextErrorResponse } from '@/src/server/error';
 import User from '@/models/IUser';
 import { IUserPermission } from '@/models/shared/types';
-import Location, { ILocationDto } from '@/models/Location';
 import { ObjectId } from 'mongodb';
-import { LocationType } from '@/models/constants';
 
 export const GET = async (_: NextRequest, { params }: { params: { id: string } }) => {
   try {
@@ -45,7 +42,7 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
     validateName(trip?.name);
     validatePermissions(userId, trip?.permissions, TripPermissionEnum.EditBasic, OperationType.UPDATE);
 
-    const oldLocations = trip?.locations;
+    const oldLocations = await Trip.findById<ITrip>(params.id);
     const tripToSave = await buildTripToSave(trip, userId, true);
 
     const updatedTrip: ITrip | null = await Trip.findOneAndUpdate(
@@ -55,12 +52,12 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
     );
     await updateTripDataInOtherDocuments(
       updatedTrip?.locations,
-      oldLocations,
+      oldLocations?.locations,
       updatedTrip?.permissions,
       new ObjectId(updatedTrip?._id),
     );
 
-    NextResponse.json(
+    return NextResponse.json(
       {
         trip: updatedTrip,
         message: 'Trip updated successfully',
@@ -110,7 +107,7 @@ const getLocationsDelta = (
 ): ObjectId[] => {
   let locationsDelta: ObjectId[] = [];
   locationArray?.forEach((currenLocation: ObjectId) => {
-    if (!deltaVerifier?.includes(currenLocation)) {
+    if (!deltaVerifier?.some((deltaVerifierObjectId) => deltaVerifierObjectId.equals(currenLocation))) {
       locationsDelta.push(currenLocation);
     }
   });

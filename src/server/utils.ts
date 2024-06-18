@@ -26,8 +26,7 @@ export const authAndGetUserId = async () => {
 
 export const saveLocationInUser = async (user: IUser, locationDto: ILocationDto) => {
   if (user.locations) {
-    const isExist =
-      user.locations.findIndex((locationId) => locationId.toString() === locationDto._id.toString()) !== -1;
+    const isExist = user.locations.findIndex((locationId) => locationId.equals(locationDto._id)) !== -1;
     if (!isExist) {
       user.locations.push(locationDto._id);
     }
