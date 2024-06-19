@@ -3,7 +3,7 @@ import { ObjectId } from 'mongodb';
 import Location from '@/models/Location';
 import { getDaysBetweenDates } from '@/app/utils/getDaysBetweenDates';
 import { IUserPermission } from '@/models/shared/types';
-import { TripPermissionEnum } from '@/models/enums/permissionsEnums';
+import { TripPermissionEnum } from '@/models/constants/constants';
 
 export const buildTripToSave = async (trip: ITrip, owner_id: string, isUpdateMode: boolean): Promise<ITrip> => {
   let totalCost = 0;

@@ -10,7 +10,6 @@ import {
   SelectChangeEvent,
 } from '@mui/material';
 import { usePermissionsController } from '@/app/hooks/formControllers/usePermissionsController';
-import { LocationPermissionEnum, TripPermissionEnum } from '@/models/enums/permissionsEnums';
 import { Types } from 'mongoose';
 import { useInfiniteUsers } from '@/app/hooks/query/useInfiniteUsers';
 import { useTheme } from '@mui/material/styles';
@@ -19,6 +18,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { PermissionInput } from '@/app/components/PermissionInput/PermissionInput';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
+import { LocationPermissionEnum, TripPermissionEnum } from '@/models/constants/constants';
 
 export interface ManagePermissionsDialogProps {
   handleClose: () => void;

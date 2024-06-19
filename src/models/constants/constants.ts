@@ -18,3 +18,8 @@ export enum OperationType {
   CREATE = 'CREATE',
   DELETE = 'DELETE',
 }
+
+export enum EntityType {
+  Trip = 'Trip',
+  Location = 'Location',
+}

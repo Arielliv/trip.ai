@@ -1,22 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
-import { auth } from '@/auth';
 import { HttpStatusCode } from 'axios';
 import Trip from '@/models/Trip';
 import User from '@/models/IUser';
 import Location from '@/models/Location';
+import { authAndGetUserId } from '@/src/server/utils';
 
 export const POST = async (_req: NextRequest, { params }: { params: { id: string } }) => {
   try {
     await dbConnect();
+    const owner_id = await authAndGetUserId();
 
-    const session = await auth();
-
-    if (!session || !session.user || !session.user.email) {
-      return NextResponse.json({ message: 'Authentication required' }, { status: HttpStatusCode.Unauthorized });
-    }
-
-    const owner_id = session.user.id;
     const { id } = params;
 
     const trip = await Trip.findById(id);

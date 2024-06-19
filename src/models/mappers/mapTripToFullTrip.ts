@@ -2,7 +2,7 @@ import { ILocationInTrip, ITrip } from '@/models/Trip';
 import { ILocation } from '@/models/Location';
 import { LocationInTripFormData, TripFormData } from '@/app/hooks/useTripForm';
 import { LocationType, Visibility } from '@/models/constants';
-import { TripPermissionEnum } from '@/models/enums/permissionsEnums';
+import { TripPermissionEnum } from '@/models/constants/constants';
 
 export const mapFullTripToTripFormData = (trip: ITrip | undefined): TripFormData | undefined => {
   if (!trip) {

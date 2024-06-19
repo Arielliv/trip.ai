@@ -1,22 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
-import { auth } from '@/auth';
 import { HttpStatusCode } from 'axios';
 import OpenAI from 'openai';
 import { GenerateTripFormData } from '@/app/hooks/useGenerateTripForm';
+import { authAndGetUserId } from '@/src/server/utils';
 
 export const POST = async (req: NextRequest) => {
   try {
     await dbConnect();
 
-    const session = await auth();
+    const owner_id = await authAndGetUserId();
 
-    if (!session || !session.user || !session.user.email) {
-      return NextResponse.json({ message: 'Authentication required' }, { status: HttpStatusCode.Unauthorized });
-    }
-
-    const owner_id = session.user.id;
-    console.log('owner_id', owner_id);
     const tripDetails: GenerateTripFormData = await req.json();
 
     if (!tripDetails) {

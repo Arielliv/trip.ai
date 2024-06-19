@@ -7,8 +7,8 @@ import { ObjectId } from 'mongodb';
 import { authAndGetUserId } from '@/src/server/utils';
 import { createNextErrorResponse } from '@/src/server/error';
 import User from '@/models/IUser';
-import { LocationPermissionEnum, OperationType } from '@/models/enums/permissionsEnums';
-import { validateName, validatePermissions } from '@/src/server/validators';
+import { validateRequiredField, validatePermissions } from '@/src/server/validators';
+import { EntityType, LocationPermissionEnum, OperationType } from '@/models/constants/constants';
 
 export const GET = async (_: NextRequest, { params }: { params: { id: string } }) => {
   try {
@@ -32,7 +32,7 @@ export const PUT = async (req: NextRequest, { params }: { params: { id: string }
       _id: params.id,
     });
 
-    validateName(body.name);
+    validateRequiredField(EntityType.Location, 'name', body.name);
     validatePermissions(userId, locationToUpdate?.permissions, LocationPermissionEnum.edit, OperationType.UPDATE);
 
     const { permissions, ...rest } = body;

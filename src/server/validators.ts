@@ -1,8 +1,8 @@
 import { IUserPermission } from '@/models/shared/types';
 import { findUserPermissions } from '@/src/server/utils';
-import { LocationPermissionEnum, OperationType, TripPermissionEnum } from '@/models/enums/permissionsEnums';
 import { ErrorType, ServerError } from '@/src/server/error';
 import User, { IUser } from '@/models/IUser';
+import { LocationPermissionEnum, OperationType, TripPermissionEnum } from '@/models/constants/constants';
 
 export const authorize = (
   userId: string,
@@ -17,9 +17,13 @@ export const authorize = (
   return action >= permission.permissionType;
 };
 
-export const validateName = (name: string | undefined) => {
-  if (!name) {
-    throw new ServerError('Location name is missing', ErrorType.IllegalArgumentError);
+export const validateRequiredField = (
+  entityName: string,
+  requiredFieldName: string,
+  requiredField: string | undefined,
+) => {
+  if (!requiredField) {
+    throw new ServerError(`${entityName} ${requiredFieldName} is missing`, ErrorType.IllegalArgumentError);
   }
 };
 
