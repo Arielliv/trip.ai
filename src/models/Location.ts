@@ -8,7 +8,7 @@ export interface ILocation {
   _id?: string;
   trips: Types.ObjectId[];
   name: string;
-  googleName: string;
+  googleName?: string;
   note?: string;
   type?: LocationType;
   googlePlaceId: string;
@@ -27,7 +27,7 @@ export interface ILocationDto extends Document {
   _id: Types.ObjectId;
   trips: Types.ObjectId[];
   name: string;
-  googleName: string; // New: Name from Google Places
+  googleName?: string; // New: Name from Google Places
   note?: string;
   type?: LocationType;
   googlePlaceId: string; // Google Maps Place ID
@@ -46,7 +46,7 @@ export interface ILocationDto extends Document {
 const LocationSchema: Schema = new Schema({
   trips: [{ type: Types.ObjectId, ref: 'Trip' }],
   name: { type: String, required: true },
-  googleName: { type: String, required: true }, // Added
+  googleName: { type: String, required: false },
   note: { type: String },
   type: { type: String, enum: Object.values(LocationType), required: true },
   googlePlaceId: { type: String, required: true },

@@ -2,11 +2,12 @@ import { HttpStatusCode } from 'axios';
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import Location, { ILocation, ILocationDto } from '@/models/Location';
-import { IUser } from '@/models/IUser';
-import { authAndGetUserId, saveLocationInUser } from '@/src/server/utils';
 import { createNextErrorResponse } from '@/src/server/error';
 import { getUserOrThrow, validateRequiredField } from '@/src/server/validators';
+import { IUser } from '@/models/IUser';
+import { authAndGetUserId } from '@/src/server/utils';
 import { EntityType, LocationPermissionEnum } from '@/models/constants/constants';
+import { saveLocationInUser } from '@/src/server/userUtils';
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -22,6 +23,7 @@ export const POST = async (req: NextRequest) => {
       user_id: userId,
       permissions: [{ userId: userId, permissionType: LocationPermissionEnum.admin }],
     });
+
     await saveLocationInUser(user, newLocationDto);
 
     return NextResponse.json(
