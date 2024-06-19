@@ -5,7 +5,7 @@ import User, { IUser } from '@/models/IUser';
 import Location, { ILocationDto } from '@/models/Location';
 import { ObjectId } from 'mongodb';
 import { LocationType } from '@/models/constants';
-import { LocationPermissionEnum, TripPermissionEnum } from '@/models/enums/permissionsEnums';
+import { LocationPermissionEnum, TripPermissionEnum } from '@/models/constants/constants';
 
 export function findUserPermissions(userId: string, permissions: IUserPermission[]): IUserPermission | undefined {
   return permissions.find((permissionObj) => permissionObj.userId.toString() === userId);
@@ -19,7 +19,7 @@ export const authAndGetUserId = async () => {
   }
   const user = session.user;
   if (!user?.id) {
-    throw new ServerError('Tried to fetch user id from null variable', ErrorType.NullPointerError);
+    throw new ServerError('Tried to fetch user id from empty session', ErrorType.NullPointerError);
   }
   return user.id;
 };
@@ -93,17 +93,23 @@ const updateLocationAndUserByTripPermission = async (
   locationToAdd: ObjectId[],
 ) => {
   const user = await User.findById(userPermissionOnTrip.userId);
+
   for (const location of locationToAdd) {
     const locationFromDb: ILocationDto | null = await Location.findById(location._id);
+
     if (!locationFromDb) {
       throw Error('Location was not found in db will trying to update');
     }
+
     const userPermissionOnLocationIndex = locationFromDb.permissions.findIndex((permission) => {
       return permission.userId.toString() === userPermissionOnTrip.userId.toString();
     });
+
     let permissionTypeToSave;
+
     if (userPermissionOnLocationIndex === -1) {
       permissionTypeToSave = getLocationPermissionByTripPermission(userPermissionOnTrip, locationFromDb.type);
+
       if (permissionTypeToSave) {
         if (locationFromDb.permissions) {
           locationFromDb.permissions.push({
@@ -118,15 +124,18 @@ const updateLocationAndUserByTripPermission = async (
             },
           ];
         }
+
         await locationFromDb.save();
         await saveLocationInUser(user, locationFromDb);
       }
     } else {
       permissionTypeToSave = getLocationPermissionByTripPermission(userPermissionOnTrip, locationFromDb.type);
       const currentPermissionType = locationFromDb.permissions[userPermissionOnLocationIndex].permissionType;
+
       if (permissionTypeToSave) {
         locationFromDb.permissions[userPermissionOnLocationIndex].permissionType =
           permissionTypeToSave <= currentPermissionType ? permissionTypeToSave : currentPermissionType;
+
         await locationFromDb.save();
         await saveLocationInUser(user, locationFromDb);
       }
@@ -138,7 +147,8 @@ const getLocationPermissionByTripPermission = (
   userPermissionOnTrip: IUserPermission,
   locationType: LocationType | undefined,
 ): LocationPermissionEnum | undefined => {
-  let permissionType = undefined;
+  let permissionType;
+
   if (userPermissionOnTrip.permissionType <= TripPermissionEnum.EditBasic) {
     permissionType = LocationPermissionEnum.edit;
   } else if (userPermissionOnTrip.permissionType <= TripPermissionEnum.ViewFullTrip) {
@@ -155,6 +165,10 @@ const getLocationPermissionByTripPermission = (
   ) {
     permissionType = LocationPermissionEnum.view;
   }
-  if (!permissionType) return undefined;
+
+  if (!permissionType) {
+    return;
+  }
+
   return permissionType;
 };

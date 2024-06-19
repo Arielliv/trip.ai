@@ -10,12 +10,12 @@ import {
   SelectChangeEvent,
 } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { LocationPermissionEnum, TripPermissionEnum } from '@/models/enums/permissionsEnums';
 import DeleteIcon from '@mui/icons-material/Delete';
 import React from 'react';
 import { usePermissionsController } from '@/app/hooks/formControllers/usePermissionsController';
 import { IUserPermission } from '@/models/shared/types';
 import { IUser } from '@/models/IUser';
+import { LocationPermissionEnum, TripPermissionEnum } from '@/models/constants/constants';
 
 export interface PermissionInputProps {
   field: IUserPermission;

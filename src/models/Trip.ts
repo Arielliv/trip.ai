@@ -1,9 +1,9 @@
 /* v8 ignore start */
 import { Schema, Types, models, model } from 'mongoose';
-import { Role, TransportationType, Visibility } from '@/models/constants';
+import { TransportationType, Visibility } from '@/models/constants';
 import { IUserPermission } from '@/models/shared/types';
 import { ILocation } from '@/models/Location';
-import { LocationPermissionEnum, TripPermissionEnum } from '@/models/enums/permissionsEnums';
+import { TripPermissionEnum } from '@/models/constants/constants';
 
 export interface ITrip {
   _id?: string;

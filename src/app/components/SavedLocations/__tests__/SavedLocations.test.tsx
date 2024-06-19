@@ -2,7 +2,7 @@ import { screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { SavedLocationsDriver } from '@/app/components/SavedLocations/__tests__/SavedLocations.driver';
 import { ObjectId } from 'mongodb';
-import { LocationPermissionEnum } from '@/models/enums/permissionsEnums';
+import { LocationPermissionEnum } from '@/models/constants/constants';
 
 describe('SavedLocations', () => {
   let driver: SavedLocationsDriver;

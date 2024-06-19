@@ -2,11 +2,11 @@ import { HttpStatusCode } from 'axios';
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
 import Location, { ILocation, ILocationDto } from '@/models/Location';
-import { LocationPermissionEnum } from '@/models/enums/permissionsEnums';
 import { IUser } from '@/models/IUser';
 import { authAndGetUserId, saveLocationInUser } from '@/src/server/utils';
 import { createNextErrorResponse } from '@/src/server/error';
-import { getUserOrThrow, validateName } from '@/src/server/validators';
+import { getUserOrThrow, validateRequiredField } from '@/src/server/validators';
+import { EntityType, LocationPermissionEnum } from '@/models/constants/constants';
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -15,7 +15,7 @@ export const POST = async (req: NextRequest) => {
     const userId = await authAndGetUserId();
     const locationData: ILocation = await req.json();
     const user = await getUserOrThrow(userId);
-    validateName(locationData.name);
+    validateRequiredField(EntityType.Location, 'name', locationData.name);
 
     const newLocationDto: ILocationDto = await Location.create<ILocationDto>({
       ...locationData,

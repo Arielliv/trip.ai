@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/dbConnect';
-import { auth } from '@/auth';
 import { HttpStatusCode } from 'axios';
 import User, { IUser } from '@/models/IUser';
+import { authAndGetUserId } from '@/src/server/utils';
 
 export const GET = async (req: NextRequest) => {
   const url = new URL(req.url);
@@ -13,11 +13,7 @@ export const GET = async (req: NextRequest) => {
   try {
     await dbConnect();
 
-    const session = await auth();
-
-    if (!session || !session.user || !session.user.email) {
-      return NextResponse.json({ message: 'Authentication required' }, { status: HttpStatusCode.Unauthorized });
-    }
+    await authAndGetUserId();
 
     const [users, totalCount] = await Promise.all([User.find<IUser>(), User.countDocuments()]);
 

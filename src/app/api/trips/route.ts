@@ -2,28 +2,25 @@ import { HttpStatusCode } from 'axios';
 import { NextRequest, NextResponse } from 'next/server';
 import Trip, { ITrip, ITripDto } from '@/models/Trip';
 import dbConnect from '@/lib/dbConnect';
-import { auth } from '@/auth';
 import { buildTripToSave } from '@/models/builders/buildTripToSave';
 import User, { IUser } from '@/models/IUser';
 import {
   authAndGetUserId,
-  saveLocationInUser,
   saveTripIdInManyUsers,
   updateLocationsPermissions,
   updateLocationsTripsArray,
 } from '@/src/server/utils';
-import { validateName } from '@/src/server/validators';
+import { validateRequiredField } from '@/src/server/validators';
 import { createNextErrorResponse } from '@/src/server/error';
 import { ObjectId } from 'mongodb';
+import { EntityType } from '@/models/constants/constants';
 
 export const POST = async (req: NextRequest) => {
   try {
     await dbConnect();
     const owner_id = await authAndGetUserId();
     const tripData: ITrip = await req.json();
-    validateName(tripData.name);
-
-    console.log(`new trip: ${JSON.stringify(tripData)}, ${JSON.stringify(tripData)}`);
+    validateRequiredField(EntityType.Trip, 'name', tripData.name);
 
     const tripDto = await buildTripToSave(tripData, owner_id, false);
     const trip: ITripDto = await Trip.create<ITripDto>(tripDto);
@@ -33,9 +30,9 @@ export const POST = async (req: NextRequest) => {
       await updateLocationsPermissions(locationIds, trip.permissions);
     }
 
-    const allUserWithPermissions = trip.permissions?.map((permission) => permission.userId);
-    if (allUserWithPermissions) {
-      await saveTripIdInManyUsers(allUserWithPermissions, trip._id);
+    const usersWithPermissions = trip.permissions?.map((permission) => permission.userId);
+    if (usersWithPermissions) {
+      await saveTripIdInManyUsers(usersWithPermissions, trip._id);
     }
 
     return NextResponse.json(
@@ -60,13 +57,8 @@ export const GET = async (req: NextRequest) => {
   try {
     await dbConnect();
 
-    const session = await auth();
+    const user_id = await authAndGetUserId();
 
-    if (!session || !session.user || !session.user.email) {
-      return NextResponse.json({ message: 'Authentication required' }, { status: HttpStatusCode.Unauthorized });
-    }
-
-    const user_id = session.user.id;
     const user: IUser | null = await User.findById<IUser>(user_id);
 
     if (!user) {

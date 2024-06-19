@@ -1,7 +1,7 @@
 /* v8 ignore start */
 import { Types } from 'mongoose';
 import { Role } from '@/models/constants';
-import { LocationPermissionEnum, TripPermissionEnum } from '@/models/enums/permissionsEnums';
+import { LocationPermissionEnum, TripPermissionEnum } from '@/models/constants/constants';
 
 export interface Coordinate {
   latitude: number;

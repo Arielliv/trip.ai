@@ -19,7 +19,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import { MapMarker } from '@/app/components/Map/Map';
 import { LongTextNote } from '@/app/components/LongTextNote/LongTextNote';
 import { LocationPermissionFilter } from '@/app/components/LocationPermissionFilter/LocationPermissionFilter';
-import { LocationPermissionEnum } from '@/models/enums/permissionsEnums';
+import { LocationPermissionEnum } from '@/models/constants/constants';
 
 export interface LocationCardProps {
   location: ILocation;

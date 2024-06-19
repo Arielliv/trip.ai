@@ -1,7 +1,7 @@
 import React from 'react';
 import { IUserPermission } from '@/models/shared/types';
-import { LocationPermissionEnum } from '@/models/enums/permissionsEnums';
 import { useSession } from 'next-auth/react';
+import { LocationPermissionEnum } from '@/models/constants/constants';
 
 interface LocationPermissionFilterProps extends React.PropsWithChildren {
   permissions: IUserPermission[];

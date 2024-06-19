@@ -2,7 +2,7 @@
 import { Schema, Types, models, model, Document } from 'mongoose';
 import { LocationType } from '@/models/constants';
 import { Address, Coordinate, IUserPermission } from '@/models/shared/types';
-import { LocationPermissionEnum } from '@/models/enums/permissionsEnums';
+import { LocationPermissionEnum } from '@/models/constants/constants';
 
 export interface ILocation {
   _id?: string;
