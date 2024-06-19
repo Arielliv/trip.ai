@@ -5,8 +5,8 @@ export interface IUser extends Document {
   name: string;
   image: string; // URL to the user's image
   default_trip: Types.ObjectId; // Reference to the user's default trip
-  trips: [Types.ObjectId];
-  locations: [Types.ObjectId];
+  trips: Types.ObjectId[];
+  locations: Types.ObjectId[];
 }
 
 const UserSchema: Schema = new Schema({

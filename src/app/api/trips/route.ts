@@ -3,9 +3,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import Trip, { ITrip, ITripDto } from '@/models/Trip';
 import dbConnect from '@/lib/dbConnect';
 import { buildTripToSave } from '@/models/builders/buildTripToSave';
-import User, { IUser } from '@/models/IUser';
 import {
   authAndGetUserId,
+  getUserById,
   saveTripIdInManyUsers,
   updateLocationsPermissions,
   updateLocationsTripsArray,
@@ -20,20 +20,7 @@ export const POST = async (req: NextRequest) => {
     await dbConnect();
     const owner_id = await authAndGetUserId();
     const tripData: ITrip = await req.json();
-    validateRequiredField(EntityType.Trip, 'name', tripData.name);
-
-    const tripDto = await buildTripToSave(tripData, owner_id, false);
-    const trip: ITripDto = await Trip.create<ITripDto>(tripDto);
-    const locationIds = trip.locations.map((location) => location.location_id);
-    if (locationIds.length > 0) {
-      await updateLocationsTripsArray(locationIds, [], trip._id ? new ObjectId(trip._id) : null);
-      await updateLocationsPermissions(locationIds, trip.permissions);
-    }
-
-    const usersWithPermissions = trip.permissions?.map((permission) => permission.userId);
-    if (usersWithPermissions) {
-      await saveTripIdInManyUsers(usersWithPermissions, trip._id);
-    }
+    const trip = await createTripInDB(tripData, owner_id);
 
     return NextResponse.json(
       {
@@ -59,11 +46,7 @@ export const GET = async (req: NextRequest) => {
 
     const user_id = await authAndGetUserId();
 
-    const user: IUser | null = await User.findById<IUser>(user_id);
-
-    if (!user) {
-      return NextResponse.json({ message: 'User not found' }, { status: HttpStatusCode.NotFound });
-    }
+    const user = await getUserById(user_id);
 
     const searchQuery = { _id: { $in: user.trips } };
 
@@ -85,4 +68,22 @@ export const GET = async (req: NextRequest) => {
     // @ts-ignore
     return NextResponse.json({ error: error.message });
   }
+};
+
+export const createTripInDB = async (tripData: ITrip, owner_id: string) => {
+  validateRequiredField(EntityType.Trip, 'name', tripData.name);
+
+  const tripDto = await buildTripToSave(tripData, owner_id, false);
+  const trip: ITripDto = await Trip.create<ITripDto>(tripDto);
+  const locationIds = trip.locations.map((location) => location.location_id);
+  if (locationIds.length > 0) {
+    await updateLocationsTripsArray(locationIds, [], trip._id ? new ObjectId(trip._id) : null);
+    await updateLocationsPermissions(locationIds, trip.permissions);
+  }
+
+  const usersWithPermissions = trip.permissions?.map((permission) => permission.userId);
+  if (usersWithPermissions) {
+    await saveTripIdInManyUsers(usersWithPermissions, trip._id);
+  }
+  return trip;
 };

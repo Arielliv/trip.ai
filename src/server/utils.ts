@@ -6,14 +6,25 @@ import Location, { ILocationDto } from '@/models/Location';
 import { ObjectId } from 'mongodb';
 import { LocationType } from '@/models/constants';
 import { LocationPermissionEnum, TripPermissionEnum } from '@/models/constants/constants';
+import { saveLocationInUser } from '@/src/server/userUtils';
 
 export function findUserPermissions(userId: string, permissions: IUserPermission[]): IUserPermission | undefined {
   return permissions.find((permissionObj) => permissionObj.userId.toString() === userId);
 }
 
+export const getUserById = async (userId: string) => {
+  const user: IUser | null = await User.findById<IUser>(userId);
+
+  if (!user) {
+    throw new ServerError('User not found', ErrorType.NotFoundError);
+  } else {
+    return user;
+  }
+};
+
 export const authAndGetUserId = async () => {
   const session = await auth();
-
+  console.log('session od me', session);
   if (!session || !session.user || !session.user.id) {
     throw new ServerError('User Authentication failed', ErrorType.AuthenticationError);
   }
@@ -22,18 +33,6 @@ export const authAndGetUserId = async () => {
     throw new ServerError('Tried to fetch user id from empty session', ErrorType.NullPointerError);
   }
   return user.id;
-};
-
-export const saveLocationInUser = async (user: IUser, locationDto: ILocationDto) => {
-  if (user.locations) {
-    const isExist = user.locations.findIndex((locationId) => locationId.equals(locationDto._id)) !== -1;
-    if (!isExist) {
-      user.locations.push(locationDto._id);
-    }
-  } else {
-    user.locations = [locationDto._id];
-  }
-  await user.save();
 };
 
 export const saveTripIdInManyUsers = async (userIds: ObjectId[] | undefined, tripId: string | undefined) => {
