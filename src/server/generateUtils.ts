@@ -1,7 +1,7 @@
 import axios from 'axios';
 import OpenAI from 'openai';
 import { GenerateTripFormData } from '@/app/hooks/useGenerateTripForm';
-import { ChatCompletion } from 'openai/src/resources/chat/completions';
+import { ChatCompletion } from 'openai/resources';
 
 export const getGooglePlaceIdAndAdditionalData = async (
   locationAddress: string,
