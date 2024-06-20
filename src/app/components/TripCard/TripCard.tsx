@@ -1,4 +1,4 @@
-import { Button, Card, CardContent, CardMedia, Chip, Divider, Typography } from '@mui/material';
+import { Button, Card, CardContent, CardMedia, Chip, Divider, Tooltip, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { ITrip } from '@/models/Trip';
 import { TripMiniView } from '@/app/components/TripMiniView/TripMiniView';
@@ -34,10 +34,12 @@ export const TripCard = ({ trip: { mainImageUrl, name, totals, locations }, trip
         <CardMedia component="img" height="140" image={mainImageUrl} alt="Trip image" onError={handleImgError} />
         <CardContent>
           <Grid container justifyContent="space-between" alignItems="center">
-            <Grid xs={9}>
-              <Typography gutterBottom variant="h5" component="div">
-                {name}
-              </Typography>
+            <Grid xs={8} style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <Tooltip title={name}>
+                <Typography noWrap={true} gutterBottom variant="h6" component="p">
+                  {name}
+                </Typography>
+              </Tooltip>
             </Grid>
             {totals?.totalAmountOfDays && <Grid xs={3}>{<Chip label={`${totals?.totalAmountOfDays} days`} />}</Grid>}
             <Grid xs={12}>
