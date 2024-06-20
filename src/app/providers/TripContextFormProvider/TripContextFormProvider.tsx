@@ -41,6 +41,7 @@ export const TripContextFormProvider = ({ children }: { children: React.ReactNod
 
   const clearFormOnEditState = useCallback(async () => {
     router.push(pathname);
+    manageTrips.setCurrentTripId(undefined);
     reset(defaultTripFormData);
     clearTripLocationsFromTable();
   }, [router, pathname, reset, clearTripLocationsFromTable]);

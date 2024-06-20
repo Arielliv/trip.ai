@@ -26,13 +26,14 @@ export interface TripsManagerContextObject {
   hasNextPage: boolean;
   removeTrip: (id: string) => void;
   currentTripId: string | undefined;
+  setCurrentTripId: (id: string | undefined) => void;
 }
 
 export const useManageTrips = (
   reset?: (tripFormData?: TripFormData) => void,
   limit = 10,
 ): TripsManagerContextObject => {
-  const [currentTripId, setCurrentTripId] = useState<string>();
+  const [currentTripId, setCurrentTripId] = useState<string | undefined>();
   const { enqueueSnackbar } = useSnackbar();
   const queryClient = useQueryClient();
 
@@ -108,6 +109,7 @@ export const useManageTrips = (
     editTrip,
     removeTrip,
     currentTripId,
+    setCurrentTripId,
     isEditMode: !!currentTripId,
     isLoading,
     hasNextPage,
