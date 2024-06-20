@@ -25,5 +25,7 @@ COPY . .
 RUN npm run build
 
 RUN npm ci
+
+EXPOSE 3000
 # Run the web service on container startup.
 CMD [ "npm", "start" ]
