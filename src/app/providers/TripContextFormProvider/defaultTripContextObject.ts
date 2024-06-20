@@ -2,8 +2,6 @@ import { TripsManagerContextObject } from '@/app/hooks/useManageTrips';
 import { ITrip } from '@/models/Trip';
 import { ManageLocationTableHook } from '@/app/hooks/useManageLocationTable';
 import { LocationInTripFormData } from '@/app/hooks/useTripForm';
-import { FetchNextPageOptions, InfiniteData, InfiniteQueryObserverResult } from '@tanstack/react-query';
-import { TripsPaginationResponse } from '@/lib/types';
 
 const defaultManageLocationTableHook: ManageLocationTableHook = {
   handleRowModesModelChange: () => {},
@@ -32,6 +30,7 @@ const defaultSavedTripsContext: TripsManagerContextObject = {
   isLoading: false,
   hasNextPage: false,
   removeTrip: (_id: string) => {},
+  setCurrentTripId: (_id: string | undefined) => {},
 };
 
 export const defaultTripContext = {
