@@ -30,7 +30,7 @@ export const authConfig = {
         return true;
         // Redirect unauthenticated users to login page
       } else {
-        return Response.redirect(new URL('/signin', nextUrl));
+        return Response.redirect(new URL('/api/auth/signin', nextUrl));
       }
     },
   },
