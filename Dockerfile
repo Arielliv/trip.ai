@@ -2,6 +2,9 @@
 # https://hub.docker.com/_/node
 FROM node:20
 
+ARG MONGODB_URI
+ENV MONGODB_URI=${MONGODB_URI}
+
 # Create and change to the app directory.
 WORKDIR /usr/src/app
 
