@@ -1,8 +1,4 @@
 /* v8 ignore start */
-import { auth } from './auth';
-
-export default auth((req) => {
-  // req.auth
-});
+export { auth as middleware } from './auth';
 
 /* v8 ignore stop */

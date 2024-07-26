@@ -12,6 +12,7 @@ export const {
   // Secret for Next-auth, without this JWT encryption/decryption won't work
   secret: process.env.NEXTAUTH_SECRET,
   session: { strategy: 'jwt' },
+  trustHost: true,
   ...authConfig,
 });
 
