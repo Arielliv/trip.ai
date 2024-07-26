@@ -2,8 +2,10 @@
 # https://hub.docker.com/_/node
 FROM node:20
 
-ARG MONGODB_URI
 ENV MONGODB_URI=${MONGODB_URI}
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+ENV NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+ENV NEXT_AUTH_URL=${NEXT_AUTH_URL}
 
 # Create and change to the app directory.
 WORKDIR /usr/src/app
