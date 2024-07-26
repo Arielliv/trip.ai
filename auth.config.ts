@@ -41,7 +41,6 @@ export const authConfig = {
       allowDangerousEmailAccountLinking: true,
     }),
   ], // Add providers with an empty array for now
-  secret: process.env.AUTH_SECRET,
 } satisfies NextAuthConfig;
 
 /* v8 ignore stop */
