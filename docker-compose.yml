@@ -10,6 +10,13 @@ services:
     environment:
       MONGODB_URI: ${MONGODB_URI}
       NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      NEXT_AUTH_URL: ${NEXT_AUTH_URL}
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET}
+      NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: ${NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+
     # Uncomment the following lines if your application depends on MongoDB running as part of your Docker setup
     # depends_on:
     #   - mongo
