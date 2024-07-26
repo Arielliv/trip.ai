@@ -4,8 +4,8 @@ import GoogleProvider from 'next-auth/providers/google';
 
 export const authConfig = {
   pages: {
-    signIn: '/signin',
-    signOut: '/signin',
+    signIn: '/api/auth/signin',
+    signOut: '/api/auth/signin',
   },
   callbacks: {
     async jwt({ token, user }) {
@@ -41,6 +41,7 @@ export const authConfig = {
       allowDangerousEmailAccountLinking: true,
     }),
   ], // Add providers with an empty array for now
+  secret: process.env.AUTH_SECRET,
 } satisfies NextAuthConfig;
 
 /* v8 ignore stop */
