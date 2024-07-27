@@ -5,20 +5,20 @@ import { LocationsPaginationResponse } from '@/lib/types';
 
 export async function createLocation(newLocation: ILocation): Promise<ILocation> {
   noStore();
-  const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/locations`, newLocation);
+  const res = await axios.post(`/api/locations`, newLocation);
   console.log(`${res.data.message} with id ${res.data.id}`);
   return res.data.location as ILocation;
 }
 
 export async function updateLocation(updatedLocation: ILocation): Promise<ILocation> {
   noStore();
-  const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/location/${updatedLocation._id}`, updatedLocation);
+  const res = await axios.put(`/api/location/${updatedLocation._id}`, updatedLocation);
   console.log(`${res.data.message} with id ${res.data.id}`);
   return res.data.location as ILocation;
 }
 
 export async function deleteLocation(locationId: string) {
-  return axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/location/${locationId}`);
+  return axios.delete(`/api/location/${locationId}`);
 }
 
 export async function fetchLocations(
@@ -27,7 +27,7 @@ export async function fetchLocations(
   tripId?: string,
 ): Promise<LocationsPaginationResponse> {
   noStore();
-  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/locations`, {
+  const res = await axios.get(`/api/locations`, {
     params: {
       page,
       limit,
@@ -39,6 +39,6 @@ export async function fetchLocations(
 
 export async function fetchLocation(id: string): Promise<ILocation> {
   noStore();
-  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/location/${id}`);
+  const res = await axios.get(`/api/location/${id}`);
   return res.data as ILocation;
 }

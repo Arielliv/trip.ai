@@ -4,7 +4,7 @@ import axios from 'axios';
 
 export async function fetchUsers(page: number, limit: number = 10): Promise<UsersPaginationResponse> {
   noStore();
-  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users`, {
+  const res = await axios.get(`/api/users`, {
     params: {
       page: page,
       limit: limit,

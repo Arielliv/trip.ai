@@ -7,13 +7,13 @@ import { GenerateTripFormData } from '@/app/hooks/useGenerateTripForm';
 
 export async function fetchTripById(id: string): Promise<ITrip> {
   noStore();
-  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/trip/${id}`);
+  const res = await axios.get(`/api/trip/${id}`);
   return res.data as ITrip;
 }
 
 export async function fetchTrips(page: number, limit: number = 10): Promise<TripsPaginationResponse> {
   noStore();
-  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/trips`, {
+  const res = await axios.get(`/api/trips`, {
     params: {
       page: page,
       limit: limit,
@@ -24,7 +24,7 @@ export async function fetchTrips(page: number, limit: number = 10): Promise<Trip
 
 export async function searchTrips(filters?: Filters, page = 0, limit = 10): Promise<TripsPaginationResponse> {
   noStore();
-  const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/searchTrips`, {
+  const res = await axios.get(`/api/searchTrips`, {
     params: {
       ...(filters && filters.freeTextFilter && { freeText: filters.freeTextFilter }),
       ...(filters && filters.locationFilter && { location: filters.locationFilter }),
@@ -41,29 +41,29 @@ export async function searchTrips(filters?: Filters, page = 0, limit = 10): Prom
 
 export async function createTrip(newTrip: ITrip): Promise<ITrip> {
   noStore();
-  const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/trips`, newTrip);
+  const res = await axios.post(`/api/trips`, newTrip);
   console.log(`${res.data.message} with id ${res.data.id}`);
   return res.data.trip as ITrip;
 }
 
 export async function generateTrip(generateTripData: GenerateTripFormData): Promise<ITrip> {
   noStore();
-  const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/generateTrip`, generateTripData);
+  const res = await axios.post(`/api/generateTrip`, generateTripData);
   console.log(res.data.message);
   return res.data.message;
 }
 
 export async function updateTrip(updatedTrip: ITrip): Promise<ITrip> {
   noStore();
-  const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/trip/${updatedTrip._id}`, updatedTrip);
+  const res = await axios.put(`/api/trip/${updatedTrip._id}`, updatedTrip);
   console.log(`${res.data.message} with id ${res.data.id}`);
   return res.data.trip as ITrip;
 }
 
 export async function deleteTrip(tripId: string) {
-  return axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/trip/${tripId}`);
+  return axios.delete(`/api/trip/${tripId}`);
 }
 
 export async function duplicateTrip(tripId: string) {
-  return axios.post(`${process.env.NEXT_PUBLIC_API_URL}/duplicateTrip/${tripId}`);
+  return axios.post(`/api/duplicateTrip/${tripId}`);
 }
