@@ -10,6 +10,7 @@ import { NextAuthProvider } from '@/app/providers/NextAuthProvider/NextAuthProvi
 import { auth } from '@/auth';
 import NoSsrProvider from '@/app/providers/NoSsrProvider/NoSsrProvider';
 import ReactQueryProvider from '@/app/providers/ReactQueryProvider/ReactQueryProvider';
+import { logEnvVariables } from '@/app/utils/logEnv';
 
 const inter = Inter({ subsets: ['latin'], display: 'swap' });
 
@@ -17,6 +18,8 @@ export const metadata: Metadata = {
   title: 'Trip.AI',
   description: 'The place to plan your next trip',
 };
+
+logEnvVariables();
 
 export default async function RootLayout({
   children,
