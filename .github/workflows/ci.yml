@@ -52,9 +52,18 @@ jobs:
       - name: Build and push Docker image
         run: |
           BRANCH_NAME=$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//-/g')
-          TIMESTAMP=$(date -u +"%Y%m%dT%H%M%SZ")
-          IMAGE_TAG=${BRANCH_NAME}-${TIMESTAMP}
-          docker build --build-arg MONGODB_URI="${{ secrets.MONGODB_URI }}" --build-arg NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}" -t tripairegistry.azurecr.io/tripai:$IMAGE_TAG .
+          TIMESTAMP=$(date -u +"%Y%m%d-%H%M%S")
+          IMAGE_TAG=${REPO_NAME}-${BRANCH_NAME}-${TIMESTAMP}
+          docker build \
+            --build-arg MONGODB_URI="${{ secrets.MONGODB_URI }}" \
+            --build-arg NEXT_PUBLIC_API_URL="${{ secrets.NEXT_PUBLIC_API_URL }}" \
+            --build-arg NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}" \
+            --build-arg NEXT_AUTH_URL="${{ secrets.NEXT_AUTH_URL }}" \
+            --build-arg GOOGLE_CLIENT_ID="${{ secrets.GOOGLE_CLIENT_ID }}" \
+            --build-arg GOOGLE_CLIENT_SECRET="${{ secrets.GOOGLE_CLIENT_SECRET }}" \
+            --build-arg NEXT_PUBLIC_GOOGLE_MAPS_API_KEY="${{ secrets.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY }}" \
+            --build-arg OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}" \
+            -t tripairegistry.azurecr.io/tripai:$IMAGE_TAG .
           docker push tripairegistry.azurecr.io/tripai:$IMAGE_TAG
         env:
           GITHUB_REF: ${{ github.ref }}
