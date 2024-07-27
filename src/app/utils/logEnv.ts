@@ -5,13 +5,13 @@ export const logEnvVariables = () => {
 
   const envVars = [
     'MONGODB_URI',
-    'NEXT_PUBLIC_API_URL',
     'NEXTAUTH_SECRET',
-    'NEXT_AUTH_URL',
-    'GOOGLE_CLIENT_ID',
-    'GOOGLE_CLIENT_SECRET',
+    'NEXTAUTH_URL',
+    'NEXT_PUBLIC_API_URL',
+    'NEXT_PUBLIC_GOOGLE_CLIENT_ID',
+    'NEXT_PUBLIC_GOOGLE_CLIENT_SECRET',
     'NEXT_PUBLIC_GOOGLE_MAPS_API_KEY',
-    'OPENAI_API_KEY',
+    'NEXT_PUBLIC_OPENAI_API_KEY',
   ];
 
   envVars.forEach((varName) => {
