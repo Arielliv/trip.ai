@@ -23,7 +23,6 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { getFormatDateDuration } from '@/app/utils/getFormatDateDuration';
 import { currencyFormatter } from '@/app/utils/currencyFormatter';
 import { useGetFullTripById } from '@/app/hooks/query/useFetchTripById';
-import { ITrip } from '@/models/Trip';
 import { useDuplicateTrip } from '@/app/hooks/useDuplicateTrip';
 import { useTripsSearchContext } from '@/app/providers/TripsSearchContextProvider/TripsSearchContextProvider';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -33,35 +32,35 @@ import { useNavigateToLocationPageByTripId } from '@/app/hooks/useNavigateToLoca
 import ShareIcon from '@mui/icons-material/Share';
 
 export interface TripMiniViewProps {
-  trip: ITrip;
+  tripId: string;
   handleClose: () => void;
   isOpen: boolean;
 }
 
-export const TripMiniView = ({ trip, handleClose, isOpen }: TripMiniViewProps) => {
+export const TripMiniView = ({ tripId, handleClose, isOpen }: TripMiniViewProps) => {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
   // Use react-query to fetch the full trip details
-  const { data: fullTrip, isLoading } = useGetFullTripById(trip._id);
+  const { data: fullTrip, isLoading } = useGetFullTripById(tripId);
   const { refetch } = useTripsSearchContext();
   const { duplicateTrip, isDuplicating } = useDuplicateTrip(refetch);
   const { navigateToLocationPageByTripId } = useNavigateToLocationPageByTripId();
 
   const handleDuplicate = () => {
-    if (!trip._id) {
+    if (!tripId) {
       return;
     }
 
-    duplicateTrip(trip._id);
+    duplicateTrip(tripId);
   };
 
   const handleView = () => {
-    if (!trip._id) {
+    if (!tripId) {
       return;
     }
 
-    navigateToLocationPageByTripId(trip._id);
+    navigateToLocationPageByTripId(tripId);
   };
 
   const dateDuration =

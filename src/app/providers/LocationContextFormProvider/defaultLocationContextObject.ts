@@ -20,8 +20,8 @@ const defaultLocationContextObject: LocationContextObject = {
 
 const defaultSavedLocationsContext: LocationsManagerContextObject = {
   locations: [],
-  addLocation: (_newLocation: ILocation) => {},
-  editLocation: (_updatedLocation: ILocation) => {},
+  addLocation: (_newLocation: { location: ILocation; files?: File[] }) => {},
+  editLocation: (_updatedLocation: { location: ILocation; files?: File[] }) => {},
   isLoading: false,
   hasNextPage: false,
   loadLocationsByTripId: (_id?: string) => {},

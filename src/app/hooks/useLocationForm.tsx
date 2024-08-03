@@ -6,12 +6,14 @@ export interface LocationFormData {
   note: string;
   locationType: string;
   place: google.maps.places.PlaceResult | null;
+  files?: File[] | undefined;
 }
 export const defaultLocationFormData = {
   locationName: '',
   locationType: 'general',
   note: '',
   place: null, // initialize the place
+  files: undefined,
 };
 
 export const useLocationForm = (editableLocation?: LocationFormData) => {

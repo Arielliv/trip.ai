@@ -20,6 +20,7 @@ import { MapMarker } from '@/app/components/Map/Map';
 import { LongTextNote } from '@/app/components/LongTextNote/LongTextNote';
 import { LocationPermissionFilter } from '@/app/components/LocationPermissionFilter/LocationPermissionFilter';
 import { LocationPermissionEnum } from '@/models/constants/constants';
+import FilesDialog from '@/app/components/FilesDialog/FilesDialog';
 
 export interface LocationCardProps {
   location: ILocation;
@@ -31,6 +32,15 @@ export interface LocationCardProps {
 export function LocationCard({ location, onEdit, onDelete, onSelect }: LocationCardProps) {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
+  const [isFilesDialogOpen, setIsFilesDialogOpen] = useState(false);
+
+  const handleFilesDialogOpen = () => {
+    setIsFilesDialogOpen(true);
+  };
+
+  const handleFilesDialogClose = () => {
+    setIsFilesDialogOpen(false);
+  };
 
   const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -121,11 +131,13 @@ export function LocationCard({ location, onEdit, onDelete, onSelect }: LocationC
             <MoreVertIcon />
           </IconButton>
           <Menu anchorEl={anchorEl} open={open} onClose={handleMenuClose}>
-            <MenuItem onClick={handleMenuClose}>Action 1</MenuItem>
-            <MenuItem onClick={handleMenuClose}>Action 2</MenuItem>
+            <MenuItem onClick={handleFilesDialogOpen}>Show files</MenuItem>
           </Menu>
         </Box>
       </CardContent>
+      {isFilesDialogOpen && (
+        <FilesDialog files={location.files} isOpen={isFilesDialogOpen} handleClose={handleFilesDialogClose} />
+      )}
     </Card>
   );
 }

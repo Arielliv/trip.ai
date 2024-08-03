@@ -3,6 +3,7 @@ export enum LocationFormFieldPath {
   LocationType = 'locationType',
   Place = 'place',
   Note = 'note',
+  Files = 'files',
 }
 
 export enum TripFormFieldPath {

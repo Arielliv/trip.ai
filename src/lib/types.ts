@@ -2,6 +2,10 @@ import { ILocation } from '@/models/Location';
 import { ITrip } from '@/models/Trip';
 import { IUser } from '@/models/IUser';
 
+export enum StorageContainerName {
+  Locations = 'locations',
+}
+
 export interface LocationsResponse {
   locations: ILocation[];
 }

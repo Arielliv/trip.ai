@@ -65,7 +65,7 @@ export const TripCard = ({ trip: { mainImageUrl, name, totals, locations }, trip
         </CardContent>
       </Card>
 
-      {isOpen && <TripMiniView trip={trip} isOpen={isOpen} handleClose={handleClose} />}
+      {isOpen && <TripMiniView tripId={trip._id || ''} isOpen={isOpen} handleClose={handleClose} />}
     </>
   );
 };
