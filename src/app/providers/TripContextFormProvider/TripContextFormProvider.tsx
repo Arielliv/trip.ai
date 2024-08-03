@@ -44,6 +44,7 @@ export const TripContextFormProvider = ({ children }: { children: React.ReactNod
     manageTrips.setCurrentTripId(undefined);
     reset(defaultTripFormData);
     clearTripLocationsFromTable();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router, pathname, reset, clearTripLocationsFromTable]);
 
   const contextValue = useMemo<TripsManagerContextObject & ManageLocationTableHook & FormHandlers>(

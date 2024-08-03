@@ -67,101 +67,101 @@ export const generateTrip = async (tripDetails: GenerateTripFormData): Promise<C
   };
 
   // real code
-  // const response = await openai.chat.completions.create(params);
+  const response = await openai.chat.completions.create(params);
 
   // stub answer for development
-  const response = {
-    choices: [
-      {
-        message: {
-          content: {
-            visibility: 'public',
-            name: 'City Style Exploration of Japan',
-            locations: [
-              {
-                location_id: 'tokyo',
-                dateRange: ['2024-07-01', '2024-07-07'],
-                duration: {
-                  value: 7,
-                  timeUnit: 'days',
-                },
-                additionalInfo: 'Explore the vibrant city of Tokyo',
-                cost: 1500,
-                connectedLocationData: {
-                  name: 'Tokyo',
-                  note: 'Experience the blend of tradition and modernity',
-                  type: 'general',
-                  googlePlaceId: 'ChIJ51cu8IcbXWARiRtXIothAS4',
-                  formattedAddress: 'Tokyo, Japan',
-                  placeTypes: ['locality', 'political'],
-                  coordinates: {
-                    latitude: 35.6895,
-                    longitude: 139.6917,
-                  },
-                  mapsUrl: 'https://www.google.com/maps/place/?q=place_id:ChIJ51cu8IcbXWARiRtXIothAS6',
-                  links: ['https://www.gotokyo.org/en/'],
-                  businessStatus: 'Operational',
-                  imageUrl: 'https://example.com/tokyo.jpg',
-                },
-              },
-              {
-                location_id: 'kyoto',
-                dateRange: ['2024-07-08', '2024-07-14'],
-                duration: {
-                  value: 7,
-                  timeUnit: 'days',
-                },
-                additionalInfo: 'Visit historic temples and traditional tea houses',
-                cost: 1200,
-                connectedLocationData: {
-                  name: 'Kyoto',
-                  note: 'Experience the ancient capital of Japan',
-                  type: 'general',
-                  googlePlaceId: 'ChIJB4GkMCJLGGARbzZ8g-H-Ah4',
-                  formattedAddress: 'Kyoto, Japan',
-                  placeTypes: ['locality', 'political'],
-                  coordinates: {
-                    latitude: 35.0116,
-                    longitude: 135.7681,
-                  },
-                  mapsUrl: 'https://www.google.com/maps/place/?q=place_id:ChIJB4GkMCJLGGARbzZ8g-H-Ah4',
-                  links: ['https://kyoto.travel/en'],
-                  business_status: 'Operational',
-                  imageUrl: 'https://example.com/kyoto.jpg',
-                },
-              },
-              {
-                location_id: 'osaka',
-                dateRange: ['2024-07-15', '2024-07-21'],
-                duration: {
-                  value: 7,
-                  timeUnit: 'days',
-                },
-                additionalInfo: "Experience Osaka's food scene and vibrant nightlife",
-                cost: 1300,
-                connectedLocationData: {
-                  name: 'Osaka',
-                  note: 'Known for its modern architecture and street food',
-                  type: 'general',
-                  googlePlaceId: 'ChIJm7pJVxuQAGAR_f2uZNu2v1E',
-                  formattedAddress: 'Osaka, Japan',
-                  placeTypes: ['locality', 'political'],
-                  coordinates: {
-                    latitude: 34.6937,
-                    longitude: 135.5023,
-                  },
-                  mapsUrl: 'https://www.google.com/maps/place/?q=place_id:ChIJm7pJVxuQAGAR_f2uZNu2v1E',
-                  links: ['https://osaka-info.jp/en'],
-                  businessStatus: 'Operational',
-                  imageUrl: 'https://example.com/osaka.jpg',
-                },
-              },
-            ],
-          },
-        },
-      },
-    ],
-  };
+  // const response = {
+  //   choices: [
+  //     {
+  //       message: {
+  //         content: {
+  //           visibility: 'public',
+  //           name: 'City Style Exploration of Japan',
+  //           locations: [
+  //             {
+  //               location_id: 'tokyo',
+  //               dateRange: ['2024-07-01', '2024-07-07'],
+  //               duration: {
+  //                 value: 7,
+  //                 timeUnit: 'days',
+  //               },
+  //               additionalInfo: 'Explore the vibrant city of Tokyo',
+  //               cost: 1500,
+  //               connectedLocationData: {
+  //                 name: 'Tokyo',
+  //                 note: 'Experience the blend of tradition and modernity',
+  //                 type: 'general',
+  //                 googlePlaceId: 'ChIJ51cu8IcbXWARiRtXIothAS4',
+  //                 formattedAddress: 'Tokyo, Japan',
+  //                 placeTypes: ['locality', 'political'],
+  //                 coordinates: {
+  //                   latitude: 35.6895,
+  //                   longitude: 139.6917,
+  //                 },
+  //                 mapsUrl: 'https://www.google.com/maps/place/?q=place_id:ChIJ51cu8IcbXWARiRtXIothAS6',
+  //                 links: ['https://www.gotokyo.org/en/'],
+  //                 businessStatus: 'Operational',
+  //                 imageUrl: 'https://example.com/tokyo.jpg',
+  //               },
+  //             },
+  //             {
+  //               location_id: 'kyoto',
+  //               dateRange: ['2024-07-08', '2024-07-14'],
+  //               duration: {
+  //                 value: 7,
+  //                 timeUnit: 'days',
+  //               },
+  //               additionalInfo: 'Visit historic temples and traditional tea houses',
+  //               cost: 1200,
+  //               connectedLocationData: {
+  //                 name: 'Kyoto',
+  //                 note: 'Experience the ancient capital of Japan',
+  //                 type: 'general',
+  //                 googlePlaceId: 'ChIJB4GkMCJLGGARbzZ8g-H-Ah4',
+  //                 formattedAddress: 'Kyoto, Japan',
+  //                 placeTypes: ['locality', 'political'],
+  //                 coordinates: {
+  //                   latitude: 35.0116,
+  //                   longitude: 135.7681,
+  //                 },
+  //                 mapsUrl: 'https://www.google.com/maps/place/?q=place_id:ChIJB4GkMCJLGGARbzZ8g-H-Ah4',
+  //                 links: ['https://kyoto.travel/en'],
+  //                 business_status: 'Operational',
+  //                 imageUrl: 'https://example.com/kyoto.jpg',
+  //               },
+  //             },
+  //             {
+  //               location_id: 'osaka',
+  //               dateRange: ['2024-07-15', '2024-07-21'],
+  //               duration: {
+  //                 value: 7,
+  //                 timeUnit: 'days',
+  //               },
+  //               additionalInfo: "Experience Osaka's food scene and vibrant nightlife",
+  //               cost: 1300,
+  //               connectedLocationData: {
+  //                 name: 'Osaka',
+  //                 note: 'Known for its modern architecture and street food',
+  //                 type: 'general',
+  //                 googlePlaceId: 'ChIJm7pJVxuQAGAR_f2uZNu2v1E',
+  //                 formattedAddress: 'Osaka, Japan',
+  //                 placeTypes: ['locality', 'political'],
+  //                 coordinates: {
+  //                   latitude: 34.6937,
+  //                   longitude: 135.5023,
+  //                 },
+  //                 mapsUrl: 'https://www.google.com/maps/place/?q=place_id:ChIJm7pJVxuQAGAR_f2uZNu2v1E',
+  //                 links: ['https://osaka-info.jp/en'],
+  //                 businessStatus: 'Operational',
+  //                 imageUrl: 'https://example.com/osaka.jpg',
+  //               },
+  //             },
+  //           ],
+  //         },
+  //       },
+  //     },
+  //   ],
+  // };
 
   console.log('openAi response', response);
   // @ts-ignore
