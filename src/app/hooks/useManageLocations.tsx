@@ -17,8 +17,8 @@ export interface LocationsManagerContextObject {
   fetchNextPage?: (
     options?: FetchNextPageOptions,
   ) => Promise<InfiniteQueryObserverResult<InfiniteData<LocationsPaginationResponse, unknown>, Error>>;
-  addLocation: (newLocation: ILocation) => void;
-  editLocation: (updatedLocation: ILocation) => void;
+  addLocation: (newLocation: { location: ILocation; files?: File[] }) => void;
+  editLocation: (updatedLocation: { location: ILocation; files?: File[] }) => void;
   isLoading: boolean;
   hasNextPage: boolean;
   removeLocation: (id: string) => void;
@@ -75,11 +75,11 @@ export const useManageLocations = (limit = 10) => {
     },
   });
 
-  const addLocation = (newLocation: ILocation) => {
+  const addLocation = (newLocation: { location: ILocation; files?: File[] }) => {
     addLocationMutation.mutate(newLocation);
   };
 
-  const editLocation = (updatedLocation: ILocation) => {
+  const editLocation = (updatedLocation: { location: ILocation; files?: File[] }) => {
     editLocationMutation.mutate(updatedLocation);
   };
 

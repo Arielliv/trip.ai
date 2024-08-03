@@ -11,7 +11,9 @@ export const useOnLocationFormSubmit = () => {
   const onSubmit: SubmitHandler<LocationFormData> = async (data): Promise<void> => {
     if (Object.keys(formState.errors).length === 0) {
       const locationData = mapLocationFormDataToLocationSchema(data);
-      isEditMode ? editLocation(locationData) : addLocation(locationData);
+      isEditMode
+        ? editLocation({ location: locationData, files: data.files })
+        : addLocation({ location: locationData, files: data.files });
       reset(defaultLocationFormData);
     }
   };

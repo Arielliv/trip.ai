@@ -13,6 +13,7 @@ import { LocationFormData } from '@/app/hooks/useLocationForm';
 import { useLocationContext } from '@/app/providers/LocationContextFormProvider/LocationContextFormProvider';
 import { useOnLocationFormSubmit } from '@/app/hooks/useOnLocationFormSubmit';
 import { useLocationNoteController } from '@/app/hooks/formControllers/useLocationNoteController';
+import { FileUploader } from '@/app/components/FileUploader/FileUploader';
 
 const LocationForm = () => {
   const { onSubmit } = useOnLocationFormSubmit();
@@ -67,6 +68,9 @@ const LocationForm = () => {
         </Grid>
         <Grid xs={12}>
           <TextField label="Note" variant="outlined" multiline rows={4} fullWidth {...noteField} />
+        </Grid>
+        <Grid xs={12}>
+          <FileUploader />
         </Grid>
         <Grid xs={12}>
           <Button type="submit" variant="contained" fullWidth disabled={isSubmitting} onClick={handleSubmit(onSubmit)}>

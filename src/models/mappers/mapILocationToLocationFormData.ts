@@ -11,5 +11,6 @@ export const mapILocationToLocationFormData = (location: ILocation | undefined):
     note: location.note || '',
     locationType: location.type ? location.type.toString().toLowerCase() : 'general',
     place: null,
+    files: [],
   };
 };

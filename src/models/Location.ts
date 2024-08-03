@@ -21,6 +21,7 @@ export interface ILocation {
   links?: string[];
   businessStatus?: string;
   imageUrl?: string;
+  files?: IFile[];
 }
 
 export interface ILocationDto extends Document {
@@ -41,6 +42,12 @@ export interface ILocationDto extends Document {
   links?: string[]; // New: Array of additional links, e.g., the website
   businessStatus?: string; // New: Optional business status
   imageUrl: string; // URL to the image of the location
+  files: IFile[]; // New: Array of file URLs
+}
+
+export interface IFile {
+  name: string;
+  url: string;
 }
 
 const LocationSchema: Schema = new Schema({
@@ -78,6 +85,12 @@ const LocationSchema: Schema = new Schema({
   links: [{ type: String }], // Added
   businessStatus: { type: String }, // Added as optional
   imageUrl: { type: String },
+  files: [
+    {
+      url: { type: String, required: true },
+      name: { type: String, required: true },
+    },
+  ], // Added
 });
 
 const Location = models.Location || model<ILocation>('Location', LocationSchema);
