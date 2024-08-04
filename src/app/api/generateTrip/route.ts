@@ -3,10 +3,10 @@ import dbConnect from '@/lib/dbConnect';
 import { HttpStatusCode } from 'axios';
 import { GenerateTripFormData } from '@/app/hooks/useGenerateTripForm';
 import { authAndGetUserId, getUserById } from '@/src/server/utils';
-import { ITrip } from '@/models/Trip';
 import { generateTrip } from '@/src/server/generateUtils';
 import { bulkCreateLocations } from '@/src/server/locationUtils';
 import { createTripInDB } from '@/app/api/trips/route';
+import { Visibility } from '@/models/constants';
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -20,13 +20,15 @@ export const POST = async (req: NextRequest) => {
     if (!tripDetails) {
       return NextResponse.json({ message: 'Missing trip details' }, { status: HttpStatusCode.BadRequest });
     }
-    const response = await generateTrip(tripDetails);
+    const suggestedTrip = await generateTrip(tripDetails);
 
-    console.log('openAi response', response);
+    console.log('openAi response', suggestedTrip);
 
-    const suggestedTrip: ITrip = response.choices[0].message.content as unknown as ITrip;
     const newLocations = await bulkCreateLocations(suggestedTrip.locations, owner_id, user);
-    const trip = await createTripInDB({ ...suggestedTrip, locations: newLocations }, owner_id);
+    const trip = await createTripInDB(
+      { ...suggestedTrip, locations: newLocations, visibility: Visibility.Private },
+      owner_id,
+    );
 
     return NextResponse.json(
       {

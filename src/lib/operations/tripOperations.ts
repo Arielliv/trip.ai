@@ -50,7 +50,7 @@ export async function generateTrip(generateTripData: GenerateTripFormData): Prom
   noStore();
   const res = await axios.post(`/api/generateTrip`, generateTripData);
   console.log(res.data.message);
-  return res.data.message;
+  return res.data.trip as ITrip;
 }
 
 export async function updateTrip(updatedTrip: ITrip): Promise<ITrip> {

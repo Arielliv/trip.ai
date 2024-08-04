@@ -4,6 +4,7 @@ import Location, { ILocationDto } from '@/models/Location';
 import { saveLocationsInUser } from '@/src/server/userUtils';
 import { ILocationInTrip } from '@/models/Trip';
 import { IUser } from '@/models/IUser';
+import { LocationType } from '@/models/constants';
 
 export const bulkCreateLocations = async (
   locations: ILocationInTrip[],
@@ -18,7 +19,16 @@ export const bulkCreateLocations = async (
         );
         location.connectedLocationData.imageUrl = imageUrl;
         location.connectedLocationData.googlePlaceId = googlePlaceId;
-        return { ...location, connectedLocationData: { ...location.connectedLocationData, googlePlaceId, imageUrl } };
+        location.connectedLocationData.type = getLocationType(location.connectedLocationData.type);
+        return {
+          ...location,
+          connectedLocationData: {
+            ...location.connectedLocationData,
+            googlePlaceId,
+            imageUrl,
+            type: getLocationType(location.connectedLocationData.type),
+          },
+        };
       }
     }),
   );
@@ -44,4 +54,18 @@ export const bulkCreateLocations = async (
   );
 
   return newLocationsResults as unknown as ILocationInTrip[];
+};
+
+const getLocationType = (type?: string): LocationType => {
+  if (!type) {
+    return LocationType.General;
+  }
+  switch (type) {
+    case 'restaurant':
+      return LocationType.Restaurant;
+    case 'hotel':
+      return LocationType.Hotel;
+    default:
+      return LocationType.General;
+  }
 };
