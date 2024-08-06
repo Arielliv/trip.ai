@@ -22,7 +22,7 @@ export const LongTextNote = ({ value }: { value: string }) => {
           color: 'grey.500',
           mb: '1.275rem',
           textOverflow: 'ellipsis',
-          WebkitLineClamp: '2',
+          WebkitLineClamp: '1',
           WebkitBoxOrient: 'vertical',
           overflow: 'hidden',
           display: '-webkit-box',

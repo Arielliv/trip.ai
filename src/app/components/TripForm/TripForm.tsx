@@ -29,8 +29,11 @@ const TripForm = () => {
     setIsPermissionModalOpen(true);
   };
 
-  const handleClosePermissionModal = () => {
+  const handleClosePermissionModal = ({ isSubmitted }: { isSubmitted: boolean }) => {
     setIsPermissionModalOpen(false);
+    if (isSubmitted && !formState.isSubmitting) {
+      handleSubmit(onSubmit)();
+    }
   };
 
   const handleOpenGenerateModal = () => {

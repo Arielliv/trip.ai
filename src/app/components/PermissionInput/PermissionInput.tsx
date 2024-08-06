@@ -49,6 +49,22 @@ export const PermissionInput = ({
     return fields.some((field) => field.userId.toString() === userId);
   };
 
+  const getPermissionType = (permissionType: string) => {
+    switch (permissionType) {
+      case 'ViewBasic':
+        return 'View Basic';
+      case 'ViewHotels':
+        return 'View Hotels';
+      case 'ViewFullTrip':
+        return 'View Full Trip';
+      case 'EditBasic':
+        return 'Edit Basic';
+      case 'Admin':
+        return 'Admin';
+      default:
+        return 'View Basic';
+    }
+  };
   return (
     <Grid container spacing={1} justifyContent={'center'} alignItems={'center'} flexDirection={'row'}>
       <Grid xs={6}>
@@ -98,7 +114,7 @@ export const PermissionInput = ({
               .filter(([_key, value]) => !isNaN(Number(value)))
               .map(([key, value]) => (
                 <MenuItem key={value} value={value}>
-                  {key}
+                  {getPermissionType(key)}
                 </MenuItem>
               ))}
           </Select>

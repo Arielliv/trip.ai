@@ -10,6 +10,7 @@ import {
   Menu,
   MenuItem,
   Rating,
+  Tooltip,
   Typography,
 } from '@mui/material';
 import Edit from '@mui/icons-material/Edit';
@@ -93,24 +94,30 @@ export function LocationCard({ location, onEdit, onDelete, onSelect }: LocationC
       />
       <CardContent sx={{ flexGrow: 1, pr: 2 }}>
         <Box mb={1}>
-          <Typography
-            component="h3"
-            sx={{
-              fontSize: 17,
-              fontWeight: 'bold',
-              letterSpacing: '0.5px',
-              marginBottom: 0,
-              display: 'inline-block',
-            }}
-          >
-            {location.name}
-          </Typography>
+          <Tooltip title={location.name}>
+            <Typography
+              component="h3"
+              sx={{
+                fontSize: 17,
+                fontWeight: 'bold',
+                letterSpacing: '0.5px',
+                marginBottom: 0,
+                textOverflow: 'ellipsis',
+                WebkitLineClamp: '1',
+                WebkitBoxOrient: 'vertical',
+                overflow: 'hidden',
+                display: '-webkit-box',
+              }}
+            >
+              {location.name}
+            </Typography>
+          </Tooltip>
           <Rating name="rating" value={0} size="small" readOnly sx={{ verticalAlign: 'text-top' }} />
         </Box>
         <Box mb={1}>
           <LongTextNote value={location.note ?? ''} />
         </Box>
-        <Divider light sx={{ mt: 1, mb: 1 }} />
+        <Divider light />
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignContent: 'flex-end', alignSelf: 'flex-end' }}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
             <LocationPermissionFilter permissions={location.permissions} permissionLevel={LocationPermissionEnum.edit}>

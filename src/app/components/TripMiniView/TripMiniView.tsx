@@ -118,7 +118,7 @@ export const TripMiniView = ({ tripId, handleClose, isOpen }: TripMiniViewProps)
                   </LoadingButton>
                 </Grid>
                 <Grid xs={4}>
-                  <Button endIcon={<ShareIcon />} autoFocus color={'secondary'}>
+                  <Button endIcon={<ShareIcon />} autoFocus color={'secondary'} disabled>
                     Share trip
                   </Button>
                 </Grid>
