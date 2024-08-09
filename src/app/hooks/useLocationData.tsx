@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { MapMarker } from '@/app/components/Map/Map';
 import { usePlaceController } from '@/app/hooks/formControllers/usePlaceController';
-import { LocationFormData } from '@/app/hooks/useLocationForm';
+import { LocationFormData } from '@/app/hooks/forms/useLocationForm';
 import { Control } from 'react-hook-form';
 
 export interface LocationContextObject {

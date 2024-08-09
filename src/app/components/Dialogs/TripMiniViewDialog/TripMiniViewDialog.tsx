@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Accordion,
   AccordionDetails,
@@ -17,6 +17,7 @@ import {
   Grid,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ContentCopy from '@mui/icons-material/ContentCopy';
 import CloseIcon from '@mui/icons-material/Close';
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -30,6 +31,8 @@ import LocationOnIcon from '@mui/icons-material/LocationOn';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { useNavigateToLocationPageByTripId } from '@/app/hooks/useNavigateToLocationPageByTripId';
 import ShareIcon from '@mui/icons-material/Share';
+import { CopyLocationToTripsDialog } from '@/app/components/Dialogs/CopyLocationToTrips/CopyLocationToTripsDialog';
+import { ILocationInTrip } from '@/models/Trip';
 
 export interface TripMiniViewProps {
   tripId: string;
@@ -37,7 +40,9 @@ export interface TripMiniViewProps {
   isOpen: boolean;
 }
 
-export const TripMiniView = ({ tripId, handleClose, isOpen }: TripMiniViewProps) => {
+export const TripMiniViewDialog = ({ tripId, handleClose, isOpen }: TripMiniViewProps) => {
+  const [isOpenSelectTripDialog, setIsOpenSelectTripDialog] = useState(false);
+  const [locationToAdd, setLocationToAdd] = useState<ILocationInTrip>();
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -61,6 +66,15 @@ export const TripMiniView = ({ tripId, handleClose, isOpen }: TripMiniViewProps)
     }
 
     navigateToLocationPageByTripId(tripId);
+  };
+
+  const handleSelectTripDialogOpen = (location: ILocationInTrip) => {
+    setIsOpenSelectTripDialog(true);
+    setLocationToAdd(location);
+  };
+
+  const handleSelectTripDialogClose = () => {
+    setIsOpenSelectTripDialog(false);
   };
 
   const dateDuration =
@@ -143,6 +157,14 @@ export const TripMiniView = ({ tripId, handleClose, isOpen }: TripMiniViewProps)
                     <Typography variant="subtitle2" color="text.secondary">
                       {location.connectedLocationData?.type}
                     </Typography>
+                    <IconButton
+                      aria-label="Generate trip"
+                      color="secondary"
+                      size="large"
+                      onClick={() => handleSelectTripDialogOpen(location)}
+                    >
+                      <ContentCopy />
+                    </IconButton>
                   </Grid>
                 </AccordionSummary>
                 <AccordionDetails>
@@ -169,6 +191,13 @@ export const TripMiniView = ({ tripId, handleClose, isOpen }: TripMiniViewProps)
           Ok
         </Button>
       </DialogActions>
+      {isOpenSelectTripDialog && (
+        <CopyLocationToTripsDialog
+          location={locationToAdd}
+          isOpen={isOpenSelectTripDialog}
+          handleClose={handleSelectTripDialogClose}
+        />
+      )}
     </Dialog>
   );
 };

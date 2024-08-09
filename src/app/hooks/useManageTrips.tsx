@@ -11,7 +11,7 @@ import { useState } from 'react';
 import { useInfiniteTrips } from '@/app/hooks/query/useInfiniteTrips';
 import { TripsPaginationResponse } from '@/lib/types';
 import { useSnackbar } from 'notistack';
-import { TripFormData } from '@/app/hooks/useTripForm';
+import { TripFormData } from '@/app/hooks/forms/useTripForm';
 import { mapITripToTripFormData } from '@/models/mappers/mapITripToTripFormData';
 
 export interface TripsManagerContextObject {

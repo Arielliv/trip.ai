@@ -1,4 +1,4 @@
-import { TripFormData } from '@/app/hooks/useTripForm';
+import { TripFormData } from '@/app/hooks/forms/useTripForm';
 import { Control, useFieldArray } from 'react-hook-form';
 import { TripFormFieldPath } from '@/app/components/constants/locationFormFieldPath';
 

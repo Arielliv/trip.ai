@@ -1,4 +1,4 @@
-import { ITrip } from '@/models/Trip';
+import { ILocationInTrip, ITrip } from '@/models/Trip';
 import { unstable_noStore as noStore } from 'next/dist/server/web/spec-extension/unstable-no-store';
 import axios from 'axios';
 import { TripsPaginationResponse } from '@/lib/types';
@@ -44,6 +44,16 @@ export async function createTrip(newTrip: ITrip): Promise<ITrip> {
   const res = await axios.post(`/api/trips`, newTrip);
   console.log(`${res.data.message} with id ${res.data.id}`);
   return res.data.trip as ITrip;
+}
+
+export async function addLocationToTrips(addLocationToTripObject: {
+  location: ILocationInTrip;
+  tripIds: string[];
+}): Promise<void> {
+  noStore();
+  const res = await axios.post(`/api/bulkAddLocationToTrips`, addLocationToTripObject);
+  console.log(res.data.message);
+  return;
 }
 
 export async function generateTrip(generateTripData: GenerateTripFormData): Promise<ITrip> {

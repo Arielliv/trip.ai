@@ -22,7 +22,7 @@ import Divider from '@mui/material/Divider';
 import React, { useState } from 'react';
 import { ITrip } from '@/models/Trip';
 import Grid from '@mui/material/Unstable_Grid2';
-import { TripMiniView } from '@/app/components/TripMiniView/TripMiniView';
+import { TripMiniViewDialog } from '@/app/components/Dialogs/TripMiniViewDialog/TripMiniViewDialog';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 export interface TripListItemProps {
@@ -130,7 +130,7 @@ export const TripListItem = ({ index, trip, handleEdit, handleDelete, handleSele
         </Grid>
       </ListItem>
       <Divider component="li" />
-      {isOpen && <TripMiniView tripId={trip._id || ''} isOpen={isOpen} handleClose={handleClose} />}
+      {isOpen && <TripMiniViewDialog tripId={trip._id || ''} isOpen={isOpen} handleClose={handleClose} />}
     </>
   );
 };

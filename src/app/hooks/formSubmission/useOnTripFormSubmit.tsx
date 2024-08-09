@@ -1,6 +1,6 @@
 import { SubmitHandler } from 'react-hook-form';
 import { useTripContext } from '@/app/providers/TripContextFormProvider/TripContextFormProvider';
-import { TripFormData, useTripForm } from '@/app/hooks/useTripForm';
+import { TripFormData, useTripForm } from '@/app/hooks/forms/useTripForm';
 import { mapTripFormDataToTripSchema } from '@/models/mappers/mapTripFormDataToTripSchema';
 
 export const useOnTripFormSubmit = () => {

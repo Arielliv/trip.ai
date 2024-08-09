@@ -13,8 +13,8 @@ import { DurationView } from '@/app/components/LocationsTable/TableComponents/Du
 import { DateView } from '@/app/components/LocationsTable/TableComponents/Date/DateView/DateView';
 import { useTripContext } from '@/app/providers/TripContextFormProvider/TripContextFormProvider';
 import { useFormContext } from 'react-hook-form';
-import { TripFormData } from '@/app/hooks/useTripForm';
-import { useOnTripFormSubmit } from '@/app/hooks/useOnTripFormSubmit';
+import { TripFormData } from '@/app/hooks/forms/useTripForm';
+import { useOnTripFormSubmit } from '@/app/hooks/formSubmission/useOnTripFormSubmit';
 
 export const LocationsTable = () => {
   const { onSubmit } = useOnTripFormSubmit();

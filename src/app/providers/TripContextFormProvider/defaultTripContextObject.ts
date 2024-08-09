@@ -1,7 +1,7 @@
 import { TripsManagerContextObject } from '@/app/hooks/useManageTrips';
 import { ITrip } from '@/models/Trip';
 import { ManageLocationTableHook } from '@/app/hooks/useManageLocationTable';
-import { LocationInTripFormData } from '@/app/hooks/useTripForm';
+import { LocationInTripFormData } from '@/app/hooks/forms/useTripForm';
 
 const defaultManageLocationTableHook: ManageLocationTableHook = {
   handleRowModesModelChange: () => {},

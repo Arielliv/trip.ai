@@ -1,5 +1,5 @@
 import { ILocation } from '@/models/Location';
-import { LocationFormData } from '@/app/hooks/useLocationForm';
+import { LocationFormData } from '@/app/hooks/forms/useLocationForm';
 
 export const mapILocationToLocationFormData = (location: ILocation | undefined): LocationFormData | undefined => {
   if (!location) {

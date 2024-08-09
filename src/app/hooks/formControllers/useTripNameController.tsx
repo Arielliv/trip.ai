@@ -1,8 +1,7 @@
 import { useController } from 'react-hook-form';
 
-import { LocationFormData } from '@/app/hooks/useLocationForm';
-import { LocationFormFieldPath, TripFormFieldPath } from '@/app/components/constants/locationFormFieldPath';
-import { TripFormData } from '@/app/hooks/useTripForm';
+import { TripFormFieldPath } from '@/app/components/constants/locationFormFieldPath';
+import { TripFormData } from '@/app/hooks/forms/useTripForm';
 
 export const useTripNameController = () => {
   const {

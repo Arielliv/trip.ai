@@ -1,7 +1,7 @@
 import { Button, Card, CardContent, CardMedia, Chip, Divider, Tooltip, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { ITrip } from '@/models/Trip';
-import { TripMiniView } from '@/app/components/TripMiniView/TripMiniView';
+import { TripMiniViewDialog } from '@/app/components/Dialogs/TripMiniViewDialog/TripMiniViewDialog';
 import { getFormatDateDuration } from '@/app/utils/getFormatDateDuration';
 import { currencyFormatter } from '@/app/utils/currencyFormatter';
 import Grid from '@mui/material/Unstable_Grid2';
@@ -65,7 +65,7 @@ export const TripCard = ({ trip: { mainImageUrl, name, totals, locations }, trip
         </CardContent>
       </Card>
 
-      {isOpen && <TripMiniView tripId={trip._id || ''} isOpen={isOpen} handleClose={handleClose} />}
+      {isOpen && <TripMiniViewDialog tripId={trip._id || ''} isOpen={isOpen} handleClose={handleClose} />}
     </>
   );
 };

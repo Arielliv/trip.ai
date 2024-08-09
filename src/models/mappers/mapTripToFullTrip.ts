@@ -1,6 +1,6 @@
 import { ILocationInTrip, ITrip } from '@/models/Trip';
 import { ILocation } from '@/models/Location';
-import { LocationInTripFormData, TripFormData } from '@/app/hooks/useTripForm';
+import { LocationInTripFormData, TripFormData } from '@/app/hooks/forms/useTripForm';
 import { LocationType, Visibility } from '@/models/constants';
 import { TripPermissionEnum } from '@/models/constants/constants';
 
