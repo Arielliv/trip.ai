@@ -4,7 +4,7 @@ import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { FormProvider } from 'react-hook-form';
 import { DevTool } from '@hookform/devtools';
 import { TripsManagerContextObject, useManageTrips } from '@/app/hooks/useManageTrips';
-import { defaultTripFormData, useTripForm } from '@/app/hooks/useTripForm';
+import { defaultTripFormData, useTripForm } from '@/app/hooks/forms/useTripForm';
 import { defaultTripContext } from '@/app/providers/TripContextFormProvider/defaultTripContextObject';
 import { ManageLocationTableHook, useManageLocationTable } from '@/app/hooks/useManageLocationTable';
 import { mapFullTripToTripFormData } from '@/models/mappers/mapTripToFullTrip';

@@ -10,7 +10,7 @@ import {
 import { v4 as uuidv4 } from 'uuid';
 import { Columns } from '@/app/components/constants/constants';
 import { mapRowToLocation } from '@/models/mappers/mapRowToLocation';
-import { LocationInTripFormData, TripFormData } from '@/app/hooks/useTripForm';
+import { LocationInTripFormData, TripFormData } from '@/app/hooks/forms/useTripForm';
 import { Control } from 'react-hook-form';
 import { useLocationsInTripController } from '@/app/hooks/formControllers/useLocationsInTripController';
 

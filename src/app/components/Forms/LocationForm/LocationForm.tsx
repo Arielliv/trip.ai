@@ -9,9 +9,9 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { useFormContext } from 'react-hook-form';
 import { useLocationNameController } from '@/app/hooks/formControllers/useLocationNameController';
 import { useLocationTypeController } from '@/app/hooks/formControllers/useLocationTypeController';
-import { LocationFormData } from '@/app/hooks/useLocationForm';
+import { LocationFormData } from '@/app/hooks/forms/useLocationForm';
 import { useLocationContext } from '@/app/providers/LocationContextFormProvider/LocationContextFormProvider';
-import { useOnLocationFormSubmit } from '@/app/hooks/useOnLocationFormSubmit';
+import { useOnLocationFormSubmit } from '@/app/hooks/formSubmission/useOnLocationFormSubmit';
 import { useLocationNoteController } from '@/app/hooks/formControllers/useLocationNoteController';
 import { FileUploader } from '@/app/components/FileUploader/FileUploader';
 

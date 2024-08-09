@@ -4,7 +4,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { FormProvider } from 'react-hook-form';
 import { LocationsManagerContextObject, useManageLocations } from '@/app/hooks/useManageLocations';
 import { LocationContextObject, useLocationData } from '@/app/hooks/useLocationData';
-import { useLocationForm, defaultLocationFormData } from '@/app/hooks/useLocationForm';
+import { useLocationForm, defaultLocationFormData } from '@/app/hooks/forms/useLocationForm';
 import { defaultLocationContext } from '@/app/providers/LocationContextFormProvider/defaultLocationContextObject';
 import { mapILocationToLocationFormData } from '@/models/mappers/mapILocationToLocationFormData';
 import { fetchPlaceDetailsFromGoogleAPIById } from '@/app/providers/LocationContextFormProvider/utils/fetchPlaceDetailsFromGoogleAPIById';

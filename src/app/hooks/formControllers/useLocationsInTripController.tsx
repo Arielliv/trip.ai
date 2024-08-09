@@ -1,5 +1,5 @@
 import { Control, FieldArrayWithId, useFieldArray } from 'react-hook-form';
-import { LocationInTripFormData, TripFormData } from '@/app/hooks/useTripForm';
+import { LocationInTripFormData, TripFormData } from '@/app/hooks/forms/useTripForm';
 import { TripFormFieldPath } from '@/app/components/constants/locationFormFieldPath';
 
 export interface LocationsInTripController {

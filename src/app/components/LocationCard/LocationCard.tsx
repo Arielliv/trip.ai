@@ -21,7 +21,7 @@ import { MapMarker } from '@/app/components/Map/Map';
 import { LongTextNote } from '@/app/components/LongTextNote/LongTextNote';
 import { LocationPermissionFilter } from '@/app/components/LocationPermissionFilter/LocationPermissionFilter';
 import { LocationPermissionEnum } from '@/models/constants/constants';
-import FilesDialog from '@/app/components/FilesDialog/FilesDialog';
+import FilesDialog from '@/app/components/Dialogs/FilesDialog/FilesDialog';
 
 export interface LocationCardProps {
   location: ILocation;

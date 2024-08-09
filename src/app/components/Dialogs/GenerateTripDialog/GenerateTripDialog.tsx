@@ -8,7 +8,7 @@ import { useGenerateTripForm } from '@/app/hooks/useGenerateTripForm';
 import Grid from '@mui/material/Unstable_Grid2';
 import LoadingButton from '@mui/lab/LoadingButton';
 import { DevTool } from '@hookform/devtools';
-import { useOnGenerateTripFormSubmit } from '@/app/hooks/useOnGenerateTripFormSubmit';
+import { useOnGenerateTripFormSubmit } from '@/app/hooks/formSubmission/useOnGenerateTripFormSubmit';
 
 export interface GenerateTripDialogProps {
   handleClose: () => void;

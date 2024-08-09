@@ -6,15 +6,15 @@ import CircularProgress from '@mui/material/CircularProgress';
 import { Box, FormControlLabel, Switch, TextField } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import { useFormContext } from 'react-hook-form';
-import { TripFormData } from '@/app/hooks/useTripForm';
+import { TripFormData } from '@/app/hooks/forms/useTripForm';
 import { useTripNameController } from '@/app/hooks/formControllers/useTripNameController';
-import { useOnTripFormSubmit } from '@/app/hooks/useOnTripFormSubmit';
+import { useOnTripFormSubmit } from '@/app/hooks/formSubmission/useOnTripFormSubmit';
 import { useTripContext } from '@/app/providers/TripContextFormProvider/TripContextFormProvider';
 import { useTripVisibilityController } from '@/app/hooks/formControllers/useTripVisibilityController';
-import ManagePermissionsDialog from '@/app/components/ManagePermissionsDialog/ManagePermissionsDialog';
+import ManagePermissionsDialog from '@/app/components/Dialogs/ManagePermissionsDialog/ManagePermissionsDialog';
 import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import IconButton from '@mui/material/IconButton';
-import GenerateTripDialog from '@/app/components/GenerateTripDialog/GenerateTripDialog';
+import GenerateTripDialog from '@/app/components/Dialogs/GenerateTripDialog/GenerateTripDialog';
 
 const TripForm = () => {
   const { clearFormOnEditState } = useTripContext();

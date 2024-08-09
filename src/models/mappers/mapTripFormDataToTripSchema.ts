@@ -1,5 +1,5 @@
 import { Visibility } from '@/models/constants';
-import { LocationInTripFormData, TripFormData } from '@/app/hooks/useTripForm';
+import { LocationInTripFormData, TripFormData } from '@/app/hooks/forms/useTripForm';
 import { ITrip, ILocationInTrip } from '@/models/Trip';
 
 export const mapTripFormDataToTripSchema = (tripFormData: TripFormData): ITrip => {

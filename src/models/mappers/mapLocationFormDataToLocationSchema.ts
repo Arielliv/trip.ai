@@ -1,6 +1,6 @@
 import { ILocation } from '@/models/Location';
 import { LocationType } from '@/models/constants';
-import { LocationFormData } from '@/app/hooks/useLocationForm';
+import { LocationFormData } from '@/app/hooks/forms/useLocationForm';
 
 export const mapStringTypeToEnumType = (type: string) => {
   switch (type) {

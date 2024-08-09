@@ -1,6 +1,6 @@
 import { useController } from 'react-hook-form';
 import { TripFormFieldPath } from '@/app/components/constants/locationFormFieldPath';
-import { TripFormData } from '@/app/hooks/useTripForm';
+import { TripFormData } from '@/app/hooks/forms/useTripForm';
 
 export const useTripVisibilityController = () => {
   const {

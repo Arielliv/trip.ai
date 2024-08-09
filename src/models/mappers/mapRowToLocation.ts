@@ -1,5 +1,5 @@
 import { GridRowModel } from '@mui/x-data-grid-pro';
-import { LocationInTripFormData } from '@/app/hooks/useTripForm';
+import { LocationInTripFormData } from '@/app/hooks/forms/useTripForm';
 import { Columns } from '@/app/components/constants/constants';
 
 export const mapRowToLocation = (row: GridRowModel): LocationInTripFormData => {

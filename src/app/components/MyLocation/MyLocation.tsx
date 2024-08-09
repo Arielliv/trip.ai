@@ -6,7 +6,7 @@ import Grid from '@mui/material/Unstable_Grid2';
 import { Box } from '@mui/material';
 import { MyLocationDataTestIds } from '@/app/components/constants/constants';
 import { LocationContextFormProvider } from '@/app/providers/LocationContextFormProvider/LocationContextFormProvider';
-import LocationForm from '@/app/components/LocationForm/LocationForm';
+import LocationForm from '@/app/components/Forms/LocationForm/LocationForm';
 import SavedLocations from '@/app/components/SavedLocations/SavedLocations';
 import { CustomizedTabs } from '@/app/components/CustomaziedTabs/CustomizedTabs';
 
