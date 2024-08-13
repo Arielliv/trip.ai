@@ -17,7 +17,6 @@ const SavedLocations = ({ setSelectedTab }: SavedLocationsProps) => {
 
   const handleEdit = (id: string, coordinate: Omit<MapMarker, 'id'>) => {
     setLocationId(id);
-    setSelectedTab('0');
     handleFocusLocation(coordinate);
   };
 

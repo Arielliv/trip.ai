@@ -9,7 +9,10 @@ import { defaultLocationContext } from '@/app/providers/LocationContextFormProvi
 import { mapILocationToLocationFormData } from '@/models/mappers/mapILocationToLocationFormData';
 import { fetchPlaceDetailsFromGoogleAPIById } from '@/app/providers/LocationContextFormProvider/utils/fetchPlaceDetailsFromGoogleAPIById';
 import { DevTool } from '@hookform/devtools';
-import { ManageTripIdQueryParamObject, useManageTripIdQueryParam } from '@/app/hooks/useManageTripIdQueryParam';
+import {
+  manageMyLocationsQueryParams,
+  useManageMyLocationsQueryParams,
+} from '@/app/hooks/useManageMyLocationsQueryParams';
 
 export interface FormHandlers {
   clearFormOnEditState(): void;
@@ -17,7 +20,7 @@ export interface FormHandlers {
 }
 
 export const LocationDataContext = createContext<
-  LocationContextObject & LocationsManagerContextObject & FormHandlers & ManageTripIdQueryParamObject
+  LocationContextObject & LocationsManagerContextObject & FormHandlers & manageMyLocationsQueryParams
 >(defaultLocationContext);
 
 export const LocationContextFormProvider = ({ children }: { children: React.ReactNode }) => {
@@ -26,11 +29,12 @@ export const LocationContextFormProvider = ({ children }: { children: React.Reac
   const { getLocationById } = manageLocations;
   const locationData = useLocationData(formMethods.control);
   const { handleFocusEditLocation } = locationData;
-  const manageTripIdQueryParam = useManageTripIdQueryParam(manageLocations.loadLocationsByTripId);
+  const manageMyLocationsQueryParams = useManageMyLocationsQueryParams(manageLocations.loadLocationsByTripId);
   const router = useRouter();
   const pathname = usePathname();
-  const locationId = manageTripIdQueryParam.locationId;
+  const locationId = manageMyLocationsQueryParams.locationId;
   const isEditMode = Boolean(locationId);
+
   const {
     reset,
     formState: { isSubmitSuccessful },
@@ -74,16 +78,16 @@ export const LocationContextFormProvider = ({ children }: { children: React.Reac
   }, [router, pathname, reset]);
 
   const contextValue = useMemo<
-    LocationContextObject & LocationsManagerContextObject & FormHandlers & ManageTripIdQueryParamObject
+    LocationContextObject & LocationsManagerContextObject & FormHandlers & manageMyLocationsQueryParams
   >(
     () => ({
       ...locationData,
       ...manageLocations,
-      ...manageTripIdQueryParam,
+      ...manageMyLocationsQueryParams,
       isEditMode,
       clearFormOnEditState,
     }),
-    [locationData, manageLocations, manageTripIdQueryParam, isEditMode, clearFormOnEditState],
+    [locationData, manageLocations, manageMyLocationsQueryParams, isEditMode, clearFormOnEditState],
   );
 
   return (

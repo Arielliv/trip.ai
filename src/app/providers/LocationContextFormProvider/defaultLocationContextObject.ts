@@ -1,7 +1,7 @@
 import { LocationContextObject } from '@/app/hooks/useLocationData';
 import { ILocation } from '@/models/Location';
 import { LocationsManagerContextObject } from '@/app/hooks/useManageLocations';
-import { ManageTripIdQueryParamObject } from '@/app/hooks/useManageTripIdQueryParam';
+import { manageMyLocationsQueryParams } from '@/app/hooks/useManageMyLocationsQueryParams';
 
 const defaultLocationContextObject: LocationContextObject = {
   mapCenter: { lat: -34.397, lng: 150.644 },
@@ -28,11 +28,13 @@ const defaultSavedLocationsContext: LocationsManagerContextObject = {
   removeLocation: (_id: string) => {},
 };
 
-const defaultManageTripIdQueryParamObject: ManageTripIdQueryParamObject = {
+const defaultManageTripIdQueryParamObject: manageMyLocationsQueryParams = {
   tripId: undefined,
   locationId: undefined,
   setTripId: (_newTripId: string) => {},
   setLocationId: (_locationId: string) => {},
+  selectedTab: '0',
+  setSelectedTab: (_tab: string) => {},
 };
 
 export const defaultLocationContext = {

@@ -1,8 +1,7 @@
 'use client';
-import React, { useCallback } from 'react';
+import React from 'react';
 import { CircularProgress, List, Box } from '@mui/material';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useTripContext } from '@/app/providers/TripContextFormProvider/TripContextFormProvider';
 import { TripListItem } from '@/app/components/TripListItem/TripListItem';
 import { useNavigateToLocationPageByTripId } from '@/app/hooks/useNavigateToLocationPageByTripId';
@@ -12,27 +11,12 @@ export interface SavedTripsProps {
 }
 
 const SavedTrips = ({ setSelectedTab }: SavedTripsProps) => {
-  const { trips, fetchNextPage, isLoading, hasNextPage, removeTrip } = useTripContext();
+  const { trips, fetchNextPage, isLoading, hasNextPage, removeTrip, setTripId } = useTripContext();
   const { navigateToLocationPageByTripId } = useNavigateToLocationPageByTripId();
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      params.set(name, value);
-
-      return params.toString();
-    },
-    [searchParams],
-  );
 
   const handleEdit = (id?: string) => {
     if (!id) return;
-
-    router.push(pathname + '?' + createQueryString('id', id));
-    setSelectedTab('0');
+    setTripId(id);
   };
 
   const handleDelete = (id?: string) => {

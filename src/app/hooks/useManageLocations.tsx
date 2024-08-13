@@ -8,9 +8,9 @@ import {
 import { ILocation } from '@/models/Location';
 import { createLocation, deleteLocation, updateLocation } from '@/lib/operations/locationOperations';
 import { useInfiniteLocations } from '@/app/hooks/query/useInfiniteLocations';
-import { useSnackbar } from 'notistack';
 import { useCallback, useMemo, useState } from 'react';
 import { LocationsPaginationResponse } from '@/lib/types';
+import { useSnackbarWithMultipleLoaders } from '@/app/hooks/useSnackbarWithLoader';
 
 export interface LocationsManagerContextObject {
   locations: ILocation[];
@@ -28,7 +28,7 @@ export interface LocationsManagerContextObject {
 export const useManageLocations = (limit = 10) => {
   const queryClient = useQueryClient();
   const [tripId, setTripId] = useState<string>();
-  const { enqueueSnackbar } = useSnackbar();
+  const { showSnackbarWithLoader, closeSnackbarById, enqueueSnackbar } = useSnackbarWithMultipleLoaders();
 
   const { data, error, fetchNextPage, hasNextPage, isLoading } = useInfiniteLocations(tripId, limit);
 
@@ -37,39 +37,54 @@ export const useManageLocations = (limit = 10) => {
   }, [data]);
 
   const addLocationMutation = useMutation({
-    mutationFn: createLocation,
+    mutationFn: (newLocation: { location: ILocation; files?: File[] }) => {
+      showSnackbarWithLoader('addLocation', 'Creating your location');
+      return createLocation(newLocation);
+    },
     onSuccess: () => {
+      closeSnackbarById('addLocation');
       const message = 'Location created successfully!';
       enqueueSnackbar(message, { variant: 'success' });
       return queryClient.invalidateQueries({ queryKey: ['locations', limit] });
     },
     onError: (error) => {
+      closeSnackbarById('addLocation');
       const message = error.message;
       enqueueSnackbar(message, { variant: 'error' });
     },
   });
 
   const editLocationMutation = useMutation({
-    mutationFn: updateLocation,
+    mutationFn: (updatedLocation: { location: ILocation; files?: File[] }) => {
+      showSnackbarWithLoader('editLocation', 'Updating your location');
+      return updateLocation(updatedLocation);
+    },
     onSuccess: () => {
+      closeSnackbarById('editLocation');
       const message = 'Location updated successfully!';
       enqueueSnackbar(message, { variant: 'success' });
       return queryClient.invalidateQueries({ queryKey: ['locations', limit] });
     },
     onError: (error) => {
+      closeSnackbarById('editLocation');
       const message = error.message;
       enqueueSnackbar(message, { variant: 'error' });
     },
   });
 
   const removeLocationMutation = useMutation({
-    mutationFn: deleteLocation,
+    mutationFn: (id: string) => {
+      showSnackbarWithLoader('removeLocation', 'Removing your location');
+      return deleteLocation(id);
+    },
     onSuccess: () => {
+      closeSnackbarById('removeLocation');
       const message = 'Location removed successfully!';
       enqueueSnackbar(message, { variant: 'success' });
       return queryClient.invalidateQueries({ queryKey: ['locations', limit] });
     },
     onError: (error) => {
+      closeSnackbarById('removeLocation');
       const message = error.message;
       enqueueSnackbar(message, { variant: 'error' });
     },

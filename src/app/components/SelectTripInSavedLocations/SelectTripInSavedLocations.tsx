@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, CircularProgress, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
+import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import { useManageTrips } from '@/app/hooks/useManageTrips';
 import { useLocationContext } from '@/app/providers/LocationContextFormProvider/LocationContextFormProvider';
 import { defaultTripId } from '@/app/components/constants/constants';
@@ -22,11 +22,7 @@ export const SelectTripInSavedLocations = () => {
           dataLength={trips.length}
           next={() => fetchNextPage!()}
           hasMore={!isLoading && hasNextPage}
-          loader={
-            <Box display="flex" alignItems="center" justifyContent="center">
-              <CircularProgress />
-            </Box>
-          }
+          loader={undefined}
         >
           <Select
             label="Select Trip"
