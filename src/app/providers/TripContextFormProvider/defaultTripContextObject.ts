@@ -2,6 +2,7 @@ import { TripsManagerContextObject } from '@/app/hooks/useManageTrips';
 import { ITrip } from '@/models/Trip';
 import { ManageLocationTableHook } from '@/app/hooks/useManageLocationTable';
 import { LocationInTripFormData } from '@/app/hooks/forms/useTripForm';
+import { manageMyTripsQueryParams } from '@/app/hooks/useManageMyTripsQueryParams';
 
 const defaultManageLocationTableHook: ManageLocationTableHook = {
   handleRowModesModelChange: () => {},
@@ -33,8 +34,18 @@ const defaultSavedTripsContext: TripsManagerContextObject = {
   setCurrentTripId: (_id: string | undefined) => {},
 };
 
+const defaultManageMyTripsQueryParams: manageMyTripsQueryParams = {
+  tripId: undefined,
+  setTripId: (_newTripId: string) => {},
+  selectedTab: '0',
+  setSelectedTab: (_tab: string) => {},
+};
+
 export const defaultTripContext = {
   ...defaultSavedTripsContext,
   ...defaultManageLocationTableHook,
+  ...defaultManageMyTripsQueryParams,
   clearFormOnEditState: () => {},
+  selectedTab: '0',
+  handleSelectTab: (_newTab: string) => {},
 };

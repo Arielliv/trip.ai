@@ -10,16 +10,18 @@ import { ManageLocationTableHook, useManageLocationTable } from '@/app/hooks/use
 import { mapFullTripToTripFormData } from '@/models/mappers/mapTripToFullTrip';
 import { useGetFullTripById } from '@/app/hooks/query/useFetchTripById';
 import { FormHandlers } from '@/app/providers/LocationContextFormProvider/LocationContextFormProvider';
+import { manageMyTripsQueryParams, useManageMyTripsQueryParams } from '@/app/hooks/useManageMyTripsQueryParams';
 
-export const TripDataContext = createContext<TripsManagerContextObject & ManageLocationTableHook & FormHandlers>(
-  defaultTripContext,
-);
+export const TripDataContext = createContext<
+  TripsManagerContextObject & ManageLocationTableHook & FormHandlers & manageMyTripsQueryParams
+>(defaultTripContext);
 
 export const TripContextFormProvider = ({ children }: { children: React.ReactNode }) => {
   const formMethods = useTripForm();
   const router = useRouter();
   const pathname = usePathname();
   const manageTrips = useManageTrips(formMethods.reset);
+  const manageMyTripsQueryParams = useManageMyTripsQueryParams();
   const searchParams = useSearchParams();
   const tripId = searchParams.get('id') || undefined;
 
@@ -47,14 +49,17 @@ export const TripContextFormProvider = ({ children }: { children: React.ReactNod
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router, pathname, reset, clearTripLocationsFromTable]);
 
-  const contextValue = useMemo<TripsManagerContextObject & ManageLocationTableHook & FormHandlers>(
+  const contextValue = useMemo<
+    TripsManagerContextObject & ManageLocationTableHook & FormHandlers & manageMyTripsQueryParams
+  >(
     () => ({
       ...manageTrips,
       ...manageLocationTable,
+      ...manageMyTripsQueryParams,
       isEditMode,
       clearFormOnEditState,
     }),
-    [clearFormOnEditState, isEditMode, manageLocationTable, manageTrips],
+    [manageMyTripsQueryParams, clearFormOnEditState, isEditMode, manageLocationTable, manageTrips],
   );
 
   return (

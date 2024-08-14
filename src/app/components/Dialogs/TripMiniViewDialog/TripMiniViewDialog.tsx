@@ -24,7 +24,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { getFormatDateDuration } from '@/app/utils/getFormatDateDuration';
 import { currencyFormatter } from '@/app/utils/currencyFormatter';
 import { useGetFullTripById } from '@/app/hooks/query/useFetchTripById';
-import { useDuplicateTrip } from '@/app/hooks/useDuplicateTrip';
+import { useDuplicateTrip } from '@/app/hooks/query/useDuplicateTrip';
 import { useTripsSearchContext } from '@/app/providers/TripsSearchContextProvider/TripsSearchContextProvider';
 import LoadingButton from '@mui/lab/LoadingButton';
 import LocationOnIcon from '@mui/icons-material/LocationOn';

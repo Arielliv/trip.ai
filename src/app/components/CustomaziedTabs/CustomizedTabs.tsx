@@ -6,12 +6,17 @@ import { DataTestIds } from '@/app/components/constants/constants';
 export const CustomizedTabs = ({
   tabs,
   dataTestPrefix = 'customizedTab',
+  selectedTab,
+  setSelectedTab,
 }: {
-  tabs: { title: string; element: (props: { setSelectedTab: (value: string) => void }) => ReactElement }[];
+  tabs: {
+    title: string;
+    element: (props: { setSelectedTab: (value: string) => void }) => ReactElement;
+  }[];
   dataTestPrefix?: string;
+  setSelectedTab: (value: string) => void;
+  selectedTab: string;
 }) => {
-  const [selectedTab, setSelectedTab] = React.useState('0');
-
   const handleSelectTab = (_event: React.SyntheticEvent, newValue: string) => {
     setSelectedTab(newValue);
   };
